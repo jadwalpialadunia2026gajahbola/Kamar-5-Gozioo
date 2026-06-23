@@ -1,1 +1,1458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Statistik Piket Kamar 11">
+  <title>Statistik · Kamar 11</title>
 
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Kamar 11">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════ */
+:root {
+  --font: 'Plus Jakarta Sans', sans-serif;
+  --mono: 'DM Mono', monospace;
+  --r: 10px; --r-lg: 16px; --r-xl: 24px;
+
+  --bg:       #f7f4ef;
+  --bg2:      #ede9e1;
+  --surface:  #ffffff;
+  --surface2: #f5f1eb;
+  --border:   #e2dbd0;
+  --border2:  #c9bfb0;
+
+  --ink:  #1c1713; --ink2: #3a3028; --ink3: #7a6e61; --ink4: #b0a393;
+
+  --accent:   #4f46e5;
+  --accent-b: #4338ca;
+  --accent-s: rgba(79,70,229,0.09);
+
+  --today:   #059669; --today-b: #10b981; --today-s: rgba(5,150,105,0.08);
+  --sunday:  #e11d48; --sunday-b: #fb7185; --sunday-s: rgba(225,29,72,0.07);
+  --gold:    #d97706; --gold-b:  #f59e0b; --gold-s:  rgba(217,119,6,0.08);
+
+  --shadow-sm: 0 1px 4px rgba(60,40,10,.08),0 1px 2px rgba(60,40,10,.05);
+  --shadow:    0 4px 20px rgba(60,40,10,.12),0 2px 6px rgba(60,40,10,.06);
+  --shadow-lg: 0 12px 48px rgba(60,40,10,.18),0 4px 12px rgba(60,40,10,.1);
+
+  --grad-accent: linear-gradient(135deg,#4f46e5,#7c3aed);
+  --grad-hero:   linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+}
+
+[data-theme="dark"] {
+  --bg:       #080d1a; --bg2:      #0d1525;
+  --surface:  #111827; --surface2: #0d1525;
+  --border:   #1e2d4a; --border2:  #2a3f66;
+
+  --ink:  #e2eaff; --ink2: #b8c8e8; --ink3: #6b84b0; --ink4: #3d5480;
+
+  --accent:   #60a5fa; --accent-b: #3b82f6; --accent-s: rgba(96,165,250,0.12);
+  --today:    #34d399; --today-b: #10b981;  --today-s: rgba(52,211,153,0.12);
+  --sunday:   #fb7185; --sunday-b: #f43f5e; --sunday-s: rgba(251,113,133,0.12);
+  --gold:     #fbbf24; --gold-b:  #f59e0b;  --gold-s:  rgba(251,191,36,0.12);
+
+  --shadow-sm: 0 1px 4px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  --shadow:    0 4px 20px rgba(0,0,0,.5),0 2px 6px rgba(0,0,0,.4);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,.6),0 4px 12px rgba(0,0,0,.5);
+
+  --grad-accent: linear-gradient(135deg,#3b82f6,#8b5cf6);
+  --grad-hero:   linear-gradient(135deg,#1d4ed8 0%,#5b21b6 100%);
+}
+
+/* ═══ RESET ═══ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--ink);
+  min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden;
+  transition:background-color .35s ease,color .35s ease;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle at 20% 20%,rgba(79,70,229,0.04) 0%,transparent 50%),
+    radial-gradient(circle at 80% 80%,rgba(124,58,237,0.03) 0%,transparent 50%),
+    radial-gradient(var(--border) 1px,transparent 1px);
+  background-size:100% 100%,100% 100%,28px 28px;
+}
+[data-theme="dark"] body::before{
+  background-image:
+    radial-gradient(circle at 20% 20%,rgba(59,130,246,0.07) 0%,transparent 50%),
+    radial-gradient(circle at 80% 80%,rgba(139,92,246,0.05) 0%,transparent 50%),
+    radial-gradient(var(--border) 1px,transparent 1px);
+}
+.page{position:relative;z-index:1;max-width:600px;margin:0 auto;padding-bottom:6rem}
+
+/* ═══ HEADER ═══ */
+.header{
+  position:sticky;top:0;z-index:100;
+  padding:1.1rem 1.4rem 1rem;
+  border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);
+  background:linear-gradient(135deg,rgba(255,252,245,.95) 0%,rgba(248,244,255,.95) 100%),
+             url('https://i.imgur.com/74hFAG8.png') center/cover;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  transition:background .35s ease;
+}
+[data-theme="dark"] .header{
+  background:linear-gradient(135deg,rgba(8,13,26,.97) 0%,rgba(13,14,35,.97) 100%),
+             url('https://i.imgur.com/74hFAG8.png') center/cover;
+  box-shadow:0 1px 0 var(--border),0 4px 20px rgba(0,0,0,.4);
+}
+.header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.85rem}
+.brand{display:flex;flex-direction:column;gap:6px}
+.room-tag{
+  font-family:var(--mono);font-size:1.3rem;font-weight:800;
+  letter-spacing:3px;text-transform:uppercase;color:var(--accent);
+  background:var(--accent-s);border:2px solid var(--accent-b);
+  padding:6px 18px;border-radius:10px;display:inline-block;width:fit-content;
+  box-shadow:0 2px 12px rgba(79,70,229,.15);position:relative;overflow:hidden;
+}
+.room-tag::before{
+  content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+  animation:sheen 3s ease-in-out infinite;
+}
+@keyframes sheen{0%{left:-100%}50%,100%{left:150%}}
+[data-theme="dark"] .room-tag{box-shadow:0 0 20px rgba(96,165,250,.25),0 2px 8px rgba(0,0,0,.3)}
+.brand h1{font-size:1.2rem;font-weight:800;color:var(--ink);letter-spacing:-.4px}
+.header-meta{text-align:right;flex-shrink:0}
+.live-date{font-size:.72rem;font-weight:600;color:var(--ink3);white-space:nowrap;display:block}
+.live-time{font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--accent);display:block;text-align:right}
+
+/* Theme btn */
+.theme-btn{
+  background:var(--surface2);border:1.5px solid var(--border);color:var(--ink3);
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);overflow:hidden;
+}
+.theme-btn:hover{background:var(--accent-s);border-color:var(--accent-b);color:var(--accent);transform:translateY(-2px)}
+.theme-btn svg{transition:transform .5s ease}
+.theme-btn:active svg{transform:rotate(45deg) scale(.85)}
+.theme-btn .sun-icon{display:none} .theme-btn .moon-icon{display:block}
+[data-theme="dark"] .theme-btn .sun-icon{display:block}
+[data-theme="dark"] .theme-btn .moon-icon{display:none}
+
+/* ═══ TAB NAVIGATION ═══ */
+.tab-nav{
+  display:flex;gap:0;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:.5rem .75rem 0;
+  position:sticky;top:78px;z-index:90;
+  box-shadow:var(--shadow-sm);
+  overflow-x:auto;scrollbar-width:none;
+}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{
+  flex-shrink:0;display:flex;align-items:center;gap:5px;
+  padding:.5rem .85rem;border:none;background:none;
+  font-family:var(--font);font-size:.72rem;font-weight:700;
+  color:var(--ink4);cursor:pointer;border-radius:var(--r) var(--r) 0 0;
+  transition:all .18s;position:relative;white-space:nowrap;
+  border-bottom:2.5px solid transparent;margin-bottom:-1px;
+}
+.tab-btn:hover{color:var(--accent);background:var(--accent-s)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-btn-icon{font-size:.9rem}
+.tab-badge{
+  background:var(--sunday);color:white;
+  font-family:var(--mono);font-size:.5rem;font-weight:800;
+  padding:1px 5px;border-radius:99px;min-width:16px;text-align:center;
+}
+
+/* ═══ TAB PANELS ═══ */
+.tab-panel{display:none;padding:1.25rem 1.4rem}
+.tab-panel.active{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ SECTION TITLE ═══ */
+.sec-title{
+  font-size:.63rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--ink4);display:flex;align-items:center;gap:8px;margin-bottom:.9rem;
+}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ═══ KPI GRID ═══ */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.25rem}
+.kpi-card{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r-lg);padding:1rem 1.1rem;
+  box-shadow:var(--shadow-sm);animation:fadeUp .3s ease both;
+  transition:box-shadow .2s,transform .15s;position:relative;overflow:hidden;
+}
+.kpi-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.kpi-card::after{
+  content:'';position:absolute;top:-16px;right:-16px;
+  width:72px;height:72px;border-radius:50%;background:var(--accent-s);pointer-events:none;
+}
+.kpi-card.green::after{background:var(--today-s)}
+.kpi-card.red::after{background:var(--sunday-s)}
+.kpi-card.gold::after{background:var(--gold-s)}
+.kpi-card.full{grid-column:1/-1;display:flex;align-items:center;gap:1rem}
+.kpi-card.full .kpi-info{flex:1;min-width:0}
+.kpi-icon{font-size:1.5rem;margin-bottom:.4rem;position:relative;z-index:1}
+.kpi-card.full .kpi-icon{font-size:1.9rem;flex-shrink:0}
+.kpi-val{font-family:var(--mono);font-size:1.9rem;font-weight:800;line-height:1;color:var(--accent);margin-bottom:.15rem}
+.kpi-card.green .kpi-val{color:var(--today)}
+.kpi-card.red   .kpi-val{color:var(--sunday)}
+.kpi-card.gold  .kpi-val{color:var(--gold)}
+.kpi-card.full  .kpi-val{font-size:1.5rem;margin-bottom:.1rem}
+.kpi-label{font-size:.68rem;font-weight:700;color:var(--ink3)}
+.kpi-sub{font-size:.6rem;color:var(--ink4);margin-top:1px}
+.kpi-badge{
+  font-family:var(--mono);font-size:.65rem;font-weight:700;
+  padding:4px 10px;border-radius:99px;flex-shrink:0;
+  background:var(--today-s);color:var(--today);border:1px solid var(--today-b);
+}
+.clean-bar-wrap{margin-top:.5rem;height:7px;background:var(--bg2);border-radius:99px;overflow:hidden}
+.clean-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--today),#34d399);transition:width .8s cubic-bezier(.4,0,.2,1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ CHART ═══ */
+.chart-card{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r-lg);padding:1rem 1.2rem;margin-bottom:1.1rem;
+  box-shadow:var(--shadow-sm);
+}
+.chart-title{font-size:.8rem;font-weight:800;color:var(--ink);margin-bottom:1rem}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:90px}
+.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.chart-bar-wrap{flex:1;width:100%;display:flex;align-items:flex-end}
+.chart-bar{
+  width:100%;border-radius:4px 4px 0 0;min-height:4px;
+  background:linear-gradient(180deg,var(--accent),rgba(79,70,229,.4));
+  transition:height .6s cubic-bezier(.4,0,.2,1);
+}
+.chart-bar.current{background:linear-gradient(180deg,var(--today),rgba(5,150,105,.4))}
+.chart-mon-lbl{font-family:var(--mono);font-size:.55rem;color:var(--ink4);white-space:nowrap}
+.chart-cnt{font-family:var(--mono);font-size:.58rem;font-weight:700;color:var(--ink3)}
+
+/* ═══ MEMBER CARDS (Aktivitas) ═══ */
+.member-activity-list{display:flex;flex-direction:column;gap:.55rem}
+.ma-card{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r-lg);padding:.8rem 1rem;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:var(--shadow-sm);transition:all .2s;animation:fadeUp .3s ease both;
+}
+.ma-card:hover{box-shadow:var(--shadow);border-color:var(--border2);transform:translateY(-1px)}
+.ma-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--border)}
+.ma-avatar img{width:100%;height:100%;object-fit:cover}
+.ma-info{flex:1;min-width:0}
+.ma-name{font-size:.88rem;font-weight:800;color:var(--ink)}
+.ma-detail{font-size:.65rem;color:var(--ink3);margin-top:1px}
+.ma-bar-wrap{height:5px;background:var(--bg2);border-radius:99px;overflow:hidden;margin-top:5px}
+.ma-bar{height:100%;border-radius:99px;background:var(--grad-accent);transition:width .7s cubic-bezier(.4,0,.2,1)}
+.ma-pts{text-align:right;flex-shrink:0}
+.ma-pts-val{font-family:var(--mono);font-size:1.1rem;font-weight:800;color:var(--accent);line-height:1}
+.ma-pts-lbl{font-size:.58rem;color:var(--ink4)}
+.ma-month-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:5px;
+  background:var(--today-s);color:var(--today);border:1px solid var(--today-b);
+}
+
+/* ═══ LEADERBOARD ═══ */
+.lb-hero{
+  background:var(--grad-hero);border-radius:var(--r-lg);
+  padding:1rem 1.2rem;margin-bottom:.9rem;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 6px 24px rgba(37,99,235,.28);position:relative;overflow:hidden;
+}
+.lb-hero::after{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.06)}
+.lb-hero-icon{font-size:1.8rem;position:relative;z-index:1}
+.lb-hero-text{flex:1;position:relative;z-index:1}
+.lb-hero-title{font-size:.95rem;font-weight:800;color:white}
+.lb-hero-sub{font-size:.66rem;color:rgba(255,255,255,.75)}
+.lb-pts-pills{display:flex;flex-direction:column;gap:3px;position:relative;z-index:1}
+.lb-pts-pill{font-family:var(--mono);font-size:.58rem;font-weight:600;padding:2px 7px;border-radius:5px;white-space:nowrap;background:rgba(255,255,255,.15);color:#bfdbfe}
+.lb-pts-pill.photo{color:#fde68a}
+
+.lb-list{display:flex;flex-direction:column;gap:.55rem}
+.lb-card{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r-lg);padding:.85rem 1rem;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:var(--shadow-sm);transition:all .2s;animation:fadeUp .3s ease both;
+  cursor:pointer;
+}
+.lb-card:hover{box-shadow:var(--shadow);border-color:var(--border2);transform:translateY(-1px)}
+.lb-card.rank-1{border-color:#fbbf24;background:linear-gradient(135deg,#fffbeb 0%,#fff 60%)}
+.lb-card.rank-2{border-color:#d1d5db;background:linear-gradient(135deg,#f9fafb 0%,#fff 60%)}
+.lb-card.rank-3{border-color:#d97706;background:linear-gradient(135deg,#fff7ed 0%,#fff 60%)}
+[data-theme="dark"] .lb-card.rank-1{background:linear-gradient(135deg,rgba(251,191,36,.12) 0%,var(--surface) 60%);box-shadow:0 0 0 1px rgba(251,191,36,.3),var(--shadow-sm)}
+[data-theme="dark"] .lb-card.rank-2{background:linear-gradient(135deg,rgba(107,114,128,.1) 0%,var(--surface) 60%)}
+[data-theme="dark"] .lb-card.rank-3{background:linear-gradient(135deg,rgba(217,119,6,.1) 0%,var(--surface) 60%)}
+.lb-rank{font-family:var(--mono);font-size:1rem;font-weight:800;width:26px;text-align:center;flex-shrink:0}
+.lb-card.rank-1 .lb-rank{color:#f59e0b}
+.lb-card.rank-2 .lb-rank{color:#6b7280}
+.lb-card.rank-3 .lb-rank{color:#d97706}
+.lb-av{width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2.5px solid var(--border)}
+.lb-av img{width:100%;height:100%;object-fit:cover}
+.lb-info{flex:1;min-width:0}
+.lb-name{font-size:.9rem;font-weight:800;color:var(--ink)}
+.lb-detail{font-size:.66rem;color:var(--ink3);margin-top:2px}
+.lb-detail span{margin-right:6px}
+.lb-bar-wrap{height:4px;background:var(--bg2);border-radius:99px;overflow:hidden;margin-top:5px}
+.lb-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#60a5fa);transition:width .7s cubic-bezier(.4,0,.2,1)}
+.lb-card.rank-1 .lb-bar{background:linear-gradient(90deg,#f59e0b,#fcd34d)}
+.lb-score-col{text-align:right;flex-shrink:0}
+.lb-score{font-family:var(--mono);font-size:1.3rem;font-weight:800;color:var(--accent);line-height:1}
+.lb-score-lbl{font-size:.58rem;color:var(--ink4)}
+.lb-click-hint{font-size:.58rem;color:var(--ink4);margin-top:2px}
+
+/* ═══ DENDA PANEL ═══ */
+.denda-hero{
+  background:linear-gradient(135deg,#6d28d9 0%,#a855f7 50%,#ec4899 100%);
+  border-radius:var(--r-lg);padding:1.1rem 1.2rem;margin-bottom:.9rem;
+  box-shadow:0 4px 24px rgba(109,40,217,.3);position:relative;overflow:hidden;
+}
+.denda-hero::before{content:'';position:absolute;top:-30%;right:-5%;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.07)}
+.denda-hero::after{content:'';position:absolute;bottom:-40%;left:30%;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.05)}
+.denda-hero-top{display:flex;align-items:flex-start;gap:12px;position:relative;z-index:1}
+.denda-hero-icon{font-size:2rem;flex-shrink:0}
+.denda-hero-info{flex:1}
+.denda-hero-label{font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:2px}
+.denda-hero-amt{display:flex;align-items:baseline;gap:6px}
+.denda-hero-num{font-family:var(--mono);font-size:2.2rem;font-weight:800;color:#fde68a;line-height:1}
+.denda-hero-unit{font-size:.78rem;color:rgba(255,255,255,.7);font-weight:600}
+.denda-reset-info{font-size:.62rem;color:rgba(255,255,255,.55);margin-top:3px}
+.denda-chips{display:flex;gap:.5rem;margin-top:.9rem;position:relative;z-index:1;flex-wrap:wrap}
+.denda-chip{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.15);
+  border-radius:8px;padding:5px 10px;flex:1;min-width:110px;
+}
+.denda-chip-ico{font-size:.85rem;flex-shrink:0}
+.denda-chip-body{display:flex;flex-direction:column}
+.denda-chip-lbl{font-size:.5rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.denda-chip-val{font-family:var(--mono);font-size:.7rem;font-weight:700;color:rgba(255,255,255,.9)}
+.denda-note{
+  font-size:.65rem;color:rgba(255,255,255,.6);
+  margin-top:.75rem;padding-top:.75rem;
+  border-top:1px solid rgba(255,255,255,.12);
+  position:relative;z-index:1;
+}
+
+.denda-list{display:flex;flex-direction:column;gap:.5rem;margin-top:0}
+.denda-row{
+  display:flex;align-items:center;gap:9px;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r-lg);padding:.7rem .9rem;
+  box-shadow:var(--shadow-sm);transition:all .15s;animation:fadeUp .3s ease both;
+}
+.denda-row.is-paid{background:linear-gradient(135deg,rgba(5,150,105,.06) 0%,var(--surface) 60%);border-color:var(--today-b)}
+[data-theme="dark"] .denda-row.is-paid{background:linear-gradient(135deg,rgba(52,211,153,.08) 0%,var(--surface) 60%)}
+.denda-row-av{width:34px;height:34px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--border)}
+.denda-row-av img{width:100%;height:100%;object-fit:cover}
+.denda-row-info{flex:1;min-width:0}
+.denda-row-name{font-size:.84rem;font-weight:800;color:var(--ink)}
+.denda-row-days{font-size:.62rem;color:var(--ink4)}
+.denda-row-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.denda-row-amt{font-family:var(--mono);font-size:.82rem;font-weight:800;color:var(--sunday)}
+.denda-row.is-paid .denda-row-amt{color:var(--today);text-decoration:line-through;opacity:.6}
+.denda-paid-badge{
+  display:inline-flex;align-items:center;gap:2px;
+  background:var(--today-s);color:var(--today);border:1px solid var(--today-b);
+  font-size:.54rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+  padding:2px 7px;border-radius:5px;
+}
+.denda-reset-btn{
+  display:flex;align-items:center;gap:3px;
+  background:var(--surface2);color:var(--ink3);
+  border:1.5px solid var(--border2);border-radius:7px;
+  padding:4px 10px;font-size:.62rem;font-weight:700;
+  cursor:pointer;transition:all .15s;font-family:var(--font);flex-shrink:0;
+}
+.denda-reset-btn:hover{background:var(--today);color:white;border-color:var(--today)}
+.denda-clean-note{
+  text-align:center;padding:1.5rem 1rem;color:var(--ink4);font-size:.8rem;
+}
+
+/* ═══ PROFILE MODAL ═══ */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:500;
+  background:rgba(8,13,26,.65);backdrop-filter:blur(6px);
+  align-items:flex-end;justify-content:center;
+}
+.modal-overlay.show{display:flex;animation:fadeUp .22s ease}
+.profile-card{
+  background:var(--surface);border-radius:var(--r-xl) var(--r-xl) 0 0;
+  padding:1.5rem 1.4rem 2.5rem;width:100%;max-width:600px;
+  box-shadow:0 -8px 48px rgba(0,0,0,.2);border-top:1px solid var(--border);
+  position:relative;
+}
+[data-theme="dark"] .profile-card{
+  background:linear-gradient(180deg,#141d35 0%,#111827 100%);
+  box-shadow:0 -8px 48px rgba(0,0,0,.5),0 -1px 0 var(--border);
+}
+.profile-handle{width:40px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 1.4rem}
+.profile-close{
+  position:absolute;top:1.2rem;right:1.4rem;
+  background:var(--surface2);border:1.5px solid var(--border);color:var(--ink3);
+  width:32px;height:32px;border-radius:8px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .15s;
+}
+.profile-close:hover{background:var(--sunday-s);color:var(--sunday);border-color:var(--sunday-b)}
+.profile-hero{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem}
+.profile-av{width:72px;height:72px;border-radius:50%;overflow:hidden;flex-shrink:0;border:3px solid var(--accent-b);box-shadow:0 0 0 4px var(--accent-s)}
+.profile-av img{width:100%;height:100%;object-fit:cover}
+.profile-name{font-size:1.4rem;font-weight:800;color:var(--ink);letter-spacing:-.5px}
+.profile-role{font-size:.72rem;color:var(--ink4);margin-top:2px}
+.profile-rank-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--accent-s);color:var(--accent);border:1.5px solid var(--accent-b);
+  font-size:.65rem;font-weight:800;padding:3px 10px;border-radius:6px;margin-top:5px;
+}
+
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.1rem}
+.pstat{
+  background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:var(--r-lg);padding:.75rem .7rem;text-align:center;
+}
+.pstat-val{font-family:var(--mono);font-size:1.3rem;font-weight:800;color:var(--accent);line-height:1}
+.pstat-lbl{font-size:.58rem;font-weight:700;color:var(--ink4);margin-top:3px;letter-spacing:.3px}
+
+.profile-section-title{font-size:.62rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--ink4);margin-bottom:.65rem}
+.profile-month-bar{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:.85rem 1rem;margin-bottom:.85rem}
+.pmb-label{display:flex;justify-content:space-between;font-size:.7rem;font-weight:600;color:var(--ink3);margin-bottom:.5rem}
+.pmb-pct{font-family:var(--mono);font-weight:800;color:var(--accent)}
+.pmb-bar-wrap{height:10px;background:var(--bg2);border-radius:99px;overflow:hidden}
+.pmb-bar{height:100%;border-radius:99px;background:var(--grad-accent);transition:width .8s cubic-bezier(.4,0,.2,1)}
+.pmb-sub{font-size:.6rem;color:var(--ink4);margin-top:.45rem}
+
+.profile-denda-box{
+  border-radius:var(--r-lg);padding:.9rem 1rem;
+  display:flex;align-items:center;gap:12px;
+  border:1.5px solid;
+}
+.profile-denda-box.has-denda{background:var(--sunday-s);border-color:var(--sunday-b)}
+.profile-denda-box.no-denda{background:var(--today-s);border-color:var(--today-b)}
+.profile-denda-box.paid{background:rgba(5,150,105,.06);border-color:var(--today-b)}
+.pdb-icon{font-size:1.6rem;flex-shrink:0}
+.pdb-info{flex:1}
+.pdb-label{font-size:.65rem;font-weight:700;color:var(--ink3)}
+.pdb-amt{font-family:var(--mono);font-size:1.4rem;font-weight:800;line-height:1}
+.has-denda .pdb-amt{color:var(--sunday)}
+.no-denda .pdb-amt,.paid .pdb-amt{color:var(--today)}
+.pdb-note{font-size:.6rem;color:var(--ink4);margin-top:2px}
+.pdb-reset-btn{
+  background:var(--today);color:white;border:none;border-radius:8px;
+  padding:7px 13px;font-size:.68rem;font-weight:700;cursor:pointer;
+  font-family:var(--font);transition:all .15s;flex-shrink:0;
+}
+.pdb-reset-btn:hover{background:#047857;box-shadow:0 2px 10px rgba(5,150,105,.3)}
+.pdb-paid-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  background:var(--today-s);color:var(--today);border:1px solid var(--today-b);
+  font-size:.6rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+  padding:4px 10px;border-radius:6px;flex-shrink:0;
+}
+
+/* ═══ CONFIRM MODAL ═══ */
+.confirm-overlay{
+  display:none;position:fixed;inset:0;z-index:800;
+  background:rgba(8,13,26,.72);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:1.4rem;
+}
+.confirm-overlay.show{display:flex;animation:fadeUp .2s ease}
+.confirm-box{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r-xl);padding:1.5rem 1.4rem;
+  width:100%;max-width:300px;box-shadow:var(--shadow-lg);
+  display:flex;flex-direction:column;gap:.75rem;
+}
+[data-theme="dark"] .confirm-box{background:linear-gradient(180deg,#141d35 0%,#111827 100%)}
+.confirm-icon{font-size:2.5rem;text-align:center}
+.confirm-title{font-size:1rem;font-weight:800;color:var(--ink);text-align:center}
+.confirm-sub{font-size:.76rem;color:var(--ink3);text-align:center;line-height:1.55}
+.confirm-name{font-weight:800;color:var(--accent)}
+.confirm-actions{display:flex;gap:.6rem;margin-top:.2rem}
+.confirm-yes{flex:1;padding:11px;border-radius:var(--r-lg);border:none;background:var(--today);color:white;font-family:var(--font);font-size:.85rem;font-weight:700;cursor:pointer;transition:all .15s}
+.confirm-yes:hover{background:#047857;box-shadow:0 4px 12px rgba(5,150,105,.3)}
+.confirm-no{padding:11px 16px;border-radius:var(--r-lg);border:1.5px solid var(--border2);background:var(--surface2);color:var(--ink3);font-family:var(--font);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .15s}
+.confirm-no:hover{background:var(--border);color:var(--ink)}
+
+/* ═══ BOTTOM NAV ═══ */
+.bottom-nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  z-index:300;width:100%;max-width:600px;display:flex;
+  background:rgba(247,244,239,.92);
+  backdrop-filter:blur(20px) saturate(1.8);-webkit-backdrop-filter:blur(20px) saturate(1.8);
+  border-top:1px solid var(--border);
+  padding:.5rem .5rem calc(.5rem + env(safe-area-inset-bottom));
+  box-shadow:0 -4px 24px rgba(60,40,10,.08);
+}
+[data-theme="dark"] .bottom-nav{background:rgba(8,13,26,.92);box-shadow:0 -4px 24px rgba(0,0,0,.4),0 -1px 0 var(--border)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;text-decoration:none;gap:3px;padding:.45rem .25rem;border:none;background:none;cursor:pointer;border-radius:var(--r);transition:all .2s;color:var(--ink4)}
+.nav-btn:hover{background:var(--accent-s);color:var(--accent)}
+.nav-btn.active{color:var(--accent)}
+.nav-btn.active .nav-icon{background:var(--accent-s);transform:translateY(-2px);box-shadow:0 4px 12px rgba(79,70,229,.15)}
+[data-theme="dark"] .nav-btn.active .nav-icon{box-shadow:0 4px 16px rgba(96,165,250,.25)}
+.nav-icon{width:38px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .2s}
+.nav-label{font-size:.62rem;font-weight:700;letter-spacing:.3px}
+
+/* ═══ LOADING ═══ */
+.loading-box{display:flex;align-items:center;justify-content:center;gap:8px;padding:4rem 1rem;color:var(--ink4);font-size:.85rem}
+.spin{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ═══ TOAST ═══ */
+.toast{
+  position:fixed;bottom:5.5rem;left:50%;
+  transform:translateX(-50%) translateY(16px);
+  background:linear-gradient(135deg,#111827,#1e2d4a);
+  color:white;font-size:.8rem;font-weight:600;
+  padding:.65rem 1.4rem;border-radius:50px;
+  opacity:0;transition:all .28s ease;pointer-events:none;white-space:nowrap;z-index:9999;
+  box-shadow:var(--shadow-lg);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Avatar colors */
+.av-faris   {background:#dbeafe;color:#1d4ed8;border-color:#bfdbfe}
+.av-apri    {background:#fce7f3;color:#be185d;border-color:#fbcfe8}
+.av-jonathan {background:#d1fae5;color:#065f46;border-color:#a7f3d0}
+.av-doni    {background:#ccfbf1;color:#0f766e;border-color:#99f6e4}
+.av-afrizal {background:#ffedd5;color:#c2410c;border-color:#fed7aa}
+.av-setiawan{background:#f3e8ff;color:#7e22ce;border-color:#e9d5ff}
+.av-ricky   {background:#ffe4e6;color:#be123c;border-color:#fecdd3}
+[data-theme="dark"] .av-faris   {background:rgba(29,78,216,.2);border-color:rgba(191,219,254,.3);color:#93c5fd}
+[data-theme="dark"] .av-apri    {background:rgba(190,24,93,.2);border-color:rgba(251,207,232,.3);color:#f9a8d4}
+[data-theme="dark"] .av-jonathan {background:rgba(6,95,70,.2);border-color:rgba(167,243,208,.3);color:#6ee7b7}
+[data-theme="dark"] .av-doni    {background:rgba(15,118,110,.2);border-color:rgba(153,246,228,.3);color:#5eead4}
+[data-theme="dark"] .av-afrizal {background:rgba(194,65,12,.2);border-color:rgba(254,215,170,.3);color:#fdba74}
+[data-theme="dark"] .av-setiawan{background:rgba(126,34,206,.2);border-color:rgba(233,213,255,.3);color:#d8b4fe}
+[data-theme="dark"] .av-ricky   {background:rgba(190,18,60,.2);border-color:rgba(254,205,211,.3);color:#fda4af}
+
+@media(max-width:420px){
+  .tab-panel{padding:1rem}
+  .kpi-grid{gap:.5rem}
+  .profile-stats{grid-template-columns:repeat(3,1fr)}
+  .denda-chips{flex-direction:column}
+}
+  </style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<header class="header">
+  <div class="header-top">
+    <div class="brand">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="room-tag">Kamar 11</span>
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+      <h1>📊 Statistik Piket</h1>
+    </div>
+    <div class="header-meta">
+      <span class="live-date" id="live-date">—</span>
+      <span class="live-time" id="live-time">—</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ TAB NAVIGATION ══ -->
+<nav class="tab-nav" id="tab-nav">
+  <button class="tab-btn active" data-tab="ringkasan">
+    <span class="tab-btn-icon">📋</span> Ringkasan
+  </button>
+  <button class="tab-btn" data-tab="aktivitas">
+    <span class="tab-btn-icon">📅</span> Aktivitas
+  </button>
+  <button class="tab-btn" data-tab="peringkat">
+    <span class="tab-btn-icon">🏆</span> Peringkat
+  </button>
+  <button class="tab-btn" data-tab="denda">
+    <span class="tab-btn-icon">💸</span> Rekap Denda
+    <span class="tab-badge" id="denda-badge" style="display:none">!</span>
+  </button>
+</nav>
+
+<!-- ══ LOADING ══ -->
+<div class="loading-box" id="loading-box">
+  <svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity=".3"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+  Memuat data Supabase...
+</div>
+
+<!-- ══ TAB: RINGKASAN ══ -->
+<div class="tab-panel active" id="panel-ringkasan" style="display:none">
+
+  <div class="sec-title">Ikhtisar Keseluruhan</div>
+  <div class="kpi-grid">
+    <div class="kpi-card green" style="animation-delay:.04s">
+      <div class="kpi-icon">✅</div>
+      <div class="kpi-val" id="kpi-total">—</div>
+      <div class="kpi-label">Total Piket Selesai</div>
+      <div class="kpi-sub">Sejak awal sistem</div>
+    </div>
+    <div class="kpi-card" style="animation-delay:.07s">
+      <div class="kpi-icon">📸</div>
+      <div class="kpi-val" id="kpi-photos">—</div>
+      <div class="kpi-label">Foto Bukti</div>
+      <div class="kpi-sub">Total dari semua anggota</div>
+    </div>
+    <div class="kpi-card gold" style="animation-delay:.10s">
+      <div class="kpi-icon">🗓️</div>
+      <div class="kpi-val" id="kpi-month">—</div>
+      <div class="kpi-label">Piket Bulan Ini</div>
+      <div class="kpi-sub" id="kpi-month-sub">Berjalan</div>
+    </div>
+    <div class="kpi-card red" style="animation-delay:.13s">
+      <div class="kpi-icon">🔄</div>
+      <div class="kpi-val" id="kpi-swaps">—</div>
+      <div class="kpi-label">Tukar Jadwal</div>
+      <div class="kpi-sub">Total pertukaran</div>
+    </div>
+    <div class="kpi-card full" style="animation-delay:.16s">
+      <div class="kpi-icon">🏠</div>
+      <div class="kpi-info">
+        <div class="kpi-label">Kebersihan Bulan Ini</div>
+        <div class="kpi-val" id="kpi-clean">—</div>
+        <div class="clean-bar-wrap"><div class="clean-bar" id="clean-bar" style="width:0%"></div></div>
+        <div class="kpi-sub" id="kpi-clean-sub">—</div>
+      </div>
+      <div class="kpi-badge" id="kpi-clean-badge">—</div>
+    </div>
+  </div>
+
+  <div class="sec-title">Top 3 Peringkat</div>
+  <div class="lb-list" id="top3-list"></div>
+
+</div>
+
+<!-- ══ TAB: AKTIVITAS ══ -->
+<div class="tab-panel" id="panel-aktivitas" style="display:none">
+
+  <div class="sec-title">Grafik 6 Bulan Terakhir</div>
+  <div class="chart-card">
+    <div class="chart-title">📈 Piket Berhasil per Bulan</div>
+    <div class="chart-bars" id="chart-bars"></div>
+  </div>
+
+  <div class="sec-title">Detail Per Anggota</div>
+  <div class="member-activity-list" id="member-activity-list"></div>
+
+</div>
+
+<!-- ══ TAB: PERINGKAT ══ -->
+<div class="tab-panel" id="panel-peringkat" style="display:none">
+
+  <div class="lb-hero">
+    <div class="lb-hero-icon">🏆</div>
+    <div class="lb-hero-text">
+      <div class="lb-hero-title">Ranking Kerajinan</div>
+      <div class="lb-hero-sub">Klik nama untuk melihat profil lengkap</div>
+    </div>
+    <div class="lb-pts-pills">
+      <span class="lb-pts-pill">✓ Selesai = +10 poin</span>
+      <span class="lb-pts-pill photo">📸 Foto = +5 poin</span>
+    </div>
+  </div>
+  <div class="lb-list" id="lb-list"></div>
+
+</div>
+
+<!-- ══ TAB: REKAP DENDA ══ -->
+<div class="tab-panel" id="panel-denda" style="display:none">
+
+  <div class="denda-hero">
+    <div class="denda-hero-top">
+      <div class="denda-hero-icon">⚠️</div>
+      <div class="denda-hero-info">
+        <div class="denda-hero-label">Total Denda Bulan Ini</div>
+        <div class="denda-hero-amt">
+          <span class="denda-hero-num" id="denda-total">0</span>
+          <span class="denda-hero-unit">LKR</span>
+        </div>
+        <div class="denda-reset-info" id="denda-reset-info">Reset otomatis tiap awal bulan</div>
+      </div>
+    </div>
+    <div class="denda-chips">
+      <div class="denda-chip">
+        <div class="denda-chip-ico">📅</div>
+        <div class="denda-chip-body">
+          <span class="denda-chip-lbl">Periode</span>
+          <span class="denda-chip-val" id="denda-periode">—</span>
+        </div>
+      </div>
+      <div class="denda-chip">
+        <div class="denda-chip-ico">🔔</div>
+        <div class="denda-chip-body">
+          <span class="denda-chip-lbl">Efektif Sejak</span>
+          <span class="denda-chip-val" id="denda-efektif">—</span>
+        </div>
+      </div>
+      <div class="denda-chip">
+        <div class="denda-chip-ico">⚡</div>
+        <div class="denda-chip-body">
+          <span class="denda-chip-lbl">Tarif / Hari</span>
+          <span class="denda-chip-val">5.000 LKR</span>
+        </div>
+      </div>
+    </div>
+    <div class="denda-note">
+      Denda hanya dihitung untuk hari kerja yang terlewat · Klik ✓ Lunas untuk reset manual setelah pembayaran tunai
+    </div>
+  </div>
+
+  <div class="sec-title">Rincian Per Anggota</div>
+  <div class="denda-list" id="denda-list"></div>
+
+</div>
+
+</div><!-- /.page -->
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="bottom-nav">
+  <a class="nav-btn" href="./index.html">
+    <div class="nav-icon">🗓️</div>
+    <span class="nav-label">Jadwal</span>
+  </a>
+  <a class="nav-btn" href="./log.html">
+    <div class="nav-icon">📋</div>
+    <span class="nav-label">Histori</span>
+  </a>
+  <a class="nav-btn active" href="./stats.html">
+    <div class="nav-icon">📊</div>
+    <span class="nav-label">Statistik</span>
+  </a>
+</nav>
+
+<!-- ══ PROFILE MODAL ══ -->
+<div class="modal-overlay" id="profileModal">
+  <div class="profile-card">
+    <div class="profile-handle"></div>
+    <button class="profile-close" onclick="closeProfile()">✕</button>
+    <div class="profile-hero">
+      <div class="profile-av" id="prof-av"><img id="prof-img" src="" alt=""></div>
+      <div>
+        <div class="profile-name" id="prof-name">—</div>
+        <div class="profile-role" id="prof-role">Penghuni Kamar 11</div>
+        <div class="profile-rank-badge" id="prof-rank">—</div>
+      </div>
+    </div>
+    <div class="profile-stats">
+      <div class="pstat">
+        <div class="pstat-val" id="prof-done">—</div>
+        <div class="pstat-lbl">Total Piket</div>
+      </div>
+      <div class="pstat">
+        <div class="pstat-val" id="prof-pts">—</div>
+        <div class="pstat-lbl">Total Poin</div>
+      </div>
+      <div class="pstat">
+        <div class="pstat-val" id="prof-photos">—</div>
+        <div class="pstat-lbl">Foto Bukti</div>
+      </div>
+    </div>
+    <div class="profile-section-title">Kebersihan Bulan Ini</div>
+    <div class="profile-month-bar">
+      <div class="pmb-label">
+        <span id="prof-month-label">Bulan ini</span>
+        <span class="pmb-pct" id="prof-pct">—%</span>
+      </div>
+      <div class="pmb-bar-wrap"><div class="pmb-bar" id="prof-bar" style="width:0%"></div></div>
+      <div class="pmb-sub" id="prof-month-sub">—</div>
+    </div>
+    <div class="profile-section-title">Status Denda Bulan Ini</div>
+    <div class="profile-denda-box" id="prof-denda-box">
+      <div class="pdb-icon" id="prof-denda-icon">💸</div>
+      <div class="pdb-info">
+        <div class="pdb-label" id="prof-denda-label">Nominal Denda</div>
+        <div class="pdb-amt" id="prof-denda-amt">0 LKR</div>
+        <div class="pdb-note" id="prof-denda-note">—</div>
+      </div>
+      <div id="prof-denda-action"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONFIRM MODAL ══ -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">💸</div>
+    <div class="confirm-title">Konfirmasi Pelunasan</div>
+    <div class="confirm-sub">
+      Tandai denda <span class="confirm-name" id="confirm-name">—</span>
+      bulan ini sebagai <strong>LUNAS</strong>?
+      <br><small style="opacity:.65">Tidak bisa dibatalkan, tapi akan aktif kembali bulan depan jika masih ada yang terlewat.</small>
+    </div>
+    <div class="confirm-actions">
+      <button class="confirm-no" onclick="closeConfirm()">Batal</button>
+      <button class="confirm-yes" onclick="doReset()">✓ Ya, Lunas!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   SUPABASE
+════════════════════════════════════════════════════════════ */
+const { createClient } = window.supabase;
+const supabaseClient = createClient(
+  'https://lzjmyilduranngskrcyo.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6am15aWxkdXJhbm5nc2tyY3lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyMzU1NjUsImV4cCI6MjA4NjgxMTU2NX0.ybyZTOLYGMOjM_SucsfpsVU3WaL8qVY4m-1XYdK2J7Q'
+);
+
+/* ════════════════════════════════════════════════════════════
+   KONFIGURASI — ubah di sini jika ada perubahan aturan
+════════════════════════════════════════════════════════════ */
+const PHOTOS = {
+  FARIS:'https://i.imgur.com/cBFVxdR.png', APRI:'https://i.imgur.com/6Q305xB.png',
+  JONATHAN:'https://i.imgur.com/AGDx072.png', DONI:'https://i.imgur.com/7cUoYM6.png',
+  AFRIZAL:'https://i.imgur.com/XvqdJxb.png', SETIAWAN:'https://i.imgur.com/r53dzxC.png',
+  RICKY:'https://i.imgur.com/TZZIY4f.png'
+};
+const AVATAR_CLS = {
+  FARIS:'av-faris', APRI:'av-apri', JONATHAN:'av-jonathan', DONI:'av-doni',
+  AFRIZAL:'av-afrizal', SETIAWAN:'av-setiawan', RICKY:'av-ricky'
+};
+const ROSTER = ['FARIS','APRI','JONATHAN','DONI','AFRIZAL','SETIAWAN','RICKY'];
+const EPOCH  = new Date('2025-01-06'); // Senin pertama siklus piket
+
+/*
+ * DENDA_MULAI_EFEKTIF:
+ *   Tanggal pertama denda boleh dihitung (inklusif).
+ *   Jadwal SEBELUM atau SAMA dengan tanggal ini tidak dikenai denda.
+ *   → "Efektif besok dari 3 Mei 2026" = 4 Mei 2026
+ */
+const DENDA_MULAI_EFEKTIF = new Date('2026-05-04');
+DENDA_MULAI_EFEKTIF.setHours(0,0,0,0);
+
+const DENDA_PER_HARI = 5000; // LKR per hari terlewat
+const PTS_DONE       = 10;
+const PTS_PHOTO      = 5;
+
+/* ════════════════════════════════════════════════════════════
+   KONSTANTA WAKTU — today di-freeze saat halaman dimuat
+   (semua perbandingan tanggal pakai objek ini agar konsisten)
+════════════════════════════════════════════════════════════ */
+const today = new Date();
+today.setHours(0,0,0,0);
+const NOW_MONTH = today.getMonth();
+const NOW_YEAR  = today.getFullYear();
+
+const MON_SHORT = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const MON_FULL  = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const RANK_EMOJI = ['🥇','🥈','🥉'];
+
+/* ════════════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════════════ */
+let _computedData   = null; // cache setelah loadData selesai
+let _pendingReset   = null; // nama orang yang akan direset dendanya
+let _profilePerson  = null; // nama orang yang sedang dibuka profilnya
+
+/* ════════════════════════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════════════════════════ */
+function calcPersonForDate(date) {
+  if (date.getDay() === 0) return null;
+  let d = new Date(EPOCH), count = 0;
+  while (d < date) { if (d.getDay() !== 0) count++; d.setDate(d.getDate()+1); }
+  return ROSTER[count % ROSTER.length];
+}
+
+function parsePhotos(raw) {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw;
+  if (typeof raw === 'string') {
+    if (raw.startsWith('[')) { try { return JSON.parse(raw); } catch { return [raw]; } }
+    if (raw.startsWith('http')) return [raw];
+  }
+  return [];
+}
+
+function dateKey(d) {
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function currentMonthKey() {
+  return NOW_YEAR+'-'+String(NOW_MONTH+1).padStart(2,'0');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* ════════════════════════════════════════════════════════════
+   DENDA RESET (localStorage)
+   Key format: "denda_resets" → { "FARIS_2026-05": true, ... }
+   Key unik per orang per bulan → otomatis kedaluwarsa bulan depan
+════════════════════════════════════════════════════════════ */
+function getDendaResets() {
+  try { return JSON.parse(localStorage.getItem('denda_resets') || '{}'); }
+  catch { return {}; }
+}
+function saveDendaResets(obj) {
+  localStorage.setItem('denda_resets', JSON.stringify(obj));
+}
+function isDendaReset(person) {
+  return getDendaResets()[person + '_' + currentMonthKey()] === true;
+}
+function markDendaReset(person) {
+  const r = getDendaResets();
+  r[person + '_' + currentMonthKey()] = true;
+  saveDendaResets(r);
+}
+
+/* ════════════════════════════════════════════════════════════
+   calculateFines(doneMap)
+   ─────────────────────────────────────────────────────────
+   Aturan yang diimplementasikan:
+   1. Hanya bulan berjalan (reset otomatis tiap bulan baru).
+   2. Batas mulai: max(awal_bulan_ini, DENDA_MULAI_EFEKTIF).
+   3. Hanya hari kerja (Senin–Sabtu) yang sudah lewat (< today).
+   4. Jika seseorang sudah direset manual → denda = 0.
+════════════════════════════════════════════════════════════ */
+function calculateFines(doneMap) {
+  const firstOfMonth = new Date(NOW_YEAR, NOW_MONTH, 1);
+  firstOfMonth.setHours(0,0,0,0);
+
+  /* Titik awal denda: mana yang lebih besar */
+  const dendaStart = firstOfMonth >= DENDA_MULAI_EFEKTIF
+    ? new Date(firstOfMonth)
+    : new Date(DENDA_MULAI_EFEKTIF);
+
+  const emptyResult = { byPerson:{}, byDays:{}, total:0, dendaStart, firstOfMonth };
+  ROSTER.forEach(p => { emptyResult.byPerson[p] = 0; emptyResult.byDays[p] = 0; });
+
+  /* Jika tanggal efektif belum sampai hari ini, tidak ada denda sama sekali */
+  if (dendaStart >= today) return emptyResult;
+
+  /* Hitung hari yang terlewat */
+  const byDays = {};
+  ROSTER.forEach(p => { byDays[p] = 0; });
+
+  const walker = new Date(dendaStart);
+  while (walker < today) {
+    if (walker.getDay() !== 0) {
+      const dk     = dateKey(walker);
+      const row    = doneMap[dk];
+      const person = row?.swappedName || calcPersonForDate(walker);
+      if (person && !row?.done) byDays[person]++;
+    }
+    walker.setDate(walker.getDate()+1);
+  }
+
+  /* Terapkan reset manual */
+  ROSTER.forEach(p => { if (isDendaReset(p)) byDays[p] = 0; });
+
+  const byPerson = {};
+  ROSTER.forEach(p => { byPerson[p] = byDays[p] * DENDA_PER_HARI; });
+  const total = Object.values(byPerson).reduce((a,b) => a+b, 0);
+
+  return { byPerson, byDays, total, dendaStart, firstOfMonth };
+}
+
+/* ════════════════════════════════════════════════════════════
+   COMPUTE — kalkulasi semua metrik dari doneMap
+════════════════════════════════════════════════════════════ */
+function computeAll(doneMap) {
+  /* Per-person all-time scores */
+  const scores = {};
+  ROSTER.forEach(p => { scores[p] = { person:p, done:0, photos:0, pts:0, doneThisMonth:0 }; });
+
+  /* Monthly chart (6 bulan) */
+  const monthCounts = {};
+  for (let i = 5; i >= 0; i--) {
+    const d   = new Date(NOW_YEAR, NOW_MONTH - i, 1);
+    const key = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    monthCounts[key] = 0;
+  }
+  const thisMonKey = NOW_YEAR+'-'+String(NOW_MONTH+1).padStart(2,'0');
+
+  /* Walk doneMap entries */
+  Object.entries(doneMap).forEach(([dk, row]) => {
+    if (!row.done) return;
+    const d      = new Date(dk+'T00:00:00');
+    const person = row.swappedName || calcPersonForDate(d);
+    if (!person || !scores[person]) return;
+
+    scores[person].done++;
+    scores[person].pts += PTS_DONE;
+    const np = parsePhotos(row.photos_raw || row.photos || []).length;
+    if (np > 0) { scores[person].photos += np; scores[person].pts += PTS_PHOTO; }
+
+    const mk = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    if (monthCounts[mk] !== undefined) monthCounts[mk]++;
+
+    /* Bulan ini */
+    if (d.getMonth() === NOW_MONTH && d.getFullYear() === NOW_YEAR) {
+      scores[person].doneThisMonth++;
+    }
+  });
+
+  /* Hari kerja bulan ini yang sudah berlalu */
+  const firstOfMonth = new Date(NOW_YEAR, NOW_MONTH, 1);
+  let workDaysPassed = 0;
+  const wk = new Date(firstOfMonth);
+  while (wk < today) {
+    if (wk.getDay() !== 0) workDaysPassed++;
+    wk.setDate(wk.getDate()+1);
+  }
+
+  /* Piket bulan ini total */
+  const thisMonCount = monthCounts[thisMonKey] || 0;
+
+  /* Cleanliness */
+  const cleanliness = workDaysPassed > 0
+    ? Math.round((thisMonCount / workDaysPassed) * 100) : 0;
+
+  /* Total foto & swap */
+  let totalPhotos = 0;
+  Object.values(scores).forEach(s => { totalPhotos += s.photos; });
+  let swapCount = 0;
+  Object.values(doneMap).forEach(r => { if (r.swappedName) swapCount++; });
+
+  /* Denda */
+  const fines = calculateFines(doneMap);
+
+  /* Ranked leaderboard */
+  const ranked = Object.values(scores).sort((a,b) =>
+    b.pts !== a.pts ? b.pts - a.pts : b.done - a.done
+  );
+
+  return {
+    scores, ranked, monthCounts, thisMonKey, thisMonCount,
+    workDaysPassed, cleanliness, totalPhotos, swapCount, fines
+  };
+}
+
+/* ════════════════════════════════════════════════════════════
+   LOAD DATA
+════════════════════════════════════════════════════════════ */
+async function loadData() {
+  const { data, error } = await supabaseClient
+    .from('jadwal_piket')
+    .select('date_key, is_done, photo_url, swapped_name')
+    .order('date_key', { ascending: true });
+
+  if (error) { console.error('Gagal load:', error); return; }
+
+  /* Build doneMap */
+  const doneMap = {};
+  (data || []).forEach(item => {
+    const photos = parsePhotos(item.photo_url);
+    doneMap[item.date_key] = {
+      done:        item.is_done || false,
+      photos:      photos,
+      photos_raw:  item.photo_url,
+      swappedName: item.swapped_name || null,
+    };
+  });
+
+  _computedData = computeAll(doneMap);
+
+  /* Render semua panel */
+  renderRingkasan(_computedData);
+  renderAktivitas(_computedData);
+  renderPeringkat(_computedData);
+  renderDenda(_computedData);
+
+  /* Sembunyikan loading, tampilkan konten */
+  document.getElementById('loading-box').style.display = 'none';
+  document.querySelectorAll('.tab-panel').forEach(p => {
+    if (p.classList.contains('active')) p.style.display = 'block';
+  });
+
+  /* Refresh profil jika sedang terbuka */
+  if (_profilePerson) openProfile(_profilePerson);
+}
+
+/* ════════════════════════════════════════════════════════════
+   RENDER — TAB RINGKASAN
+════════════════════════════════════════════════════════════ */
+function renderRingkasan(d) {
+  /* KPI */
+  const totalDone = Object.values(d.scores).reduce((a,b) => a+b.done, 0);
+  document.getElementById('kpi-total').textContent    = totalDone;
+  document.getElementById('kpi-photos').textContent   = d.totalPhotos;
+  document.getElementById('kpi-month').textContent    = d.thisMonCount;
+  document.getElementById('kpi-swaps').textContent    = d.swapCount;
+  document.getElementById('kpi-month-sub').textContent = MON_FULL[NOW_MONTH]+' '+NOW_YEAR;
+
+  document.getElementById('kpi-clean').textContent = d.cleanliness+'%';
+  document.getElementById('kpi-clean-sub').textContent =
+    `${d.thisMonCount} dari ${d.workDaysPassed} hari kerja berlalu`;
+  setTimeout(() => {
+    document.getElementById('clean-bar').style.width = d.cleanliness+'%';
+  }, 200);
+
+  const badge = document.getElementById('kpi-clean-badge');
+  if      (d.cleanliness >= 90) { badge.textContent='🌟 Luar Biasa!'; badge.style.background='rgba(5,150,105,.15)'; badge.style.color='var(--today)'; }
+  else if (d.cleanliness >= 70) { badge.textContent='👍 Bagus!';      badge.style.background='var(--accent-s)';     badge.style.color='var(--accent)'; }
+  else if (d.cleanliness >= 50) { badge.textContent='😐 Cukup';       badge.style.background='var(--gold-s)';       badge.style.color='var(--gold)'; }
+  else                          { badge.textContent='❌ Perlu Naik';   badge.style.background='var(--sunday-s)';     badge.style.color='var(--sunday)'; }
+
+  /* Top 3 */
+  const top3 = d.ranked.slice(0,3);
+  const maxPts = d.ranked[0]?.pts || 1;
+  document.getElementById('top3-list').innerHTML = top3.map((r,i) => {
+    const pct = Math.round((r.pts/maxPts)*100);
+    return `<div class="lb-card rank-${i+1}" style="animation-delay:${i*.06}s" onclick="openProfile('${r.person}')">
+      <div class="lb-rank">${RANK_EMOJI[i]}</div>
+      <div class="lb-av"><img src="${PHOTOS[r.person]}" alt="${r.person}"></div>
+      <div class="lb-info">
+        <div class="lb-name">${r.person}</div>
+        <div class="lb-detail"><span>✓ ${r.done}x</span><span>📸 ${r.photos}</span></div>
+        <div class="lb-bar-wrap"><div class="lb-bar" style="width:${pct}%"></div></div>
+      </div>
+      <div class="lb-score-col">
+        <div class="lb-score">${r.pts}</div>
+        <div class="lb-score-lbl">poin</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════════════════════════════
+   RENDER — TAB AKTIVITAS
+════════════════════════════════════════════════════════════ */
+function renderAktivitas(d) {
+  /* Chart */
+  const keys   = Object.keys(d.monthCounts);
+  const maxVal = Math.max(...Object.values(d.monthCounts), 1);
+  document.getElementById('chart-bars').innerHTML = keys.map(k => {
+    const [,m] = k.split('-').map(Number);
+    const pct  = Math.round((d.monthCounts[k]/maxVal)*100);
+    const cur  = k === d.thisMonKey;
+    return `<div class="chart-col">
+      <div class="chart-cnt">${d.monthCounts[k] || ''}</div>
+      <div class="chart-bar-wrap">
+        <div class="chart-bar ${cur?'current':''}" style="height:${Math.max(pct,4)}%"></div>
+      </div>
+      <div class="chart-mon-lbl">${MON_SHORT[m-1]}</div>
+    </div>`;
+  }).join('');
+
+  /* Member activity list (sorted by pts) */
+  const maxDone = Math.max(...d.ranked.map(r=>r.done), 1);
+  document.getElementById('member-activity-list').innerHTML = d.ranked.map((r,i) => {
+    const pct      = Math.round((r.done/maxDone)*100);
+    const rankTxt  = i < 3 ? RANK_EMOJI[i] : `#${i+1}`;
+    const monthPct = d.workDaysPassed > 0
+      ? Math.round((r.doneThisMonth/d.workDaysPassed)*100) : 0;
+    return `<div class="ma-card" style="animation-delay:${i*.05}s">
+      <div class="ma-avatar ${AVATAR_CLS[r.person]||''}"><img src="${PHOTOS[r.person]}" alt="${r.person}"></div>
+      <div class="ma-info">
+        <div class="ma-name">${rankTxt} ${r.person}</div>
+        <div class="ma-detail">✓ ${r.done}x piket &nbsp;·&nbsp; 📸 ${r.photos} foto &nbsp;·&nbsp; bulan ini: ${r.doneThisMonth}x</div>
+        <div class="ma-bar-wrap"><div class="ma-bar" style="width:${pct}%"></div></div>
+      </div>
+      <div class="ma-pts">
+        <div class="ma-pts-val">${r.pts}</div>
+        <div class="ma-pts-lbl">poin</div>
+        <div style="margin-top:4px"><span class="ma-month-badge">${monthPct}% bln ini</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════════════════════════════
+   RENDER — TAB PERINGKAT
+════════════════════════════════════════════════════════════ */
+function renderPeringkat(d) {
+  const maxPts = d.ranked[0]?.pts || 1;
+  document.getElementById('lb-list').innerHTML = d.ranked.map((r,i) => {
+    const pct     = Math.round((r.pts/maxPts)*100);
+    const rankCls = i < 3 ? ` rank-${i+1}` : '';
+    const rank    = i < 3 ? RANK_EMOJI[i] : `#${i+1}`;
+    return `<div class="lb-card${rankCls}" style="animation-delay:${i*.06}s" onclick="openProfile('${r.person}')">
+      <div class="lb-rank">${rank}</div>
+      <div class="lb-av"><img src="${PHOTOS[r.person]}" alt="${r.person}"></div>
+      <div class="lb-info">
+        <div class="lb-name">${r.person}</div>
+        <div class="lb-detail"><span>✓ ${r.done}x selesai</span><span>📸 ${r.photos} foto</span></div>
+        <div class="lb-bar-wrap"><div class="lb-bar" style="width:${pct}%"></div></div>
+      </div>
+      <div class="lb-score-col">
+        <div class="lb-score">${r.pts}</div>
+        <div class="lb-score-lbl">poin</div>
+        <div class="lb-click-hint">👆 lihat profil</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════════════════════════════
+   RENDER — TAB REKAP DENDA
+════════════════════════════════════════════════════════════ */
+function renderDenda(d) {
+  const { fines } = d;
+  const { byPerson, byDays, total, dendaStart } = fines;
+
+  /* Update hero */
+  document.getElementById('denda-total').textContent = total.toLocaleString('id-ID');
+  document.getElementById('denda-periode').textContent = MON_FULL[NOW_MONTH]+' '+NOW_YEAR;
+
+  const isEfektifThisMonth = DENDA_MULAI_EFEKTIF.getMonth() === NOW_MONTH &&
+                              DENDA_MULAI_EFEKTIF.getFullYear() === NOW_YEAR;
+  document.getElementById('denda-efektif').textContent = isEfektifThisMonth
+    ? DENDA_MULAI_EFEKTIF.getDate()+' '+MON_SHORT[DENDA_MULAI_EFEKTIF.getMonth()]+' '+DENDA_MULAI_EFEKTIF.getFullYear()
+    : 'Awal Bulan Ini';
+  document.getElementById('denda-reset-info').textContent =
+    'Reset otomatis tiap awal bulan · '+MON_FULL[NOW_MONTH]+' '+NOW_YEAR;
+
+  /* Badge di tab */
+  const hasDenda = total > 0;
+  const badge    = document.getElementById('denda-badge');
+  badge.style.display = hasDenda ? 'inline' : 'none';
+
+  /* Denda list */
+  const hasDendaRows = ROSTER.some(p => byPerson[p] > 0 || isDendaReset(p));
+  if (!hasDendaRows) {
+    document.getElementById('denda-list').innerHTML =
+      `<div class="denda-clean-note">🎉 Semua anggota tertib bulan ini! Tidak ada denda.</div>`;
+    return;
+  }
+
+  /* Sort: terbesar dulu, lalu paid, lalu bersih */
+  const sorted = [
+    ...ROSTER.filter(p => byPerson[p] > 0 && !isDendaReset(p)).sort((a,b) => byPerson[b]-byPerson[a]),
+    ...ROSTER.filter(p => isDendaReset(p)),
+    ...ROSTER.filter(p => byPerson[p] === 0 && !isDendaReset(p)),
+  ];
+  const seen = new Set();
+  const ordered = sorted.filter(p => { if (seen.has(p)) return false; seen.add(p); return true; });
+
+  document.getElementById('denda-list').innerHTML = ordered.map((p,i) => {
+    const amt  = byPerson[p] || 0;
+    const days = byDays[p]   || 0;
+    const paid = isDendaReset(p);
+    if (amt === 0 && !paid) return '';
+    const rowCls = paid ? 'denda-row is-paid' : 'denda-row';
+    return `<div class="${rowCls}" style="animation-delay:${i*.05}s">
+      <div class="denda-row-av"><img src="${PHOTOS[p]}" alt="${p}"></div>
+      <div class="denda-row-info">
+        <div class="denda-row-name">${p}</div>
+        <div class="denda-row-days">${paid ? 'Sudah lunas' : `${days} hari terlewat`}</div>
+      </div>
+      <div class="denda-row-right">
+        <div class="denda-row-amt">${amt.toLocaleString('id-ID')} LKR</div>
+        ${paid
+          ? `<span class="denda-paid-badge">✓ Lunas</span>`
+          : `<button class="denda-reset-btn" onclick="openConfirm('${p}')">✓ Lunas</button>`
+        }
+      </div>
+    </div>`;
+  }).filter(Boolean).join('') ||
+    `<div class="denda-clean-note">🎉 Semua anggota tertib bulan ini!</div>`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   PROFILE MODAL
+════════════════════════════════════════════════════════════ */
+function openProfile(person) {
+  if (!_computedData) return;
+  _profilePerson = person;
+
+  const d   = _computedData;
+  const s   = d.scores[person];
+  const idx = d.ranked.findIndex(r => r.person === person);
+
+  /* Avatar & nama */
+  document.getElementById('prof-img').src = PHOTOS[person] || '';
+  document.getElementById('prof-img').alt = person;
+  document.getElementById('prof-name').textContent  = person;
+  document.getElementById('prof-role').textContent  = 'Penghuni Kamar 11';
+  document.getElementById('prof-rank').textContent  = idx < 3 ? RANK_EMOJI[idx]+' Peringkat '+(idx+1) : 'Peringkat #'+(idx+1);
+
+  /* Stats */
+  document.getElementById('prof-done').textContent   = s.done;
+  document.getElementById('prof-pts').textContent    = s.pts;
+  document.getElementById('prof-photos').textContent = s.photos;
+
+  /* Kebersihan bulan ini */
+  const monthPct = d.workDaysPassed > 0
+    ? Math.round((s.doneThisMonth / d.workDaysPassed) * 100) : 0;
+  document.getElementById('prof-month-label').textContent =
+    MON_FULL[NOW_MONTH]+' '+NOW_YEAR;
+  document.getElementById('prof-pct').textContent = monthPct+'%';
+  document.getElementById('prof-month-sub').textContent =
+    `${s.doneThisMonth} piket dari ${d.workDaysPassed} hari kerja yang sudah berlalu`;
+  setTimeout(() => {
+    document.getElementById('prof-bar').style.width = monthPct+'%';
+  }, 100);
+
+  /* Denda */
+  const fines = d.fines;
+  const amt   = fines.byPerson[person] || 0;
+  const days  = fines.byDays[person]   || 0;
+  const paid  = isDendaReset(person);
+  const box   = document.getElementById('prof-denda-box');
+  box.className = 'profile-denda-box '+(paid ? 'paid' : amt > 0 ? 'has-denda' : 'no-denda');
+  document.getElementById('prof-denda-icon').textContent   = paid ? '✅' : amt > 0 ? '💸' : '🎉';
+  document.getElementById('prof-denda-label').textContent  = 'Denda Bulan Ini';
+  document.getElementById('prof-denda-amt').textContent    =
+    (paid ? '0' : amt.toLocaleString('id-ID')) + ' LKR';
+  document.getElementById('prof-denda-note').textContent   = paid
+    ? 'Sudah lunas bulan ini ✓'
+    : amt > 0
+      ? `${days} hari terlewat × 5.000 LKR`
+      : 'Tidak ada denda — tertib! 🎉';
+  const action = document.getElementById('prof-denda-action');
+  if (paid) {
+    action.innerHTML = `<span class="pdb-paid-badge">✓ LUNAS</span>`;
+  } else if (amt > 0) {
+    action.innerHTML = `<button class="pdb-reset-btn" onclick="openConfirmFromProfile('${person}')">✓ Tandai Lunas</button>`;
+  } else {
+    action.innerHTML = '';
+  }
+
+  document.getElementById('profileModal').classList.add('show');
+}
+
+function closeProfile() {
+  document.getElementById('profileModal').classList.remove('show');
+  _profilePerson = null;
+  /* Reset bar agar animasi jalan lagi saat dibuka berikutnya */
+  document.getElementById('prof-bar').style.width = '0%';
+}
+
+document.getElementById('profileModal').addEventListener('click', function(e) {
+  if (e.target === this) closeProfile();
+});
+
+/* ════════════════════════════════════════════════════════════
+   CONFIRM MODAL — reset denda
+════════════════════════════════════════════════════════════ */
+function openConfirm(person) {
+  _pendingReset = person;
+  document.getElementById('confirm-name').textContent = person;
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+
+function openConfirmFromProfile(person) {
+  closeProfile();
+  setTimeout(() => openConfirm(person), 220);
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('show');
+  _pendingReset = null;
+}
+
+function doReset() {
+  if (!_pendingReset) return;
+  markDendaReset(_pendingReset);
+  const name = _pendingReset;
+  closeConfirm();
+  showToast(`✅ Denda ${name} bulan ini ditandai LUNAS!`);
+  loadData(); // re-render
+}
+
+/**
+ * resetUserFine(personName)
+ * ─────────────────────────────────────────────
+ * Fungsi publik yang bisa dipanggil langsung dari console browser
+ * jika ingin reset denda tanpa melalui UI tombol.
+ *
+ * Contoh penggunaan:
+ *   resetUserFine('FARIS')   → reset denda Faris bulan ini
+ *   resetUserFine('DONI')    → reset denda Doni bulan ini
+ *
+ * @param {string} personName  Nama anggota dalam HURUF BESAR
+ */
+function resetUserFine(personName) {
+  const upper = personName.toUpperCase();
+  if (!ROSTER.includes(upper)) {
+    console.warn('[Kamar 11] Nama tidak ditemukan:', personName);
+    return;
+  }
+  openConfirm(upper);
+}
+
+document.getElementById('confirmOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeConfirm();
+});
+
+/* ════════════════════════════════════════════════════════════
+   TAB SWITCHING
+════════════════════════════════════════════════════════════ */
+document.getElementById('tab-nav').addEventListener('click', function(e) {
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+
+  const tab = btn.dataset.tab;
+
+  this.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+
+  document.querySelectorAll('.tab-panel').forEach(p => {
+    const isActive = p.id === 'panel-'+tab;
+    p.classList.toggle('active', isActive);
+    p.style.display = isActive ? 'block' : 'none';
+  });
+});
+
+/* ════════════════════════════════════════════════════════════
+   CLOCK
+════════════════════════════════════════════════════════════ */
+function updateClock() {
+  const now = new Date();
+  document.getElementById('live-date').textContent =
+    now.getDate()+' '+MON_FULL[now.getMonth()]+' '+now.getFullYear();
+  document.getElementById('live-time').textContent =
+    String(now.getHours()).padStart(2,'0')+':'+
+    String(now.getMinutes()).padStart(2,'0')+':'+
+    String(now.getSeconds()).padStart(2,'0');
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+/* ════════════════════════════════════════════════════════════
+   THEME
+════════════════════════════════════════════════════════════ */
+document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+document.getElementById('theme-toggle').addEventListener('click', () => {
+  const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('theme', t);
+});
+
+/* ════════════════════════════════════════════════════════════
+   REALTIME
+════════════════════════════════════════════════════════════ */
+supabaseClient
+  .channel('stats-realtime-v3')
+  .on('postgres_changes', { event:'*', schema:'public', table:'jadwal_piket' }, () => loadData())
+  .subscribe();
+
+/* ════════════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════════════ */
+loadData();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
