@@ -1451,70 +1451,23 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
 /* ════════════════════════════════════════════════════════════
    REALTIME
 ════════════════════════════════════════════════════════════ */
-let statsChannel = null;
+// Terima sinyal dari index.html via BroadcastChannel
+try {
+  new BroadcastChannel('piket-sync').onmessage = () => {
+    console.log('[Stats] Sinyal dari index.html — reload data');
+    loadData();
+  };
+} catch(e) {}
 
-function setupStatsRealtime() {
-  if (statsChannel) {
-    supabaseClient.removeChannel(statsChannel);
-    statsChannel = null;
-  }
+// Polling setiap 8 detik sebagai jaring pengaman utama
+setInterval(loadData, 8000);
 
-  statsChannel = supabaseClient
-    .channel('stats-sync-' + Date.now())
-    .on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'jadwal_piket' },
-      async (payload) => {
-        console.log('[Stats Realtime] Event masuk:', payload.eventType, payload.new || payload.old);
-
-        // Jika payload.new ada, langsung update cache doneMap sementara
-        // lalu panggil computeAll + render ulang TANPA fetch baru dulu
-        const row = payload.new || payload.old;
-        if (row?.date_key && _computedData) {
-          // Ambil doneMap dari _computedData untuk di-patch langsung
-          // Karena _computedData tidak menyimpan doneMap mentah,
-          // kita langsung trigger loadData dan render paksa
-        }
-
-        // Panggil loadData dan tunggu sampai selesai
-        await loadData();
-
-        // Paksa render ulang semua panel setelah data siap
-        if (_computedData) {
-          renderRingkasan(_computedData);
-          renderAktivitas(_computedData);
-          renderPeringkat(_computedData);
-          renderDenda(_computedData);
-          console.log('[Stats Realtime] Render ulang selesai');
-        }
-      }
-    )
-    .subscribe((status, err) => {
-      console.log('[Stats Realtime] Status:', status);
-      if (status === 'CHANNEL_ERROR') {
-        console.error('[Stats Realtime] Error:', err);
-        setTimeout(setupStatsRealtime, 5000);
-      }
-      if (status === 'TIMED_OUT') {
-        setTimeout(setupStatsRealtime, 3000);
-      }
-    });
-}
-
-setupStatsRealtime();
-
-// Polling fallback setiap 10 detik
-setInterval(() => {
-  if (statsChannel?.state !== 'joined') {
-    setupStatsRealtime();
-  } else {
+// Reload saat tab aktif kembali
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    console.log('[Stats] Tab aktif — reload data');
     loadData();
   }
-}, 10000);
-
-// Reload data saat tab aktif kembali
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') loadData();
 });
 /* ════════════════════════════════════════════════════════════
    INIT
