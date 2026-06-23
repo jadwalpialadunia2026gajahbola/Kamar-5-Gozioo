@@ -1451,11 +1451,51 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
 /* ════════════════════════════════════════════════════════════
    REALTIME
 ════════════════════════════════════════════════════════════ */
-supabaseClient
-  .channel('stats-realtime-v3')
-  .on('postgres_changes', { event:'*', schema:'public', table:'jadwal_piket' }, () => loadData())
-  .subscribe();
+let statsChannel = null;
 
+function setupStatsRealtime() {
+  if (statsChannel) {
+    supabaseClient.removeChannel(statsChannel);
+    statsChannel = null;
+  }
+
+  statsChannel = supabaseClient
+    .channel('stats-sync-' + Date.now())
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'jadwal_piket' },
+      (payload) => {
+        console.log('[Stats Realtime] Event masuk:', payload.eventType);
+        loadData();
+      }
+    )
+    .subscribe((status, err) => {
+      console.log('[Stats Realtime] Status:', status);
+      if (status === 'CHANNEL_ERROR') {
+        console.error('[Stats Realtime] Error:', err);
+        setTimeout(setupStatsRealtime, 5000);
+      }
+      if (status === 'TIMED_OUT') {
+        setTimeout(setupStatsRealtime, 3000);
+      }
+    });
+}
+
+setupStatsRealtime();
+
+// Polling fallback setiap 10 detik
+setInterval(() => {
+  if (statsChannel?.state !== 'joined') {
+    setupStatsRealtime();
+  } else {
+    loadData();
+  }
+}, 10000);
+
+// Reload data saat tab aktif kembali
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') loadData();
+});
 /* ════════════════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════════════════ */
