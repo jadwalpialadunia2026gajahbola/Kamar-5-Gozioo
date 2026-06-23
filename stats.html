@@ -1464,9 +1464,29 @@ function setupStatsRealtime() {
     .on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'jadwal_piket' },
-      (payload) => {
-        console.log('[Stats Realtime] Event masuk:', payload.eventType);
-        loadData();
+      async (payload) => {
+        console.log('[Stats Realtime] Event masuk:', payload.eventType, payload.new || payload.old);
+
+        // Jika payload.new ada, langsung update cache doneMap sementara
+        // lalu panggil computeAll + render ulang TANPA fetch baru dulu
+        const row = payload.new || payload.old;
+        if (row?.date_key && _computedData) {
+          // Ambil doneMap dari _computedData untuk di-patch langsung
+          // Karena _computedData tidak menyimpan doneMap mentah,
+          // kita langsung trigger loadData dan render paksa
+        }
+
+        // Panggil loadData dan tunggu sampai selesai
+        await loadData();
+
+        // Paksa render ulang semua panel setelah data siap
+        if (_computedData) {
+          renderRingkasan(_computedData);
+          renderAktivitas(_computedData);
+          renderPeringkat(_computedData);
+          renderDenda(_computedData);
+          console.log('[Stats Realtime] Render ulang selesai');
+        }
       }
     )
     .subscribe((status, err) => {
