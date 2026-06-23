@@ -815,66 +815,78 @@ const supabaseClient = createClient(
   'https://psyvamqzlleldjcgiaeh.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzeXZhbXF6bGxlbGRqY2dpYWVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNzkzMzEsImV4cCI6MjA5Nzc1NTMzMX0.Ju5uWl6aWmfw4kXIBgEX3p5Z5CR6UTmY3znlirM0iqk'
 );
-
 /* ════════════════════════════════════════════════════════════
-   KONFIGURASI
+   KONFIGURASI — ubah di sini jika ada perubahan aturan
 ════════════════════════════════════════════════════════════ */
 const PHOTOS = {
-  'ARWIN':   'https://i.imgur.com/mqnpYR4.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'EDY':     'https://i.imgur.com/BuJRkiz.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'ARIE':    'https://i.imgur.com/UhoVzcY.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'JASON':   'https://i.imgur.com/dtmA8It.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'JERRI':   'https://i.imgur.com/zmHTp4I.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'KADAFI':  'https://i.imgur.com/MJZwIPA.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'IBRAHIM': 'https://i.imgur.com/AhzwSJZ.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'ARRUAN':  'https://i.imgur.com/dh2yDvv.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'RIYANSAH':'https://i.imgur.com/fV6XOJu.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'FIKRI':   'https://i.imgur.com/vj1OHx8.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'CELVIN':  'https://i.imgur.com/Hhk1xkB.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'RAMBO':   'https://i.imgur.com/dfIfgYc.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'M_DWI':   'https://i.imgur.com/rNTo22v.jpeg?auto=format&fit=crop&w=150&h=150&q=80'
+  'ARWIN': 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80',
+  'EDY': 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=150&h=150&q=80',
+  'ARIE': 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&h=150&q=80',
+  'JASON': 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=150&h=150&q=80',
+  'JERRI': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&h=150&q=80',
+  'KADAFI': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80',
+  'IBRAHIM': 'https://images.unsplash.com/photo-1628157582853-a796fa650a6a?auto=format&fit=crop&w=150&h=150&q=80',
+  'ARRUAN': 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&w=150&h=150&q=80',
+  'RIYANSAH': 'https://images.unsplash.com/photo-1489980508314-941910ded1f4?auto=format&fit=crop&w=150&h=150&q=80',
+  'FIKRI': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&h=150&q=80',
+  'CELVIN': 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&h=150&q=80',
+  'RAMBO': 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=150&h=150&q=80',
+  'M_DWI': 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=150&h=150&q=80'
 };
-
 const AVATAR_CLS = {
   ARWIN:'av-arwin',EDY:'av-edy',ARIE:'av-arie',JASON:'av-jason',
   JERRI:'av-jerri',KADAFI:'av-kadafi',IBRAHIM:'av-ibrahim',ARRUAN:'av-arruan',
   RIYANSAH:'av-riyansah',FIKRI:'av-fikri',CELVIN:'av-celvin',RAMBO:'av-rambo',M_DWI:'av-m_dwi'
 };
-
 const DAY_MAP = {
   1: ["ARWIN","EDY"], 2: ["ARIE","JASON"], 3: ["JERRI","KADAFI"],
   4: ["IBRAHIM","ARRUAN"], 5: ["RIYANSAH"], 6: ["FIKRI","CELVIN"], 0: ["RAMBO","M_DWI"]
 };
-
 const ROSTER = ["ARWIN","EDY","ARIE","JASON","JERRI","KADAFI","IBRAHIM","ARRUAN","RIYANSAH","FIKRI","CELVIN","RAMBO","M_DWI"];
+const EPOCH  = new Date('2025-01-06'); // Senin pertama siklus piket
 
+/*
+ * DENDA_MULAI_EFEKTIF:
+ *   Tanggal pertama denda boleh dihitung (inklusif).
+ *   Jadwal SEBELUM atau SAMA dengan tanggal ini tidak dikenai denda.
+ *   → "Efektif besok dari 3 Mei 2026" = 4 Mei 2026
+ */
 const DENDA_MULAI_EFEKTIF = new Date('2026-05-04');
 DENDA_MULAI_EFEKTIF.setHours(0,0,0,0);
 
-const DENDA_PER_HARI = 500;
+const DENDA_PER_HARI = 500; // LKR per hari terlewat
 const PTS_DONE       = 10;
 const PTS_PHOTO      = 5;
 
-/* ─── Freeze waktu hari ini saat halaman dimuat ─── */
-const today     = new Date(); today.setHours(0,0,0,0);
+/* ════════════════════════════════════════════════════════════
+   KONSTANTA WAKTU — today di-freeze saat halaman dimuat
+   (semua perbandingan tanggal pakai objek ini agar konsisten)
+════════════════════════════════════════════════════════════ */
+const today = new Date();
+today.setHours(0,0,0,0);
 const NOW_MONTH = today.getMonth();
 const NOW_YEAR  = today.getFullYear();
 
-const MON_SHORT  = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-const MON_FULL   = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const MON_SHORT = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const MON_FULL  = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const RANK_EMOJI = ['🥇','🥈','🥉'];
 
-/* ─── State ─── */
-let _computedData  = null;
-let _pendingReset  = null;
-let _profilePerson = null;
+/* ════════════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════════════ */
+let _computedData   = null; // cache setelah loadData selesai
+let _pendingReset   = null; // nama orang yang akan direset dendanya
+let _profilePerson  = null; // nama orang yang sedang dibuka profilnya
 
 /* ════════════════════════════════════════════════════════════
    HELPERS
 ════════════════════════════════════════════════════════════ */
 function calcPersonForDate(date) {
   const people = DAY_MAP[date.getDay()];
-  return people && people.length ? people[0] : null;
+  return people && people.length ? people[0] : null; // ambil staf utama untuk histori/statistik per-orang
+}
+function calcPersonForDateAll(date) {
+  return DAY_MAP[date.getDay()] || [];
 }
 function parsePhotos(raw) {
   if (!raw) return [];
@@ -885,12 +897,15 @@ function parsePhotos(raw) {
   }
   return [];
 }
+
 function dateKey(d) {
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
+
 function currentMonthKey() {
   return NOW_YEAR+'-'+String(NOW_MONTH+1).padStart(2,'0');
 }
+
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
@@ -898,33 +913,55 @@ function showToast(msg) {
   t._tid = setTimeout(() => t.classList.remove('show'), 2600);
 }
 
-/* ─── Denda resets (localStorage) ─── */
+/* ════════════════════════════════════════════════════════════
+   DENDA RESET (localStorage)
+   Key format: "denda_resets" → { "FARIS_2026-05": true, ... }
+   Key unik per orang per bulan → otomatis kedaluwarsa bulan depan
+════════════════════════════════════════════════════════════ */
 function getDendaResets() {
-  try { return JSON.parse(localStorage.getItem('denda_resets') || '{}'); } catch { return {}; }
+  try { return JSON.parse(localStorage.getItem('denda_resets') || '{}'); }
+  catch { return {}; }
 }
-function saveDendaResets(obj) { localStorage.setItem('denda_resets', JSON.stringify(obj)); }
-function isDendaReset(person) { return getDendaResets()[person+'_'+currentMonthKey()] === true; }
+function saveDendaResets(obj) {
+  localStorage.setItem('denda_resets', JSON.stringify(obj));
+}
+function isDendaReset(person) {
+  return getDendaResets()[person + '_' + currentMonthKey()] === true;
+}
 function markDendaReset(person) {
   const r = getDendaResets();
-  r[person+'_'+currentMonthKey()] = true;
+  r[person + '_' + currentMonthKey()] = true;
   saveDendaResets(r);
 }
 
 /* ════════════════════════════════════════════════════════════
-   HITUNG DENDA
+   calculateFines(doneMap)
+   ─────────────────────────────────────────────────────────
+   Aturan yang diimplementasikan:
+   1. Hanya bulan berjalan (reset otomatis tiap bulan baru).
+   2. Batas mulai: max(awal_bulan_ini, DENDA_MULAI_EFEKTIF).
+   3. Hanya hari kerja (Senin–Sabtu) yang sudah lewat (< today).
+   4. Jika seseorang sudah direset manual → denda = 0.
 ════════════════════════════════════════════════════════════ */
 function calculateFines(doneMap) {
   const firstOfMonth = new Date(NOW_YEAR, NOW_MONTH, 1);
   firstOfMonth.setHours(0,0,0,0);
+
+  /* Titik awal denda: mana yang lebih besar */
   const dendaStart = firstOfMonth >= DENDA_MULAI_EFEKTIF
-    ? new Date(firstOfMonth) : new Date(DENDA_MULAI_EFEKTIF);
+    ? new Date(firstOfMonth)
+    : new Date(DENDA_MULAI_EFEKTIF);
 
   const emptyResult = { byPerson:{}, byDays:{}, total:0, dendaStart, firstOfMonth };
   ROSTER.forEach(p => { emptyResult.byPerson[p] = 0; emptyResult.byDays[p] = 0; });
+
+  /* Jika tanggal efektif belum sampai hari ini, tidak ada denda sama sekali */
   if (dendaStart >= today) return emptyResult;
 
+  /* Hitung hari yang terlewat */
   const byDays = {};
   ROSTER.forEach(p => { byDays[p] = 0; });
+
   const walker = new Date(dendaStart);
   while (walker < today) {
     if (walker.getDay() !== 0) {
@@ -935,123 +972,150 @@ function calculateFines(doneMap) {
     }
     walker.setDate(walker.getDate()+1);
   }
+
+  /* Terapkan reset manual */
   ROSTER.forEach(p => { if (isDendaReset(p)) byDays[p] = 0; });
+
   const byPerson = {};
   ROSTER.forEach(p => { byPerson[p] = byDays[p] * DENDA_PER_HARI; });
   const total = Object.values(byPerson).reduce((a,b) => a+b, 0);
+
   return { byPerson, byDays, total, dendaStart, firstOfMonth };
 }
 
 /* ════════════════════════════════════════════════════════════
-   COMPUTE ALL
+   COMPUTE — kalkulasi semua metrik dari doneMap
 ════════════════════════════════════════════════════════════ */
 function computeAll(doneMap) {
+  /* Per-person all-time scores */
   const scores = {};
   ROSTER.forEach(p => { scores[p] = { person:p, done:0, photos:0, pts:0, doneThisMonth:0 }; });
 
+  /* Monthly chart (6 bulan) */
   const monthCounts = {};
   for (let i = 5; i >= 0; i--) {
-    const d   = new Date(NOW_YEAR, NOW_MONTH-i, 1);
+    const d   = new Date(NOW_YEAR, NOW_MONTH - i, 1);
     const key = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
     monthCounts[key] = 0;
   }
   const thisMonKey = NOW_YEAR+'-'+String(NOW_MONTH+1).padStart(2,'0');
 
+  /* Walk doneMap entries */
   Object.entries(doneMap).forEach(([dk, row]) => {
     if (!row.done) return;
     const d      = new Date(dk+'T00:00:00');
     const person = row.swappedName || calcPersonForDate(d);
     if (!person || !scores[person]) return;
+
     scores[person].done++;
     scores[person].pts += PTS_DONE;
-    const np = parsePhotos(row.photos || []).length;
+    const np = parsePhotos(row.photos_raw || row.photos || []).length;
     if (np > 0) { scores[person].photos += np; scores[person].pts += PTS_PHOTO; }
+
     const mk = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
     if (monthCounts[mk] !== undefined) monthCounts[mk]++;
-    if (d.getMonth() === NOW_MONTH && d.getFullYear() === NOW_YEAR) scores[person].doneThisMonth++;
+
+    /* Bulan ini */
+    if (d.getMonth() === NOW_MONTH && d.getFullYear() === NOW_YEAR) {
+      scores[person].doneThisMonth++;
+    }
   });
 
+  /* Hari kerja bulan ini yang sudah berlalu */
+  const firstOfMonth = new Date(NOW_YEAR, NOW_MONTH, 1);
   let workDaysPassed = 0;
-  const wk = new Date(NOW_YEAR, NOW_MONTH, 1);
-  while (wk < today) { if (wk.getDay() !== 0) workDaysPassed++; wk.setDate(wk.getDate()+1); }
+  const wk = new Date(firstOfMonth);
+  while (wk < today) {
+    if (wk.getDay() !== 0) workDaysPassed++;
+    wk.setDate(wk.getDate()+1);
+  }
 
+  /* Piket bulan ini total */
   const thisMonCount = monthCounts[thisMonKey] || 0;
-  const cleanliness  = workDaysPassed > 0 ? Math.round((thisMonCount/workDaysPassed)*100) : 0;
 
+  /* Cleanliness */
+  const cleanliness = workDaysPassed > 0
+    ? Math.round((thisMonCount / workDaysPassed) * 100) : 0;
+
+  /* Total foto & swap */
   let totalPhotos = 0;
   Object.values(scores).forEach(s => { totalPhotos += s.photos; });
   let swapCount = 0;
   Object.values(doneMap).forEach(r => { if (r.swappedName) swapCount++; });
 
-  const fines  = calculateFines(doneMap);
-  const ranked = Object.values(scores).sort((a,b) => b.pts !== a.pts ? b.pts-a.pts : b.done-a.done);
+  /* Denda */
+  const fines = calculateFines(doneMap);
 
-  return { scores, ranked, monthCounts, thisMonKey, thisMonCount, workDaysPassed, cleanliness, totalPhotos, swapCount, fines };
+  /* Ranked leaderboard */
+  const ranked = Object.values(scores).sort((a,b) =>
+    b.pts !== a.pts ? b.pts - a.pts : b.done - a.done
+  );
+
+  return {
+    scores, ranked, monthCounts, thisMonKey, thisMonCount,
+    workDaysPassed, cleanliness, totalPhotos, swapCount, fines
+  };
 }
 
 /* ════════════════════════════════════════════════════════════
-   LOAD DATA  ← dipanggil oleh realtime, polling, dan init
+   LOAD DATA
 ════════════════════════════════════════════════════════════ */
 async function loadData() {
   const { data, error } = await supabaseClient
     .from('jadwal_piket')
-    .select('date_key,is_done,photo_url,swapped_name')
-    .order('date_key', { ascending:true });
+    .select('date_key, is_done, photo_url, swapped_name')
+    .order('date_key', { ascending: true });
+
   if (error) { console.error('Gagal load:', error); return; }
 
+  /* Build doneMap */
   const doneMap = {};
   (data || []).forEach(item => {
+    const photos = parsePhotos(item.photo_url);
     doneMap[item.date_key] = {
       done:        item.is_done || false,
-      photos:      parsePhotos(item.photo_url),
-      swappedName: item.swapped_name || null
+      photos:      photos,
+      photos_raw:  item.photo_url,
+      swappedName: item.swapped_name || null,
     };
   });
 
   _computedData = computeAll(doneMap);
 
-  // *** PERBAIKAN UTAMA: loadStats() dan loadDenda() dipanggil BERSAMAAN ***
-  loadStats(_computedData);
-  loadDenda(_computedData);
+  /* Render semua panel */
+  renderRingkasan(_computedData);
+  renderAktivitas(_computedData);
+  renderPeringkat(_computedData);
+  renderDenda(_computedData);
 
+  /* Sembunyikan loading, tampilkan konten */
   document.getElementById('loading-box').style.display = 'none';
   document.querySelectorAll('.tab-panel').forEach(p => {
     if (p.classList.contains('active')) p.style.display = 'block';
   });
 
+  /* Refresh profil jika sedang terbuka */
   if (_profilePerson) openProfile(_profilePerson);
 }
 
 /* ════════════════════════════════════════════════════════════
-   loadStats() — render semua panel kecuali denda
-════════════════════════════════════════════════════════════ */
-function loadStats(d) {
-  renderRingkasan(d);
-  renderAktivitas(d);
-  renderPeringkat(d);
-}
-
-/* ════════════════════════════════════════════════════════════
-   loadDenda() — render HANYA panel rekap denda
-   Dipisah agar bisa dipanggil mandiri saat reset lunas
-════════════════════════════════════════════════════════════ */
-function loadDenda(d) {
-  renderDenda(d);
-}
-
-/* ════════════════════════════════════════════════════════════
-   RENDER RINGKASAN
+   RENDER — TAB RINGKASAN
 ════════════════════════════════════════════════════════════ */
 function renderRingkasan(d) {
+  /* KPI */
   const totalDone = Object.values(d.scores).reduce((a,b) => a+b.done, 0);
   document.getElementById('kpi-total').textContent    = totalDone;
   document.getElementById('kpi-photos').textContent   = d.totalPhotos;
   document.getElementById('kpi-month').textContent    = d.thisMonCount;
   document.getElementById('kpi-swaps').textContent    = d.swapCount;
   document.getElementById('kpi-month-sub').textContent = MON_FULL[NOW_MONTH]+' '+NOW_YEAR;
-  document.getElementById('kpi-clean').textContent    = d.cleanliness+'%';
-  document.getElementById('kpi-clean-sub').textContent = `${d.thisMonCount} dari ${d.workDaysPassed} hari kerja berlalu`;
-  setTimeout(() => { document.getElementById('clean-bar').style.width = d.cleanliness+'%'; }, 200);
+
+  document.getElementById('kpi-clean').textContent = d.cleanliness+'%';
+  document.getElementById('kpi-clean-sub').textContent =
+    `${d.thisMonCount} dari ${d.workDaysPassed} hari kerja berlalu`;
+  setTimeout(() => {
+    document.getElementById('clean-bar').style.width = d.cleanliness+'%';
+  }, 200);
 
   const badge = document.getElementById('kpi-clean-badge');
   if      (d.cleanliness >= 90) { badge.textContent='🌟 Luar Biasa!'; badge.style.background='rgba(5,150,105,.15)'; badge.style.color='var(--today)'; }
@@ -1059,7 +1123,8 @@ function renderRingkasan(d) {
   else if (d.cleanliness >= 50) { badge.textContent='😐 Cukup';       badge.style.background='var(--gold-s)';       badge.style.color='var(--gold)'; }
   else                          { badge.textContent='❌ Perlu Naik';   badge.style.background='var(--sunday-s)';     badge.style.color='var(--sunday)'; }
 
-  const top3   = d.ranked.slice(0,3);
+  /* Top 3 */
+  const top3 = d.ranked.slice(0,3);
   const maxPts = d.ranked[0]?.pts || 1;
   document.getElementById('top3-list').innerHTML = top3.map((r,i) => {
     const pct = Math.round((r.pts/maxPts)*100);
@@ -1080,9 +1145,10 @@ function renderRingkasan(d) {
 }
 
 /* ════════════════════════════════════════════════════════════
-   RENDER AKTIVITAS
+   RENDER — TAB AKTIVITAS
 ════════════════════════════════════════════════════════════ */
 function renderAktivitas(d) {
+  /* Chart */
   const keys   = Object.keys(d.monthCounts);
   const maxVal = Math.max(...Object.values(d.monthCounts), 1);
   document.getElementById('chart-bars').innerHTML = keys.map(k => {
@@ -1098,11 +1164,13 @@ function renderAktivitas(d) {
     </div>`;
   }).join('');
 
+  /* Member activity list (sorted by pts) */
   const maxDone = Math.max(...d.ranked.map(r=>r.done), 1);
   document.getElementById('member-activity-list').innerHTML = d.ranked.map((r,i) => {
     const pct      = Math.round((r.done/maxDone)*100);
     const rankTxt  = i < 3 ? RANK_EMOJI[i] : `#${i+1}`;
-    const monthPct = d.workDaysPassed > 0 ? Math.round((r.doneThisMonth/d.workDaysPassed)*100) : 0;
+    const monthPct = d.workDaysPassed > 0
+      ? Math.round((r.doneThisMonth/d.workDaysPassed)*100) : 0;
     return `<div class="ma-card" style="animation-delay:${i*.05}s">
       <div class="ma-avatar ${AVATAR_CLS[r.person]||''}"><img src="${PHOTOS[r.person]}" alt="${r.person}"></div>
       <div class="ma-info">
@@ -1120,7 +1188,7 @@ function renderAktivitas(d) {
 }
 
 /* ════════════════════════════════════════════════════════════
-   RENDER PERINGKAT
+   RENDER — TAB PERINGKAT
 ════════════════════════════════════════════════════════════ */
 function renderPeringkat(d) {
   const maxPts = d.ranked[0]?.pts || 1;
@@ -1146,12 +1214,13 @@ function renderPeringkat(d) {
 }
 
 /* ════════════════════════════════════════════════════════════
-   RENDER DENDA  ← dipanggil loadDenda(), juga dari doReset()
+   RENDER — TAB REKAP DENDA
 ════════════════════════════════════════════════════════════ */
 function renderDenda(d) {
   const { fines } = d;
   const { byPerson, byDays, total, dendaStart } = fines;
 
+  /* Update hero */
   document.getElementById('denda-total').textContent = total.toLocaleString('id-ID');
   document.getElementById('denda-periode').textContent = MON_FULL[NOW_MONTH]+' '+NOW_YEAR;
 
@@ -1163,10 +1232,12 @@ function renderDenda(d) {
   document.getElementById('denda-reset-info').textContent =
     'Reset otomatis tiap awal bulan · '+MON_FULL[NOW_MONTH]+' '+NOW_YEAR;
 
+  /* Badge di tab */
   const hasDenda = total > 0;
   const badge    = document.getElementById('denda-badge');
   badge.style.display = hasDenda ? 'inline' : 'none';
 
+  /* Denda list */
   const hasDendaRows = ROSTER.some(p => byPerson[p] > 0 || isDendaReset(p));
   if (!hasDendaRows) {
     document.getElementById('denda-list').innerHTML =
@@ -1174,6 +1245,7 @@ function renderDenda(d) {
     return;
   }
 
+  /* Sort: terbesar dulu, lalu paid, lalu bersih */
   const sorted = [
     ...ROSTER.filter(p => byPerson[p] > 0 && !isDendaReset(p)).sort((a,b) => byPerson[b]-byPerson[a]),
     ...ROSTER.filter(p => isDendaReset(p)),
@@ -1187,11 +1259,12 @@ function renderDenda(d) {
     const days = byDays[p]   || 0;
     const paid = isDendaReset(p);
     if (amt === 0 && !paid) return '';
-    return `<div class="${paid?'denda-row is-paid':'denda-row'}" style="animation-delay:${i*.05}s">
+    const rowCls = paid ? 'denda-row is-paid' : 'denda-row';
+    return `<div class="${rowCls}" style="animation-delay:${i*.05}s">
       <div class="denda-row-av"><img src="${PHOTOS[p]}" alt="${p}"></div>
       <div class="denda-row-info">
         <div class="denda-row-name">${p}</div>
-        <div class="denda-row-days">${paid?'Sudah lunas':`${days} hari terlewat`}</div>
+        <div class="denda-row-days">${paid ? 'Sudah lunas' : `${days} hari terlewat`}</div>
       </div>
       <div class="denda-row-right">
         <div class="denda-row-amt">${amt.toLocaleString('id-ID')} LKR</div>
@@ -1211,39 +1284,59 @@ function renderDenda(d) {
 function openProfile(person) {
   if (!_computedData) return;
   _profilePerson = person;
+
   const d   = _computedData;
   const s   = d.scores[person];
   const idx = d.ranked.findIndex(r => r.person === person);
 
-  document.getElementById('prof-img').src            = PHOTOS[person] || '';
-  document.getElementById('prof-img').alt            = person;
-  document.getElementById('prof-name').textContent   = person;
-  document.getElementById('prof-role').textContent   = 'Penghuni Kamar-5 Gozioo';
-  document.getElementById('prof-rank').textContent   = idx < 3 ? RANK_EMOJI[idx]+' Peringkat '+(idx+1) : 'Peringkat #'+(idx+1);
+  /* Avatar & nama */
+  document.getElementById('prof-img').src = PHOTOS[person] || '';
+  document.getElementById('prof-img').alt = person;
+  document.getElementById('prof-name').textContent  = person;
+  document.getElementById('prof-role').textContent  = 'Penghuni Kamar-5 Gozioo';
+  document.getElementById('prof-rank').textContent  = idx < 3 ? RANK_EMOJI[idx]+' Peringkat '+(idx+1) : 'Peringkat #'+(idx+1);
+
+  /* Stats */
   document.getElementById('prof-done').textContent   = s.done;
   document.getElementById('prof-pts').textContent    = s.pts;
   document.getElementById('prof-photos').textContent = s.photos;
 
-  const monthPct = d.workDaysPassed > 0 ? Math.round((s.doneThisMonth/d.workDaysPassed)*100) : 0;
-  document.getElementById('prof-month-label').textContent = MON_FULL[NOW_MONTH]+' '+NOW_YEAR;
-  document.getElementById('prof-pct').textContent         = monthPct+'%';
-  document.getElementById('prof-month-sub').textContent   = `${s.doneThisMonth} piket dari ${d.workDaysPassed} hari kerja yang sudah berlalu`;
-  setTimeout(() => { document.getElementById('prof-bar').style.width = monthPct+'%'; }, 100);
+  /* Kebersihan bulan ini */
+  const monthPct = d.workDaysPassed > 0
+    ? Math.round((s.doneThisMonth / d.workDaysPassed) * 100) : 0;
+  document.getElementById('prof-month-label').textContent =
+    MON_FULL[NOW_MONTH]+' '+NOW_YEAR;
+  document.getElementById('prof-pct').textContent = monthPct+'%';
+  document.getElementById('prof-month-sub').textContent =
+    `${s.doneThisMonth} piket dari ${d.workDaysPassed} hari kerja yang sudah berlalu`;
+  setTimeout(() => {
+    document.getElementById('prof-bar').style.width = monthPct+'%';
+  }, 100);
 
+  /* Denda */
   const fines = d.fines;
   const amt   = fines.byPerson[person] || 0;
   const days  = fines.byDays[person]   || 0;
   const paid  = isDendaReset(person);
   const box   = document.getElementById('prof-denda-box');
-  box.className = 'profile-denda-box '+(paid?'paid':amt>0?'has-denda':'no-denda');
-  document.getElementById('prof-denda-icon').textContent  = paid?'✅':amt>0?'💸':'🎉';
-  document.getElementById('prof-denda-label').textContent = 'Denda Bulan Ini';
-  document.getElementById('prof-denda-amt').textContent   = (paid?'0':amt.toLocaleString('id-ID'))+' LKR';
-  document.getElementById('prof-denda-note').textContent  = paid?'Sudah lunas bulan ini ✓':amt>0?`${days} hari terlewat × 500 LKR`:'Tidak ada denda — tertib! 🎉';
+  box.className = 'profile-denda-box '+(paid ? 'paid' : amt > 0 ? 'has-denda' : 'no-denda');
+  document.getElementById('prof-denda-icon').textContent   = paid ? '✅' : amt > 0 ? '💸' : '🎉';
+  document.getElementById('prof-denda-label').textContent  = 'Denda Bulan Ini';
+  document.getElementById('prof-denda-amt').textContent    =
+    (paid ? '0' : amt.toLocaleString('id-ID')) + ' LKR';
+  document.getElementById('prof-denda-note').textContent   = paid
+    ? 'Sudah lunas bulan ini ✓'
+   : amt > 0
+        ? `${days} hari terlewat × 500 LKR`
+        : 'Tidak ada denda — tertib! 🎉';
   const action = document.getElementById('prof-denda-action');
-  if (paid)       action.innerHTML = `<span class="pdb-paid-badge">✓ LUNAS</span>`;
-  else if (amt>0) action.innerHTML = `<button class="pdb-reset-btn" onclick="openConfirmFromProfile('${person}')">✓ Tandai Lunas</button>`;
-  else            action.innerHTML = '';
+  if (paid) {
+    action.innerHTML = `<span class="pdb-paid-badge">✓ LUNAS</span>`;
+  } else if (amt > 0) {
+    action.innerHTML = `<button class="pdb-reset-btn" onclick="openConfirmFromProfile('${person}')">✓ Tandai Lunas</button>`;
+  } else {
+    action.innerHTML = '';
+  }
 
   document.getElementById('profileModal').classList.add('show');
 }
@@ -1251,20 +1344,32 @@ function openProfile(person) {
 function closeProfile() {
   document.getElementById('profileModal').classList.remove('show');
   _profilePerson = null;
+  /* Reset bar agar animasi jalan lagi saat dibuka berikutnya */
   document.getElementById('prof-bar').style.width = '0%';
 }
-document.getElementById('profileModal').addEventListener('click', function(e) { if (e.target === this) closeProfile(); });
+
+document.getElementById('profileModal').addEventListener('click', function(e) {
+  if (e.target === this) closeProfile();
+});
 
 /* ════════════════════════════════════════════════════════════
-   CONFIRM MODAL (reset denda)
+   CONFIRM MODAL — reset denda
 ════════════════════════════════════════════════════════════ */
 function openConfirm(person) {
   _pendingReset = person;
   document.getElementById('confirm-name').textContent = person;
   document.getElementById('confirmOverlay').classList.add('show');
 }
-function openConfirmFromProfile(person) { closeProfile(); setTimeout(() => openConfirm(person), 220); }
-function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('show'); _pendingReset = null; }
+
+function openConfirmFromProfile(person) {
+  closeProfile();
+  setTimeout(() => openConfirm(person), 220);
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('show');
+  _pendingReset = null;
+}
 
 function doReset() {
   if (!_pendingReset) return;
@@ -1272,28 +1377,33 @@ function doReset() {
   const name = _pendingReset;
   closeConfirm();
   showToast(`✅ Denda ${name} bulan ini ditandai LUNAS!`);
-
-  // *** PERBAIKAN: Setelah reset, recalculate fines dan render denda LANGSUNG
-  // tanpa harus menunggu roundtrip ke Supabase, UI langsung responsif.
-  if (_computedData) {
-    // Recalculate fines dari _computedData yang ada (doneMap tidak berubah, hanya localStorage reset berubah)
-    _computedData.fines = calculateFines(
-      Object.fromEntries(
-        Object.entries(_computedData.scores).map(([,]) => []) // placeholder
-      )
-    );
-    // Panggil loadData agar recalculate penuh dari DB
-  }
-  loadData();
+  loadData(); // re-render
 }
 
+/**
+ * resetUserFine(personName)
+ * ─────────────────────────────────────────────
+ * Fungsi publik yang bisa dipanggil langsung dari console browser
+ * jika ingin reset denda tanpa melalui UI tombol.
+ *
+ * Contoh penggunaan:
+ *   resetUserFine('FARIS')   → reset denda Faris bulan ini
+ *   resetUserFine('DONI')    → reset denda Doni bulan ini
+ *
+ * @param {string} personName  Nama anggota dalam HURUF BESAR
+ */
 function resetUserFine(personName) {
   const upper = personName.toUpperCase();
-  if (!ROSTER.includes(upper)) { console.warn('[Kamar-5] Nama tidak ditemukan:', personName); return; }
+  if (!ROSTER.includes(upper)) {
+    console.warn('[Kamar-5 Gozioo] Nama tidak ditemukan:', personName);
+    return;
+  }
   openConfirm(upper);
 }
 
-document.getElementById('confirmOverlay').addEventListener('click', function(e) { if (e.target === this) closeConfirm(); });
+document.getElementById('confirmOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeConfirm();
+});
 
 /* ════════════════════════════════════════════════════════════
    TAB SWITCHING
@@ -1301,8 +1411,11 @@ document.getElementById('confirmOverlay').addEventListener('click', function(e) 
 document.getElementById('tab-nav').addEventListener('click', function(e) {
   const btn = e.target.closest('.tab-btn');
   if (!btn) return;
+
   const tab = btn.dataset.tab;
+
   this.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+
   document.querySelectorAll('.tab-panel').forEach(p => {
     const isActive = p.id === 'panel-'+tab;
     p.classList.toggle('active', isActive);
@@ -1322,7 +1435,8 @@ function updateClock() {
     String(now.getMinutes()).padStart(2,'0')+':'+
     String(now.getSeconds()).padStart(2,'0');
 }
-setInterval(updateClock, 1000); updateClock();
+setInterval(updateClock, 1000);
+updateClock();
 
 /* ════════════════════════════════════════════════════════════
    THEME
@@ -1335,38 +1449,29 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
 });
 
 /* ════════════════════════════════════════════════════════════
-   REALTIME — Perbaikan utama stats.html
-   Listener postgres_changes memastikan setiap perubahan di
-   tabel jadwal_piket (dari browser manapun) memicu BAIK
-   loadStats() MAUPUN loadDenda() secara bersamaan melalui
-   satu panggilan loadData().
+   REALTIME
 ════════════════════════════════════════════════════════════ */
+// Realtime Supabase — mendengarkan perubahan tabel jadwal_piket
+// Ketika ada update dari browser manapun, loadData() dipanggil
+// yang otomatis memanggil renderDenda() sekaligus
 supabaseClient
-  .channel('piket-realtime-v2')
-  .on(
-    'postgres_changes',
-    { event: '*', schema: 'public', table: 'jadwal_piket' },
-    (payload) => {
-      console.log('[Realtime stats] perubahan diterima:', payload.eventType, payload.new?.date_key || '');
-      // loadData memanggil loadStats() DAN loadDenda() sekaligus
-      loadData();
-    }
-  )
-  .subscribe((status) => {
-    console.log('[Realtime stats] status channel:', status);
-  });
+  .channel('piket-stats-realtime')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal_piket' }, (payload) => {
+    console.log('[Realtime stats] perubahan masuk:', payload.eventType, payload.new?.date_key || '');
+    loadData();
+  })
+  .subscribe(status => console.log('[Realtime stats] status:', status));
 
-// Polling 15 detik sebagai jaring pengaman jika WebSocket terputus
-setInterval(loadData, 15000);
+// Polling 30 detik sebagai jaring pengaman jika WebSocket terputus
+setInterval(loadData, 30000);
 
-// Reload saat tab kembali aktif
+// Reload saat tab kembali aktif (misal user pindah tab lalu balik)
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
     console.log('[Stats] Tab aktif kembali — reload data');
     loadData();
   }
 });
-
 /* ════════════════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════════════════ */
@@ -1375,6 +1480,7 @@ loadData();
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
+      // Hapus semua SW lama yang rusak dulu
       const regs = await navigator.serviceWorker.getRegistrations();
       for (const reg of regs) await reg.unregister();
       console.log('[SW] Service Worker lama dihapus');
