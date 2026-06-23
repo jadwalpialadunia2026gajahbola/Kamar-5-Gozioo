@@ -778,8 +778,15 @@ toggleBtn.addEventListener('click',()=>{
   document.documentElement.setAttribute('data-theme',t);localStorage.setItem('theme',t);
 });
 
-supabaseClient.channel('piket-realtime-v2').on('postgres_changes',{event:'*',schema:'public',table:'jadwal_piket'},()=>{loadData();}).subscribe();
-
+supabaseClient
+  .channel('piket-realtime-v2')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal_piket' }, (payload) => {
+    console.log('[Index] Realtime event diterima:', payload);
+    loadData();
+  })
+  .subscribe((status) => {
+    console.log('[Index] Status channel realtime:', status);
+  });
 loadData();
 
 let deferredPrompt;
