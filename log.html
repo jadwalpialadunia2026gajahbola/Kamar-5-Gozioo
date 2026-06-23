@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Histori Piket Kamar 11">
-  <title>Histori Piket · Kamar 11</title>
+  <meta name="description" content="Histori Piket Kamar-5 Gozioo">
+  <title>Histori Piket · Kamar-5 Gozioo</title>
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="manifest" href="/manifest.json">
@@ -12,7 +12,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Kamar 11">
+  <meta name="apple-mobile-web-app-title" content="Kamar-5 Gozioo">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -328,8 +328,8 @@ body::before {
 .log-top { display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
 .log-person { display:flex; align-items:center; gap:8px; }
 .log-avatar {
-  width:32px; height:32px; border-radius:50%;
-  overflow:hidden; flex-shrink:0; border:2px solid var(--border);
+  width:48px; height:48px; border-radius:50%;
+  overflow:hidden; flex-shrink:0; border:2.5px solid var(--border);
 }
 .log-avatar img { width:100%; height:100%; object-fit:cover; }
 .log-name { font-size:.88rem; font-weight:800; color:var(--ink); }
@@ -437,7 +437,7 @@ body::before {
     <div class="header-top">
       <div class="brand">
         <div style="display:flex;align-items:center;gap:12px;">
-          <span class="room-tag">Kamar 11</span>
+          <span class="room-tag">Kamar-5 Gozioo</span>
           <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
             <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
             <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -505,22 +505,24 @@ body::before {
 /* ══ SUPABASE ══ */
 const { createClient } = window.supabase;
 const supabaseClient = createClient(
-  'https://lzjmyilduranngskrcyo.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6am15aWxkdXJhbm5nc2tyY3lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyMzU1NjUsImV4cCI6MjA4NjgxMTU2NX0.ybyZTOLYGMOjM_SucsfpsVU3WaL8qVY4m-1XYdK2J7Q'
+  'https://psyvamqzlleldjcgiaeh.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzeXZhbXF6bGxlbGRqY2dpYWVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNzkzMzEsImV4cCI6MjA5Nzc1NTMzMX0.Ju5uWl6aWmfw4kXIBgEX3p5Z5CR6UTmY3znlirM0iqk'
 );
-
 /* ══ CONFIG ══ */
 const PHOTOS = {
-  FARIS:'https://i.imgur.com/cBFVxdR.png', APRI:'https://i.imgur.com/6Q305xB.png',
-  JONATHAN:'https://i.imgur.com/AGDx072.png', DONI:'https://i.imgur.com/7cUoYM6.png',
-  AFRIZAL:'https://i.imgur.com/XvqdJxb.png', SETIAWAN:'https://i.imgur.com/r53dzxC.png',
-  RICKY:'https://i.imgur.com/TZZIY4f.png'
+  ARWIN:'',EDY:'',ARIE:'',JASON:'',JERRI:'',KADAFI:'',IBRAHIM:'',
+  ARRUAN:'',RIYANSAH:'',FIKRI:'',CELVIN:'',RAMBO:'',M_DWI:''
 };
 const AVATAR_CLS = {
-  FARIS:'av-faris', APRI:'av-apri', JONATHAN:'av-jonathan', DONI:'av-doni',
-  AFRIZAL:'av-afrizal', SETIAWAN:'av-setiawan', RICKY:'av-ricky'
+  ARWIN:'av-arwin',EDY:'av-edy',ARIE:'av-arie',JASON:'av-jason',
+  JERRI:'av-jerri',KADAFI:'av-kadafi',IBRAHIM:'av-ibrahim',ARRUAN:'av-arruan',
+  RIYANSAH:'av-riyansah',FIKRI:'av-fikri',CELVIN:'av-celvin',RAMBO:'av-rambo',M_DWI:'av-m_dwi'
 };
-const ROSTER = ["FARIS","APRI","JONATHAN","DONI","AFRIZAL","SETIAWAN","RICKY"];
+const DAY_MAP = {
+  1: ["ARWIN","EDY"], 2: ["ARIE","JASON"], 3: ["JERRI","KADAFI"],
+  4: ["IBRAHIM","ARRUAN"], 5: ["RIYANSAH"], 6: ["FIKRI","CELVIN"], 0: ["RAMBO","M_DWI"]
+};
+const ROSTER = ["ARWIN","EDY","ARIE","JASON","JERRI","KADAFI","IBRAHIM","ARRUAN","RIYANSAH","FIKRI","CELVIN","RAMBO","M_DWI"];
 const EPOCH  = new Date('2025-01-06');
 const DAY_SHORT = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 const MON_SHORT = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
@@ -531,12 +533,12 @@ let activeFilter = '';
 
 /* ══ HELPERS ══ */
 function calcPersonForDate(date) {
-  if (date.getDay() === 0) return null;
-  let d = new Date(EPOCH), count = 0;
-  while (d < date) { if (d.getDay() !== 0) count++; d.setDate(d.getDate()+1); }
-  return ROSTER[count % ROSTER.length];
+  const people = DAY_MAP[date.getDay()];
+  return people && people.length ? people[0] : null; // ambil staf utama untuk histori/statistik per-orang
 }
-
+function calcPersonForDateAll(date) {
+  return DAY_MAP[date.getDay()] || [];
+}
 function parsePhotos(raw) {
   if (!raw) return [];
   if (Array.isArray(raw)) return raw;
