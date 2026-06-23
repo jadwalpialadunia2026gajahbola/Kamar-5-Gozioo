@@ -775,10 +775,93 @@ toggleBtn.addEventListener('click',()=>{
   document.documentElement.setAttribute('data-theme',t);localStorage.setItem('theme',t);
 });
 
-supabaseClient.channel('piket-realtime-v2').on('postgres_changes',{event:'*',schema:'public',table:'jadwal_piket'},()=>{loadData();}).subscribe();
+let realtimeChannel = null;
+let reconnectTimer = null;
+
+function setupRealtimeChannel() {
+  // Bersihkan channel lama jika ada
+  if (realtimeChannel) {
+    supabaseClient.removeChannel(realtimeChannel);
+    realtimeChannel = null;
+  }
+  if (reconnectTimer) {
+    clearTimeout(reconnectTimer);
+    reconnectTimer = null;
+  }
+
+  realtimeChannel = supabaseClient
+    .channel('piket-realtime-v3-' + Math.random().toString(36).slice(2,6), {
+      config: { broadcast: { self: true } }
+    })
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'jadwal_piket' },
+      (payload) => {
+        console.log('[Realtime] INSERT diterima:', payload);
+        loadData();
+      }
+    )
+    .on(
+      'postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'jadwal_piket' },
+      (payload) => {
+        console.log('[Realtime] UPDATE diterima:', payload);
+        loadData();
+      }
+    )
+    .on(
+      'postgres_changes',
+      { event: 'DELETE', schema: 'public', table: 'jadwal_piket' },
+      (payload) => {
+        console.log('[Realtime] DELETE diterima:', payload);
+        loadData();
+      }
+    )
+    .subscribe((status, err) => {
+      console.log('Status Realtime Kamar-5:', status);
+      if (status === 'SUBSCRIBED') {
+        console.log('Koneksi realtime sukses terhubung antar-browser!');
+      }
+      if (status === 'CHANNEL_ERROR') {
+        console.error('Realtime CHANNEL_ERROR:', err);
+        console.warn('Mencoba reconnect dalam 5 detik...');
+        reconnectTimer = setTimeout(setupRealtimeChannel, 5000);
+      }
+      if (status === 'TIMED_OUT') {
+        console.warn('Realtime TIMED_OUT — reconnect dalam 3 detik...');
+        reconnectTimer = setTimeout(setupRealtimeChannel, 3000);
+      }
+      if (status === 'CLOSED') {
+        console.warn('Realtime CLOSED.');
+      }
+    });
+}
 
 loadData();
+setupRealtimeChannel();
 
+// Polling fallback setiap 30 detik — jaga-jaga jika websocket mati tanpa terdeteksi
+setInterval(() => {
+  const state = realtimeChannel?.state;
+  if (state !== 'joined') {
+    console.warn('[Polling] Channel tidak joined (state:', state, ') — reconnect...');
+    setupRealtimeChannel();
+  }
+}, 30000);
+
+// Reconnect otomatis saat tab kembali aktif setelah lama di background
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    console.log('[Realtime] Tab aktif kembali — memastikan koneksi...');
+    const state = realtimeChannel?.state;
+    if (state !== 'joined') {
+      console.log('[Realtime] State channel:', state, '— melakukan reconnect.');
+      setupRealtimeChannel();
+    } else {
+      loadData();
+    }
+  }
+});
 let deferredPrompt;
 const installContainer=document.getElementById('install-container');
 const btnInstallCustom=document.getElementById('btn-install-custom');
