@@ -715,6 +715,17 @@ body::before{
   </div>
 
   <div class="sec-title">Rincian Per Anggota</div>
+
+  <!-- Tombol aksi massal denda -->
+  <div style="display:flex;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap;">
+    <button onclick="konfirmasiLunasSemuaBulanIni()" style="flex:1;min-width:140px;padding:10px 12px;background:var(--today-s);color:var(--today);border:1.5px solid var(--today-b);border-radius:var(--r-lg);font-weight:700;font-size:.75rem;cursor:pointer;font-family:var(--font);">
+      ✅ Lunas Semua Bulan Ini
+    </button>
+    <button onclick="konfirmasiHapusSemuaRiwayat()" style="flex:1;min-width:140px;padding:10px 12px;background:var(--sunday-s);color:var(--sunday);border:1.5px solid var(--sunday-b);border-radius:var(--r-lg);font-weight:700;font-size:.75rem;cursor:pointer;font-family:var(--font);">
+      🗑️ Hapus Seluruh Riwayat
+    </button>
+  </div>
+
   <div class="denda-list" id="denda-list"></div>
 
 </div>
@@ -918,22 +929,43 @@ function showToast(msg) {
    Key format: "denda_resets" → { "FARIS_2026-05": true, ... }
    Key unik per orang per bulan → otomatis kedaluwarsa bulan depan
 ════════════════════════════════════════════════════════════ */
-function getDendaResets() {
-  try { return JSON.parse(localStorage.getItem('denda_resets') || '{}'); }
-  catch { return {}; }
-}
-function saveDendaResets(obj) {
-  localStorage.setItem('denda_resets', JSON.stringify(obj));
-}
+// Cache resets dari Supabase, diisi saat loadData()
+let _dendaResetSet = new Set(); // isi: "ARWIN_2026-06", dst
+
 function isDendaReset(person) {
-  return getDendaResets()[person + '_' + currentMonthKey()] === true;
-}
-function markDendaReset(person) {
-  const r = getDendaResets();
-  r[person + '_' + currentMonthKey()] = true;
-  saveDendaResets(r);
+  return _dendaResetSet.has(person + '_' + currentMonthKey());
 }
 
+async function markDendaReset(person) {
+  const { error } = await supabaseClient.from('denda_resets').upsert({
+    person:    person,
+    month_key: currentMonthKey()
+  }, { onConflict: 'person,month_key' });
+  if (error) { console.error('markDendaReset error:', error); showToast('Gagal simpan status lunas!'); }
+}
+
+async function markSemuaDendaReset() {
+  // Tandai SEMUA anggota roster sebagai lunas bulan ini sekaligus
+  const rows = ROSTER.map(p => ({ person: p, month_key: currentMonthKey() }));
+  const { error } = await supabaseClient.from('denda_resets').upsert(rows, { onConflict: 'person,month_key' });
+  if (error) { console.error('markSemuaDendaReset error:', error); showToast('Gagal reset semua denda!'); return false; }
+  return true;
+}
+
+async function hapusSemuaRiwayatDenda() {
+  // Hapus SELURUH riwayat denda semua bulan semua orang
+  const { error } = await supabaseClient.from('denda_resets').delete().neq('id', 0);
+  if (error) { console.error('hapusSemuaRiwayatDenda error:', error); showToast('Gagal hapus riwayat!'); return false; }
+  return true;
+}
+
+async function loadDendaResets() {
+  const { data, error } = await supabaseClient
+    .from('denda_resets')
+    .select('person, month_key');
+  if (error) { console.error('loadDendaResets error:', error); return; }
+  _dendaResetSet = new Set((data || []).map(r => r.person + '_' + r.month_key));
+}
 /* ════════════════════════════════════════════════════════════
    calculateFines(doneMap)
    ─────────────────────────────────────────────────────────
@@ -1061,6 +1093,9 @@ function computeAll(doneMap) {
    LOAD DATA
 ════════════════════════════════════════════════════════════ */
 async function loadData() {
+  // Load denda resets dari Supabase dulu sebelum hitung denda
+  await loadDendaResets();
+
   const { data, error } = await supabaseClient
     .from('jadwal_piket')
     .select('date_key, is_done, photo_url, swapped_name')
@@ -1371,15 +1406,15 @@ function closeConfirm() {
   _pendingReset = null;
 }
 
-function doReset() {
+async function doReset() {
   if (!_pendingReset) return;
-  markDendaReset(_pendingReset);
   const name = _pendingReset;
   closeConfirm();
+  showToast(`⏳ Menyimpan status lunas ${name}...`);
+  await markDendaReset(name);
   showToast(`✅ Denda ${name} bulan ini ditandai LUNAS!`);
-  loadData(); // re-render
+  // loadData() akan dipanggil otomatis oleh realtime channel denda_resets
 }
-
 /**
  * resetUserFine(personName)
  * ─────────────────────────────────────────────
@@ -1399,6 +1434,21 @@ function resetUserFine(personName) {
     return;
   }
   openConfirm(upper);
+}
+async function konfirmasiLunasSemuaBulanIni() {
+  if (!confirm(`Tandai SEMUA anggota sebagai LUNAS denda bulan ${MON_FULL[NOW_MONTH]} ${NOW_YEAR}?\n\nSemua denda bulan ini akan di-reset ke 0.`)) return;
+  showToast('⏳ Memproses...');
+  const ok = await markSemuaDendaReset();
+  if (ok) showToast('✅ Semua denda bulan ini ditandai LUNAS!');
+  // loadData() dipanggil otomatis oleh realtime
+}
+
+async function konfirmasiHapusSemuaRiwayat() {
+  if (!confirm('⚠️ HAPUS SELURUH riwayat denda dari semua bulan?\n\nSemua catatan "Lunas" akan dihapus permanen dan denda akan dihitung ulang dari awal.\n\nTindakan ini TIDAK BISA dibatalkan!')) return;
+  showToast('⏳ Menghapus seluruh riwayat...');
+  const ok = await hapusSemuaRiwayatDenda();
+  if (ok) showToast('🗑️ Seluruh riwayat denda berhasil dihapus!');
+  // loadData() dipanggil otomatis oleh realtime
 }
 
 document.getElementById('confirmOverlay').addEventListener('click', function(e) {
@@ -1454,13 +1504,25 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
 // Realtime Supabase — mendengarkan perubahan tabel jadwal_piket
 // Ketika ada update dari browser manapun, loadData() dipanggil
 // yang otomatis memanggil renderDenda() sekaligus
+// Listener realtime untuk jadwal_piket (status piket berubah)
 supabaseClient
   .channel('piket-stats-realtime')
   .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal_piket' }, (payload) => {
-    console.log('[Realtime stats] perubahan masuk:', payload.eventType, payload.new?.date_key || '');
+    console.log('[Realtime stats] jadwal berubah:', payload.eventType, payload.new?.date_key || '');
     loadData();
   })
-  .subscribe(status => console.log('[Realtime stats] status:', status));
+  .subscribe(status => console.log('[Realtime stats jadwal] status:', status));
+
+// Listener realtime untuk denda_resets (status lunas berubah)
+// Ini yang membuat tombol "Lunas" dan "Hapus Riwayat" langsung
+// terefleksi ke semua browser secara realtime
+supabaseClient
+  .channel('denda-resets-realtime')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'denda_resets' }, (payload) => {
+    console.log('[Realtime stats] denda_resets berubah:', payload.eventType);
+    loadData();
+  })
+  .subscribe(status => console.log('[Realtime denda] status:', status));
 
 // Polling 30 detik sebagai jaring pengaman jika WebSocket terputus
 setInterval(loadData, 30000);
