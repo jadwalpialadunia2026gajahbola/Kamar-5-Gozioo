@@ -556,13 +556,12 @@ async function hapusFotoIndividual(dk, photoUrl) {
   doneMap[dk].photos = sisaFoto;
 
   // 3. Sinkronkan ke database
-  const { error: dbErr } = await supabaseClient.from('jadwal_piket').upsert({
-    date_key: dk,
-    is_done: doneMap[dk].done,
-    photo_url: JSON.stringify(sisaFoto),
-    swapped_name: doneMap[dk].swappedName || null
-  });
-  if (dbErr) { showToast('Gagal update database!'); return; }
+// 3. Sinkronkan ke database — pakai UPDATE (bukan upsert) agar RLS anon tidak diblokir
+  const { error: dbErr } = await supabaseClient
+    .from('jadwal_piket')
+    .update({ photo_url: JSON.stringify(sisaFoto) })
+    .eq('date_key', dk);
+  if (dbErr) { console.error('DB update error:', dbErr); showToast('Gagal update database!'); return; }
 
   showToast('Foto berhasil dihapus!');
   await loadData();
@@ -688,9 +687,10 @@ function renderSchedule(){
     const dk=dateKey(date);const isSun=date.getDay()===0;const isToday=dk===dateKey(today);
     const dayData=doneMap[dk]||{done:false,photos:[],swappedName:null};
     const personArr=getEffectivePerson(date)||[];const origArr=calcPersonForDate(date)||[];
-const person=personArr[0]||null; // tampilkan orang pertama sebagai utama
+    const person=personArr[0]||null;
 const origPerson=origArr[0]||null;
-const personSecond=personArr[1]||null; // orang kedua jika hari itu 2 staf
+const personSecond=personArr[1]||null;
+const origPersonSecond=origArr[1]||null;
     const isSwapped=!!dayData.swappedName;const photos=dayData.photos||[];
     const avatarCls=person&&COLORS[person.toLowerCase()]?COLORS[person.toLowerCase()].cls:'av-faris';
     let cls='day-card';
@@ -704,7 +704,9 @@ const personSecond=personArr[1]||null; // orang kedua jika hari itu 2 staf
       const thumbs=photos.map(url=>`<div style="position:relative;display:inline-block;"><img src="${url}" class="proof-thumb" onclick="openLightbox('${url}','${person} - ${fmtDateLabel(dk)}')" title="Lihat foto bukti"><button onclick="event.stopPropagation();hapusFotoIndividual('${dk}','${url}')" style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--sunday);color:#fff;border:none;font-size:11px;cursor:pointer;line-height:1;">✕</button></div>`).join('');
 
       const photoCount=photos.length;const photoInfo=photoCount>0?`<span class="photo-count-badge">${photoCount} foto</span>`:'';
-      bodyContent=`<div class="day-row-main"><div class="person-chip"><div class="avatar ${avatarCls}"><img src="${PHOTOS[person]}" alt="${person}"></div><div class="person-info"><div class="person-name">${person}</div><div class="person-role">${isSwapped?'Pengganti piket':'Giliran piket'}</div>${isSwapped&&origPerson?`<div class="swap-tag">Tukar - asli: ${origPerson}</div>`:''}</div></div><div class="card-actions"><div class="done-area"><label class="done-label" for="chk-${dk}">${dayData.done?'Selesai':'Tandai'}</label><input class="done-toggle" type="checkbox" id="chk-${dk}" data-dk="${dk}" ${dayData.done?'checked':''}></div><button class="btn-swap" onclick="openSwapModal('${dk}','${origPerson||person}')">Tukar</button></div></div><div class="photos-row">${thumbs}<label class="proof-add" title="Upload foto bukti"><span>+</span><span class="proof-add-lbl">Foto</span><input type="file" accept="image/*" multiple onchange="handleUpload(this,'${dk}')"></label>${photoInfo}</div>`;
+const avatarClsSecond=personSecond&&COLORS[personSecond.toLowerCase()]?COLORS[personSecond.toLowerCase()].cls:'av-faris';
+      const secondChip=personSecond?`<div class="person-chip" style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--border);"><div class="avatar ${avatarClsSecond}"><img src="${PHOTOS[personSecond]||''}" alt="${personSecond}"></div><div class="person-info"><div class="person-name">${personSecond}</div><div class="person-role">Giliran piket</div></div></div>`:'';
+      bodyContent=`<div class="day-row-main"><div style="flex:1;min-width:0;"><div class="person-chip"><div class="avatar ${avatarCls}"><img src="${PHOTOS[person]}" alt="${person}"></div><div class="person-info"><div class="person-name">${person}</div><div class="person-role">${isSwapped?'Pengganti piket':'Giliran piket'}</div>${isSwapped&&origPerson?`<div class="swap-tag">Tukar - asli: ${origPerson}</div>`:''}</div></div>${secondChip}</div><div class="card-actions"><div class="done-area"><label class="done-label" for="chk-${dk}">${dayData.done?'Selesai':'Tandai'}</label><input class="done-toggle" type="checkbox" id="chk-${dk}" data-dk="${dk}" ${dayData.done?'checked':''}></div><button class="btn-swap" onclick="openSwapModal('${dk}','${origPerson||person}')">Tukar</button></div></div><div class="photos-row">${thumbs}<label class="proof-add" title="Upload foto bukti"><span>+</span><span class="proof-add-lbl">Foto</span><input type="file" accept="image/*" multiple onchange="handleUpload(this,'${dk}')"></label>${photoInfo}</div>`;      
     }
     html+=`<div class="${cls}" style="animation-delay:${idx*0.04}s"><div class="day-header"><div class="day-name-col"><div class="day-short">${DAY_SHORT[date.getDay()]}</div><div class="day-date-num">${date.getDate()}</div><div class="day-month-sm">${MON_SHORT[date.getMonth()]}</div></div><div class="day-body">${bodyContent}</div></div></div>`;
   });
