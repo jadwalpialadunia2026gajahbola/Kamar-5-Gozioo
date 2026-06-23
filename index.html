@@ -539,14 +539,16 @@ async function handleUpload(input,dk){
   if(!uploaded.length){showToast('Semua foto gagal diupload!');return;}
   if(!doneMap[dk])doneMap[dk]={done:true,photos:[],swappedName:null};
   const allPhotos=[...(doneMap[dk].photos||[]),...uploaded];
-  doneMap[dk].photos=allPhotos;doneMap[dk].done=true;
+  // is_done = true otomatis karena ada foto yang berhasil diupload
+  doneMap[dk].photos = allPhotos;
+  doneMap[dk].done   = allPhotos.length > 0;
 
   const{data:existingRow}=await supabaseClient.from('jadwal_piket').select('date_key').eq('date_key',dk).maybeSingle();
   let dbErr;
   if(existingRow){
-    ({error:dbErr}=await supabaseClient.from('jadwal_piket').update({is_done:true,photo_url:JSON.stringify(allPhotos)}).eq('date_key',dk));
+    ({error:dbErr}=await supabaseClient.from('jadwal_piket').update({is_done:allPhotos.length>0,photo_url:JSON.stringify(allPhotos)}).eq('date_key',dk));
   } else {
-    ({error:dbErr}=await supabaseClient.from('jadwal_piket').insert({date_key:dk,is_done:true,photo_url:JSON.stringify(allPhotos),swapped_name:doneMap[dk].swappedName||null}));
+    ({error:dbErr}=await supabaseClient.from('jadwal_piket').insert({date_key:dk,is_done:allPhotos.length>0,photo_url:JSON.stringify(allPhotos),swapped_name:doneMap[dk].swappedName||null}));
   }
 if(dbErr){console.error('Simpan foto error:',dbErr);showToast('Gagal simpan URL foto!');return;}
   showToast(`${uploaded.length} foto tersimpan!`);
@@ -578,9 +580,10 @@ async function hapusFotoIndividual(dk, photoUrl) {
 
   // 3. Sinkronkan ke database
 // 3. Sinkronkan ke database — pakai UPDATE (bukan upsert) agar RLS anon tidak diblokir
+  // Jika foto habis dihapus, is_done otomatis false
   const { error: dbErr } = await supabaseClient
     .from('jadwal_piket')
-    .update({ photo_url: JSON.stringify(sisaFoto) })
+    .update({ photo_url: JSON.stringify(sisaFoto), is_done: sisaFoto.length > 0 })
     .eq('date_key', dk);
   if (dbErr) { console.error('DB update error:', dbErr); showToast('Gagal update database!'); return; }
 
@@ -708,8 +711,12 @@ setInterval(updateClock,1000);updateClock();
 function renderStrip(){
   const strip=document.getElementById('today-strip');const txt=document.getElementById('strip-text');strip.className='today-strip';
   const person=getEffectivePerson(today);const dayData=doneMap[dateKey(today)];
-  strip.classList.add('on-duty');
-  txt.innerHTML=(dayData&&dayData.done)?`Piket <strong>${person}</strong> selesai!`:`Hari ini: <strong>${person}</strong> - Semangat!`;
+  // Selesai = ada foto bukti
+  const sudahAda = dayData && dayData.photos && dayData.photos.length > 0;
+  strip.classList.add(sudahAda ? 'on-duty' : 'on-duty');
+  txt.innerHTML = sudahAda
+    ? `✅ Piket <strong>${person}</strong> selesai — ada ${dayData.photos.length} foto bukti!`
+    : `Hari ini: <strong>${person}</strong> · Upload foto sebagai bukti piket`;
 }
 function renderSchedule(){
   const grid=document.getElementById('schedule-grid');
@@ -729,9 +736,11 @@ const personSecond=personArr[1]||null;
 const origPersonSecond=origArr[1]||null;
     const isSwapped=!!dayData.swappedName;const photos=dayData.photos||[];
     const avatarCls=person&&COLORS[person.toLowerCase()]?COLORS[person.toLowerCase()].cls:'av-faris';
+    // Selesai = ada foto, bukan dari checkbox manual
+    const isDoneByPhoto = photos.length > 0;
     let cls='day-card';
     if(isToday)cls+=' is-today status-live';
-    else if(dayData.done)cls+=' done-today status-done';
+    else if(isDoneByPhoto)cls+=' done-today status-done';
     else cls+=' status-upcoming';
     if(isSwapped)cls+=' is-swapped';
     let bodyContent='';
@@ -741,46 +750,17 @@ const origPersonSecond=origArr[1]||null;
       const photoCount=photos.length;const photoInfo=photoCount>0?`<span class="photo-count-badge">${photoCount} foto</span>`:'';
 const avatarClsSecond=personSecond&&COLORS[personSecond.toLowerCase()]?COLORS[personSecond.toLowerCase()].cls:'av-faris';
       const secondChip=personSecond?`<div class="person-chip" style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--border);"><div class="avatar ${avatarClsSecond}"><img src="${PHOTOS[personSecond]||''}" alt="${personSecond}"></div><div class="person-info"><div class="person-name">${personSecond}</div><div class="person-role">Giliran piket</div></div></div>`:'';
-      bodyContent=`<div class="day-row-main"><div style="flex:1;min-width:0;"><div class="person-chip"><div class="avatar ${avatarCls}"><img src="${PHOTOS[person]}" alt="${person}"></div><div class="person-info"><div class="person-name">${person}</div><div class="person-role">${isSwapped?'Pengganti piket':'Giliran piket'}</div>${isSwapped&&origPerson?`<div class="swap-tag">Tukar - asli: ${origPerson}</div>`:''}</div></div>${secondChip}</div><div class="card-actions"><div class="done-area"><label class="done-label" for="chk-${dk}">${dayData.done?'Selesai':'Tandai'}</label><input class="done-toggle" type="checkbox" id="chk-${dk}" data-dk="${dk}" ${dayData.done?'checked':''}></div><button class="btn-swap" onclick="openSwapModal('${dk}','${origPerson||person}')">Tukar</button></div></div><div class="photos-row">${thumbs}<label class="proof-add" title="Upload foto bukti"><span>+</span><span class="proof-add-lbl">Foto</span><input type="file" accept="image/*" multiple onchange="handleUpload(this,'${dk}')"></label>${photoInfo}</div>`;      
+      // Status selesai sekarang OTOMATIS dari foto — ada foto = selesai
+const statusBadge = photos.length > 0
+  ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;color:var(--today);background:var(--today-s);border:1.5px solid var(--today-b);padding:4px 10px;border-radius:7px;">✓ Selesai</span>`
+  : `<span style="display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;color:var(--ink4);background:var(--surface2);border:1.5px solid var(--border2);padding:4px 10px;border-radius:7px;">⏳ Belum</span>`;
+
+bodyContent=`<div class="day-row-main"><div style="flex:1;min-width:0;"><div class="person-chip"><div class="avatar ${avatarCls}"><img src="${PHOTOS[person]}" alt="${person}"></div><div class="person-info"><div class="person-name">${person}</div><div class="person-role">${isSwapped?'Pengganti piket':'Giliran piket'}</div>${isSwapped&&origPerson?`<div class="swap-tag">Tukar - asli: ${origPerson}</div>`:''}</div></div>${secondChip}</div><div class="card-actions">${statusBadge}<button class="btn-swap" onclick="openSwapModal('${dk}','${origPerson||person}')">Tukar</button></div></div><div class="photos-row">${thumbs}<label class="proof-add" title="Upload foto bukti"><span>+</span><span class="proof-add-lbl">Foto</span><input type="file" accept="image/*" multiple onchange="handleUpload(this,'${dk}')"></label>${photoInfo}</div>`;      
     }
     html+=`<div class="${cls}" style="animation-delay:${idx*0.04}s"><div class="day-header"><div class="day-name-col"><div class="day-short">${DAY_SHORT[date.getDay()]}</div><div class="day-date-num">${date.getDate()}</div><div class="day-month-sm">${MON_SHORT[date.getMonth()]}</div></div><div class="day-body">${bodyContent}</div></div></div>`;
   });
   grid.innerHTML=html;
-grid.querySelectorAll('.done-toggle').forEach(chk => {
-    chk.addEventListener('change', async function() {
-      // Cegah double-fire jika realtime balik ke browser ini
-      if (this.dataset.busy === '1') return;
-      this.dataset.busy = '1';
-      this.disabled = true;
 
-      const dk     = this.dataset.dk;
-      const isDone = this.checked;
-
-      // 1. Update label instan tanpa re-render
-      const lbl = document.querySelector(`label[for="chk-${dk}"]`);
-      if (lbl) lbl.textContent = isDone ? 'Selesai' : 'Tandai';
-
-      // 2. Update state lokal
-      if (!doneMap[dk]) doneMap[dk] = { done: false, photos: [], swappedName: null };
-      doneMap[dk].done = isDone;
-      if (!isDone) doneMap[dk].photos = [];
-
-      // 3. Simpan ke Supabase
-      await saveStatus(dk, isDone);
-      showToast(isDone ? 'Status diperbarui!' : 'Tanda dibatalkan');
-
-      // 4. Re-render ringan — TANPA loadData() agar tidak loop dengan realtime
-      renderStrip();
-      renderMembers();
-
-      // 5. Re-render jadwal tapi jaga scroll position
-      const sy = window.scrollY;
-      renderSchedule();
-      window.scrollTo(0, sy);
-
-      // busy flag otomatis hilang setelah renderSchedule buat elemen baru
-    });
-  }); 
 }
 
 function renderMembers(){
