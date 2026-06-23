@@ -1451,18 +1451,24 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
 /* ════════════════════════════════════════════════════════════
    REALTIME
 ════════════════════════════════════════════════════════════ */
-// Terima sinyal dari index.html via BroadcastChannel
-try {
-  new BroadcastChannel('piket-sync').onmessage = () => {
-    console.log('[Stats] Sinyal dari index.html — reload data');
-    loadData();
-  };
-} catch(e) {}
+/* ════════════════════════════════════════════════════════════
+   REALTIME — Supabase Postgres Changes
+   Setiap UPDATE/INSERT/DELETE di tabel jadwal_piket (dari
+   browser manapun, termasuk klik checkbox & tombol Lunas)
+   akan memicu loadData() yang otomatis merender ulang
+   SEMUA tab statistik (Ringkasan, Aktivitas, Peringkat, Denda)
+════════════════════════════════════════════════════════════ */
+supabaseClient
+  .channel('piket-realtime-v2')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal_piket' }, (payload) => {
+    console.log('[Stats] Realtime event diterima:', payload);
+    loadData();   // loadData() di file ini sudah memanggil renderRingkasan, renderAktivitas, renderPeringkat, DAN renderDenda sekaligus
+  })
+  .subscribe((status) => {
+    console.log('[Stats] Status channel realtime:', status);
+  });
 
-// Polling setiap 8 detik sebagai jaring pengaman utama
-setInterval(loadData, 8000);
-
-// Reload saat tab aktif kembali
+// Reload saat tab aktif kembali (jaring pengaman tambahan, tetap dipertahankan)
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
     console.log('[Stats] Tab aktif — reload data');
