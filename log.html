@@ -509,12 +509,12 @@ const supabaseClient = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzeXZhbXF6bGxlbGRqY2dpYWVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNzkzMzEsImV4cCI6MjA5Nzc1NTMzMX0.Ju5uWl6aWmfw4kXIBgEX3p5Z5CR6UTmY3znlirM0iqk'
 );
 /* ══ CONFIG ══ */
-
-  'ARWIN': 'https://i.imgur.com/mqnpYR4.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'EDY': 'https://i.imgur.com/BuJRkiz.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'ARIE': 'https://i.imgur.com/UhoVzcY.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'JASON': 'https://i.imgur.com/dtmA8It.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'JERRI': 'https://i.imgur.com/zmHTp4I.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+const AVATAR_MAP = {
+  'ARWIN': 'https://i.ibb.co/hFdBHKbJ/GXI413m.webp',
+  'EDY': 'https://i.ibb.co/4ZJSdFbP/Kc-YNWOi.webp',
+  'ARIE': 'https://i.ibb.co/6cKcK6qS/DNYg-S7O.webp',
+  'JASON': 'https://i.ibb.co/WNvjbsrS/j-S1t-Nw5.webp',
+  'JERRI': 'https://i.ibb.co/k2W8yxJm/Bp-Owq-Ot.webp',
   'KADAFI': 'https://i.imgur.com/MJZwIPA.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'IBRAHIM': 'https://i.imgur.com/AhzwSJZ.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'ARRUAN': 'https://i.imgur.com/dh2yDvv.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
@@ -524,10 +524,11 @@ const supabaseClient = createClient(
   'RAMBO': 'https://i.imgur.com/dfIfgYc.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'M_DWI': 'https://i.imgur.com/rNTo22v.jpeg?auto=format&fit=crop&w=150&h=150&q=80'
 };
+
 const AVATAR_CLS = {
-  ARWIN:'av-arwin',EDY:'av-edy',ARIE:'av-arie',JASON:'av-jason',
-  JERRI:'av-jerri',KADAFI:'av-kadafi',IBRAHIM:'av-ibrahim',ARRUAN:'av-arruan',
-  RIYANSAH:'av-riyansah',FIKRI:'av-fikri',CELVIN:'av-celvin',RAMBO:'av-rambo',M_DWI:'av-m_dwi'
+  ARWIN:'av-arwin', EDY:'av-edy', ARIE:'av-arie', JASON:'av-jason',
+  JERRI:'av-jerri', KADAFI:'av-kadafi', IBRAHIM:'av-ibrahim', ARRUAN:'av-arruan',
+  RIYANSAH:'av-riyansah', FIKRI:'av-fikri', CELVIN:'av-celvin', RAMBO:'av-rambo', M_DWI:'av-m_dwi'
 };
 const DAY_MAP = {
   1: ["ARWIN","EDY"], 2: ["ARIE","JASON"], 3: ["JERRI","KADAFI"],
