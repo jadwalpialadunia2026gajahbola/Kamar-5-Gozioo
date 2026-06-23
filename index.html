@@ -326,6 +326,9 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 </header>
 
 <div id="install-container" style="display:none;padding:0 1.4rem;margin-top:1rem;">
+  <div id="ios-install-hint" style="display:none;padding:10px 0 0;font-size:.75rem;color:var(--ink3);text-align:center;">
+    Di Safari: ketuk <strong>⎵ Share</strong> lalu pilih <strong>Add to Home Screen</strong>
+  </div>
   <button id="btn-install-custom" style="width:100%;padding:12px;background:var(--accent);color:white;border:none;border-radius:var(--r-lg);font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:var(--shadow);">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
     Pasang Aplikasi Kamar 5 Casper
@@ -791,6 +794,15 @@ window.addEventListener('beforeinstallprompt',(e)=>{
   });
 });
 window.addEventListener('appinstalled',()=>{installContainer.style.display='none';deferredPrompt=null;});
+
+// Tampilkan panduan manual untuk iOS Safari
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isInStandaloneMode = window.navigator.standalone === true;
+if (isIOS && !isInStandaloneMode) {
+  installContainer.style.display = 'block';
+  document.getElementById('ios-install-hint').style.display = 'block';
+  document.getElementById('btn-install-custom').style.display = 'none';
+}
 
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then(reg=>console.log('PWA Siap!',reg)).catch(err=>console.log('PWA Gagal:',err));});
