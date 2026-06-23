@@ -751,8 +751,21 @@ toggleBtn.addEventListener('click',()=>{
 });
 
 /* ══ REALTIME ══ */
-supabaseClient.channel('log-realtime').on('postgres_changes',{event:'*',schema:'public',table:'jadwal_piket'},()=>loadData()).subscribe();
+// Terima sinyal dari index.html via BroadcastChannel
+try {
+  new BroadcastChannel('piket-sync').onmessage = () => {
+    console.log('[Log] Sinyal perubahan diterima — reload data');
+    loadData();
+  };
+} catch(e) {}
 
+// Polling fallback setiap 8 detik
+setInterval(loadData, 8000);
+
+// Reload saat tab aktif kembali
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') loadData();
+});
 /* ══ INIT ══ */
 loadData();
 
