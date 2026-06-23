@@ -1,3 +1,5 @@
+INDEX.HTML
+=====================
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -429,572 +431,423 @@ const supabaseClient = createClient(
   'https://psyvamqzlleldjcgiaeh.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzeXZhbXF6bGxlbGRqY2dpYWVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNzkzMzEsImV4cCI6MjA5Nzc1NTMzMX0.Ju5uWl6aWmfw4kXIBgEX3p5Z5CR6UTmY3znlirM0iqk'
 );
-
 const PHOTOS = {
-  'ARWIN':   'https://i.imgur.com/mqnpYR4.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'EDY':     'https://i.imgur.com/BuJRkiz.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'ARIE':    'https://i.imgur.com/UhoVzcY.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'JASON':   'https://i.imgur.com/dtmA8It.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'JERRI':   'https://i.imgur.com/zmHTp4I.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'KADAFI':  'https://i.imgur.com/MJZwIPA.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'ARWIN': 'https://i.imgur.com/mqnpYR4.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'EDY': 'https://i.imgur.com/BuJRkiz.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'ARIE': 'https://i.imgur.com/UhoVzcY.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'JASON': 'https://i.imgur.com/dtmA8It.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'JERRI': 'https://i.imgur.com/zmHTp4I.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'KADAFI': 'https://i.imgur.com/MJZwIPA.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'IBRAHIM': 'https://i.imgur.com/AhzwSJZ.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'ARRUAN':  'https://i.imgur.com/dh2yDvv.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'RIYANSAH':'https://i.imgur.com/fV6XOJu.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'FIKRI':   'https://i.imgur.com/vj1OHx8.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'CELVIN':  'https://i.imgur.com/Hhk1xkB.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'RAMBO':   'https://i.imgur.com/dfIfgYc.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'M_DWI':   'https://i.imgur.com/rNTo22v.jpeg?auto=format&fit=crop&w=150&h=150&q=80'
+  'ARRUAN': 'https://i.imgur.com/dh2yDvv.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'RIYANSAH': 'https://i.imgur.com/fV6XOJu.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'FIKRI': 'https://i.imgur.com/vj1OHx8.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'CELVIN': 'https://i.imgur.com/Hhk1xkB.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'RAMBO': 'https://i.imgur.com/dfIfgYc.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'M_DWI': 'https://i.imgur.com/rNTo22v.jpeg?auto=format&fit=crop&w=150&h=150&q=80'
 };
-
+// Pemetaan langsung per hari (0=Minggu...6=Sabtu), bisa 1 atau 2 orang per hari
 const DAY_MAP = {
-  1: ["ARWIN","EDY"],
-  2: ["ARIE","JASON"],
-  3: ["JERRI","KADAFI"],
-  4: ["IBRAHIM","ARRUAN"],
-  5: ["RIYANSAH"],
-  6: ["FIKRI","CELVIN"],
-  0: ["RAMBO","M_DWI"]
+  1: ["ARWIN","EDY"],        // Senin
+  2: ["ARIE","JASON"],       // Selasa
+  3: ["JERRI","KADAFI"],     // Rabu
+  4: ["IBRAHIM","ARRUAN"],   // Kamis
+  5: ["RIYANSAH"],           // Jumat
+  6: ["FIKRI","CELVIN"],     // Sabtu
+  0: ["RAMBO","M_DWI"]       // Minggu (tidak dipakai jika Minggu = libur)
 };
-
 const ROSTER = ["ARWIN","EDY","ARIE","JASON","JERRI","KADAFI","IBRAHIM","ARRUAN","RIYANSAH","FIKRI","CELVIN","RAMBO","M_DWI"];
-
 const COLORS = {
   arwin:{cls:'av-arwin'},edy:{cls:'av-edy'},arie:{cls:'av-arie'},jason:{cls:'av-jason'},
   jerri:{cls:'av-jerri'},kadafi:{cls:'av-kadafi'},ibrahim:{cls:'av-ibrahim'},arruan:{cls:'av-arruan'},
   riyansah:{cls:'av-riyansah'},fikri:{cls:'av-fikri'},celvin:{cls:'av-celvin'},rambo:{cls:'av-rambo'},m_dwi:{cls:'av-m_dwi'}
 };
+const DAY_SHORT=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+const MON_SHORT=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const MON_FULL=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const PTS_DONE=10,PTS_PHOTO=5;
 
-const DAY_SHORT  = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
-const MON_SHORT  = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-const MON_FULL   = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const PTS_DONE   = 10;
-const PTS_PHOTO  = 5;
+const today=new Date();today.setHours(0,0,0,0);
+const EPOCH=new Date('2025-01-06');
+let weekOffset=0,doneMap={};
+let swapDateKey=null,swapSelectedNames=[],swapOriginalName=null;
 
-const today = new Date();
-today.setHours(0,0,0,0);
-
-let weekOffset = 0;
-let doneMap    = {};
-let swapDateKey      = null;
-let swapSelectedNames = [];
-let swapOriginalName  = null;
-
-/* ─── HELPERS ─── */
-function dateKey(d) {
-  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-}
-function fmtDateLabel(dk) {
-  const [y,m,day] = dk.split('-').map(Number);
-  const d = new Date(y,m-1,day);
-  return d.getDate()+' '+MON_SHORT[d.getMonth()]+' '+d.getFullYear();
-}
-function calcPersonForDate(date) {
+function dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function fmtDateLabel(dk){const[y,m,day]=dk.split('-').map(Number);const d=new Date(y,m-1,day);return d.getDate()+' '+MON_SHORT[d.getMonth()]+' '+d.getFullYear();}
+function calcPersonForDate(date){
   const people = DAY_MAP[date.getDay()];
   return people && people.length ? people : null;
 }
-function getEffectivePerson(date) {
-  const dk   = dateKey(date);
-  const data = doneMap[dk];
-  if (data?.swappedName) {
-    return data.swappedName.split(',').map(s => s.trim()).filter(Boolean);
+function getEffectivePerson(date){
+  const dk=dateKey(date);const data=doneMap[dk];
+  if(data?.swappedName){
+    // swappedName bisa "NAMA1" atau "NAMA1, NAMA2"
+    return data.swappedName.split(',').map(s=>s.trim()).filter(Boolean);
   }
   return calcPersonForDate(date);
 }
-function parsePhotos(raw) {
-  if (!raw) return [];
-  if (Array.isArray(raw)) return raw;
-  if (typeof raw === 'string') {
-    if (raw.startsWith('[')) { try { return JSON.parse(raw); } catch { return [raw]; } }
-    if (raw.startsWith('http')) return [raw];
-  }
-  return [];
-}
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._tid);
-  t._tid = setTimeout(() => t.classList.remove('show'), 2400);
-}
+function parsePhotos(raw){if(!raw)return[];if(Array.isArray(raw))return raw;if(typeof raw==='string'){if(raw.startsWith('[')){try{return JSON.parse(raw);}catch{return[raw];}}if(raw.startsWith('http'))return[raw];}return[];}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),2400);}
 
-/* ─── SLIDER ─── */
 (function(){
-  const TOTAL = 7, INTERVAL = 2200;
-  const track    = document.getElementById('sliderTrack');
-  const dotsWrap = document.getElementById('sliderDots');
-  const counter  = document.getElementById('slideCounter');
-  let cur = 0, timer = null;
-  for (let i = 0; i < TOTAL; i++) {
-    const d = document.createElement('button');
-    d.className = 'dot' + (i === 0 ? ' active' : '');
-    d.addEventListener('click', () => goTo(i, true));
-    dotsWrap.appendChild(d);
-  }
-  function updateUI() {
-    track.style.transform = `translateX(-${cur*100}%)`;
-    counter.textContent   = `${cur+1} / ${TOTAL}`;
-    dotsWrap.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===cur));
-  }
-  function goTo(idx, manual) {
-    cur = (idx+TOTAL) % TOTAL;
-    updateUI();
-    if (manual) { clearInterval(timer); startAP(); }
-  }
-  function startAP() { timer = setInterval(() => { cur=(cur+1)%TOTAL; updateUI(); }, INTERVAL); }
-  document.getElementById('sliderPrev').addEventListener('click', () => goTo(cur-1, true));
-  document.getElementById('sliderNext').addEventListener('click', () => goTo(cur+1, true));
-  updateUI(); startAP();
+  const TOTAL=7,INTERVAL=2200;
+  const track=document.getElementById('sliderTrack');
+  const dotsWrap=document.getElementById('sliderDots');
+  const counter=document.getElementById('slideCounter');
+  let cur=0,timer=null;
+  for(let i=0;i<TOTAL;i++){const d=document.createElement('button');d.className='dot'+(i===0?' active':'');d.addEventListener('click',()=>goTo(i,true));dotsWrap.appendChild(d);}
+  function updateUI(){track.style.transform=`translateX(-${cur*100}%)`;counter.textContent=`${cur+1} / ${TOTAL}`;dotsWrap.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));}
+  function goTo(idx,manual){cur=(idx+TOTAL)%TOTAL;updateUI();if(manual){clearInterval(timer);startAP();}}
+  function startAP(){timer=setInterval(()=>{cur=(cur+1)%TOTAL;updateUI();},INTERVAL);}
+  document.getElementById('sliderPrev').addEventListener('click',()=>goTo(cur-1,true));
+  document.getElementById('sliderNext').addEventListener('click',()=>goTo(cur+1,true));
+  updateUI();startAP();
 })();
 
-/* ─── LOAD DATA ─── */
-async function loadData() {
-  const { data, error } = await supabaseClient
-    .from('jadwal_piket')
-    .select('date_key,is_done,photo_url,swapped_name');
-  if (error) { console.error('Gagal load:', error); return; }
-
-  // Bangun ulang doneMap dari data terbaru
-  doneMap = {};
-  (data || []).forEach(item => {
-    doneMap[item.date_key] = {
-      done:        item.is_done || false,
-      photos:      parsePhotos(item.photo_url),
-      swappedName: item.swapped_name || null
-    };
-  });
-
-  // Render ulang SEMUA bagian UI setiap kali data berubah
-  renderStrip();
-  renderSchedule();
-  renderMembers();
+async function loadData(){
+  const{data,error}=await supabaseClient.from('jadwal_piket').select('date_key,is_done,photo_url,swapped_name');
+  if(error){console.error('Gagal load:',error);return;}
+  doneMap={};
+  (data||[]).forEach(item=>{doneMap[item.date_key]={done:item.is_done||false,photos:parsePhotos(item.photo_url),swappedName:item.swapped_name||null};});
+  renderStrip();renderSchedule();renderMembers();
 }
 
-/* ─── SAVE STATUS ─── */
 async function saveStatus(dk, isDone) {
-  const current = doneMap[dk] || { done:false, photos:[], swappedName:null };
+  const current = doneMap[dk] || { done: false, photos: [], swappedName: null };
+  _savingNow = true; // kunci realtime selama simpan
   const { error } = await supabaseClient.from('jadwal_piket').upsert({
     date_key:     dk,
     is_done:      isDone,
     photo_url:    JSON.stringify(current.photos || []),
     swapped_name: current.swappedName || null
   });
+  setTimeout(() => { _savingNow = false; }, 1500); // buka kunci setelah 1.5 detik
   if (error) { console.error('Save error:', error); showToast('Gagal sinkron!'); }
 }
-
-/* ─── UPLOAD FOTO ─── */
-async function handleUpload(input, dk) {
-  const files = Array.from(input.files || []);
-  if (!files.length) return;
+async function handleUpload(input,dk){
+  const files=Array.from(input.files||[]);if(!files.length)return;
   showToast(`Mengupload ${files.length} foto...`);
-  const uploaded = [];
-  for (const file of files) {
-    const ext      = file.name.split('.').pop() || 'jpg';
-    const fileName = `${dk}-${Date.now()}-${Math.random().toString(36).slice(2,6)}.${ext}`;
-    const { error: upErr } = await supabaseClient.storage.from('foto-piket').upload(fileName, file, { upsert:true });
-    if (upErr) { console.error('Upload error:', upErr); continue; }
-    const { data: urlData } = supabaseClient.storage.from('foto-piket').getPublicUrl(fileName);
+  const uploaded=[];
+  for(const file of files){
+    const ext=file.name.split('.').pop()||'jpg';
+    const fileName=`${dk}-${Date.now()}-${Math.random().toString(36).slice(2,6)}.${ext}`;
+    const{error:upErr}=await supabaseClient.storage.from('foto-piket').upload(fileName,file,{upsert:true});
+    if(upErr){console.error('Upload error:',upErr);continue;}
+    const{data:urlData}=supabaseClient.storage.from('foto-piket').getPublicUrl(fileName);
     uploaded.push(urlData.publicUrl);
   }
-  if (!uploaded.length) { showToast('Semua foto gagal diupload!'); return; }
-  if (!doneMap[dk]) doneMap[dk] = { done:true, photos:[], swappedName:null };
-  const allPhotos = [...(doneMap[dk].photos || []), ...uploaded];
-  doneMap[dk].photos = allPhotos;
-  doneMap[dk].done   = true;
+  if(!uploaded.length){showToast('Semua foto gagal diupload!');return;}
+  if(!doneMap[dk])doneMap[dk]={done:true,photos:[],swappedName:null};
+  const allPhotos=[...(doneMap[dk].photos||[]),...uploaded];
+  doneMap[dk].photos=allPhotos;doneMap[dk].done=true;
 
-  const { data: existingRow } = await supabaseClient.from('jadwal_piket').select('date_key').eq('date_key', dk).maybeSingle();
+  const{data:existingRow}=await supabaseClient.from('jadwal_piket').select('date_key').eq('date_key',dk).maybeSingle();
   let dbErr;
-  if (existingRow) {
-    ({ error: dbErr } = await supabaseClient.from('jadwal_piket').update({ is_done:true, photo_url:JSON.stringify(allPhotos) }).eq('date_key', dk));
+  if(existingRow){
+    ({error:dbErr}=await supabaseClient.from('jadwal_piket').update({is_done:true,photo_url:JSON.stringify(allPhotos)}).eq('date_key',dk));
   } else {
-    ({ error: dbErr } = await supabaseClient.from('jadwal_piket').insert({ date_key:dk, is_done:true, photo_url:JSON.stringify(allPhotos), swapped_name:doneMap[dk].swappedName||null }));
+    ({error:dbErr}=await supabaseClient.from('jadwal_piket').insert({date_key:dk,is_done:true,photo_url:JSON.stringify(allPhotos),swapped_name:doneMap[dk].swappedName||null}));
   }
-  if (dbErr) { console.error('Simpan foto error:', dbErr); showToast('Gagal simpan URL foto!'); return; }
+if(dbErr){console.error('Simpan foto error:',dbErr);showToast('Gagal simpan URL foto!');return;}
   showToast(`${uploaded.length} foto tersimpan!`);
   await loadData();
-}
+}  // ← TUTUP FUNGSI handleUpload — INI YANG HILANG
 
-/* ─── HAPUS FOTO INDIVIDUAL ─── */
+/**
+ * Hapus SATU foto bukti piket secara individual.
+ * Menghapus file fisik di Supabase Storage DAN memperbarui kolom photo_url di tabel.
+ * @param {string} dk        date_key terkait
+ * @param {string} photoUrl  URL publik foto yang akan dihapus
+ */
 async function hapusFotoIndividual(dk, photoUrl) {
   if (!confirm('Hapus foto bukti ini secara permanen?')) return;
+
+  // Ekstrak nama file dari URL publik Supabase Storage
+  // Format publicUrl: https://xxx.supabase.co/storage/v1/object/public/foto-piket/NAMAFILE.ext
   const fileName = photoUrl.split('/foto-piket/').pop();
   if (!fileName) { showToast('URL foto tidak valid!'); return; }
 
+  // 1. Hapus file fisik dari Storage Bucket
   const { error: storageErr } = await supabaseClient.storage.from('foto-piket').remove([fileName]);
   if (storageErr) { console.error('Gagal hapus file storage:', storageErr); showToast('Gagal hapus file foto!'); return; }
 
+  // 2. Update array foto di doneMap (buang foto yang dihapus)
   if (!doneMap[dk]) return;
   const sisaFoto = (doneMap[dk].photos || []).filter(url => url !== photoUrl);
   doneMap[dk].photos = sisaFoto;
 
-  const { error: dbErr } = await supabaseClient.from('jadwal_piket').update({ photo_url: JSON.stringify(sisaFoto) }).eq('date_key', dk);
+  // 3. Sinkronkan ke database
+// 3. Sinkronkan ke database — pakai UPDATE (bukan upsert) agar RLS anon tidak diblokir
+  const { error: dbErr } = await supabaseClient
+    .from('jadwal_piket')
+    .update({ photo_url: JSON.stringify(sisaFoto) })
+    .eq('date_key', dk);
   if (dbErr) { console.error('DB update error:', dbErr); showToast('Gagal update database!'); return; }
 
   showToast('Foto berhasil dihapus!');
   await loadData();
 }
-
-/* ─── HAPUS FOTO > 30 HARI ─── */
+/**
+ * Hapus MASSAL semua foto bukti piket yang umurnya lebih dari 30 hari.
+ * Menghapus file fisik di Storage Bucket, lalu membersihkan kolom photo_url
+ * dari baris-baris yang terkait di database.
+ */
 async function hapusFotoLebih30Hari() {
   if (!confirm('Hapus SEMUA foto bukti piket yang sudah lebih dari 30 hari? Tindakan ini tidak bisa dibatalkan!')) return;
 
   const batasTanggal = new Date();
   batasTanggal.setDate(batasTanggal.getDate() - 30);
   batasTanggal.setHours(0,0,0,0);
+
   showToast('Memproses pembersihan foto lama...');
 
+  // 1. Ambil semua baris yang punya foto dan tanggalnya lebih lama dari batas
   const { data, error } = await supabaseClient
     .from('jadwal_piket')
-    .select('date_key,photo_url,is_done,swapped_name')
+    .select('date_key, photo_url, is_done, swapped_name')
     .lt('date_key', dateKey(batasTanggal));
+
   if (error) { console.error('Gagal ambil data:', error); showToast('Gagal mengambil data!'); return; }
 
-  let totalFileDihapus = 0, totalBarisDiupdate = 0;
+  let totalFileDihapus = 0;
+  let totalBarisDiupdate = 0;
+
   for (const row of (data || [])) {
     const photos = parsePhotos(row.photo_url);
     if (!photos.length) continue;
-    const fileNames = photos.map(url => url.split('/foto-piket/').pop()).filter(Boolean);
+
+    // Ekstrak nama file dari setiap URL untuk dihapus dari Storage
+    const fileNames = photos
+      .map(url => url.split('/foto-piket/').pop())
+      .filter(Boolean);
+
     if (fileNames.length) {
       const { error: storageErr } = await supabaseClient.storage.from('foto-piket').remove(fileNames);
       if (storageErr) { console.error('Gagal hapus file:', row.date_key, storageErr); continue; }
       totalFileDihapus += fileNames.length;
     }
+
+    // 2. Bersihkan kolom photo_url di baris terkait (kosongkan array foto)
     const { error: updErr } = await supabaseClient.from('jadwal_piket').upsert({
-      date_key:     row.date_key,
-      is_done:      row.is_done,
-      photo_url:    JSON.stringify([]),
+      date_key: row.date_key,
+      is_done: row.is_done,
+      photo_url: JSON.stringify([]),
       swapped_name: row.swapped_name || null
     });
     if (!updErr) totalBarisDiupdate++;
   }
+
   showToast(`Selesai! ${totalFileDihapus} file & ${totalBarisDiupdate} baris dibersihkan.`);
   await loadData();
 }
-
-/* ─── SWAP MODAL ─── */
-function openSwapModal(dk, originalPerson) {
-  swapDateKey      = dk;
-  swapOriginalName = originalPerson;
-  const curSwap    = doneMap[dk]?.swappedName;
-  swapSelectedNames = curSwap ? curSwap.split(',').map(s => s.trim()).filter(Boolean) : [];
-  document.getElementById('swap-date-label').textContent = DAY_SHORT[new Date(dk+'T00:00:00').getDay()]+', '+fmtDateLabel(dk);
-  document.getElementById('swap-sub').textContent = 'Pilih hingga 2 anggota pengganti untuk tanggal:';
-  const grid = document.getElementById('swap-grid');
-  grid.innerHTML = ROSTER.map(person => {
-    const isOriginal = person === originalPerson;
-    const isSel      = swapSelectedNames.includes(person);
-    return `<button class="swap-person-btn ${isSel?'sel':''} ${isOriginal?'is-original':''}" data-person="${person}" onclick="selectSwapPerson(this,'${person}')">
-      <div class="swap-av"><img src="${PHOTOS[person]}" alt="${person}"></div>
-      <div>
-        <div class="swap-person-name">${person}</div>
-        <div class="swap-person-tag">${isOriginal?'(Jadwal asli)':isSel?'(Terpilih)':''}</div>
-      </div>
-    </button>`;
+function openSwapModal(dk,originalPerson){
+  swapDateKey=dk;swapOriginalName=originalPerson;
+  // Muat pilihan sebelumnya jika ada (bisa 1 atau 2 nama, dipisah koma)
+  const curSwap=doneMap[dk]?.swappedName;
+  swapSelectedNames=curSwap?curSwap.split(',').map(s=>s.trim()).filter(Boolean):[];
+  document.getElementById('swap-date-label').textContent=DAY_SHORT[new Date(dk+'T00:00:00').getDay()]+', '+fmtDateLabel(dk);
+  document.getElementById('swap-sub').textContent='Pilih hingga 2 anggota pengganti untuk tanggal:';
+  const grid=document.getElementById('swap-grid');
+  grid.innerHTML=ROSTER.map(person=>{
+    const isOriginal=person===originalPerson;
+    const isSel=swapSelectedNames.includes(person);
+    return `<button class="swap-person-btn ${isSel?'sel':''} ${isOriginal?'is-original':''}" data-person="${person}" onclick="selectSwapPerson(this,'${person}')"><div class="swap-av"><img src="${PHOTOS[person]}" alt="${person}"></div><div><div class="swap-person-name">${person}</div><div class="swap-person-tag">${isOriginal?'(Jadwal asli)':isSel?'(Terpilih)':''}</div></div></button>`;
   }).join('');
-  document.getElementById('btn-swap-confirm').disabled = swapSelectedNames.length === 0;
+  document.getElementById('btn-swap-confirm').disabled=swapSelectedNames.length===0;
   document.getElementById('swapModal').classList.add('show');
 }
-
-function selectSwapPerson(el, person) {
-  const idx = swapSelectedNames.indexOf(person);
-  if (idx > -1) {
-    swapSelectedNames.splice(idx, 1);
+function selectSwapPerson(el,person){
+  const idx=swapSelectedNames.indexOf(person);
+  if(idx>-1){
+    // Sudah terpilih → batalkan pilihan
+    swapSelectedNames.splice(idx,1);
   } else {
-    if (swapSelectedNames.length >= 2) { showToast('Maksimal 2 pengganti!'); return; }
+    if(swapSelectedNames.length>=2){showToast('Maksimal 2 pengganti!');return;}
     swapSelectedNames.push(person);
   }
-  document.querySelectorAll('.swap-person-btn').forEach(b => {
-    const isSel = swapSelectedNames.includes(b.dataset.person);
-    b.classList.toggle('sel', isSel);
-    const tag = b.querySelector('.swap-person-tag');
-    if (b.dataset.person === swapOriginalName) tag.textContent = '(Jadwal asli)';
-    else if (isSel) tag.textContent = '(Terpilih)';
-    else tag.textContent = '';
+  document.querySelectorAll('.swap-person-btn').forEach(b=>{
+    const isSel=swapSelectedNames.includes(b.dataset.person);
+    b.classList.toggle('sel',isSel);
+    const tag=b.querySelector('.swap-person-tag');
+    if(b.dataset.person===swapOriginalName)tag.textContent='(Jadwal asli)';
+    else if(isSel)tag.textContent='(Terpilih)';
+    else tag.textContent='';
   });
-  document.getElementById('btn-swap-confirm').disabled = swapSelectedNames.length === 0;
+  document.getElementById('btn-swap-confirm').disabled=swapSelectedNames.length===0;
 }
+function closeSwapModal(){document.getElementById('swapModal').classList.remove('show');swapDateKey=null;swapSelectedNames=[];swapOriginalName=null;}
+document.getElementById('swapModal').addEventListener('click',function(e){if(e.target===this)closeSwapModal();});
+async function confirmSwap(){
+  if(!swapDateKey||swapSelectedNames.length===0)return;
+  const dk=swapDateKey;
+  // Gabung nama dengan koma jika 2 orang, null jika dikembalikan ke aslinya
+  const isRevert=swapSelectedNames.length===1&&swapSelectedNames[0]===swapOriginalName;
+  const newName=isRevert?null:swapSelectedNames.join(', ');
+  if(!doneMap[dk])doneMap[dk]={done:false,photos:[],swappedName:null};
+  doneMap[dk].swappedName=newName;
 
-function closeSwapModal() {
-  document.getElementById('swapModal').classList.remove('show');
-  swapDateKey = null; swapSelectedNames = []; swapOriginalName = null;
-}
-document.getElementById('swapModal').addEventListener('click', function(e) { if (e.target === this) closeSwapModal(); });
-
-async function confirmSwap() {
-  if (!swapDateKey || swapSelectedNames.length === 0) return;
-  const dk        = swapDateKey;
-  const isRevert  = swapSelectedNames.length === 1 && swapSelectedNames[0] === swapOriginalName;
-  const newName   = isRevert ? null : swapSelectedNames.join(', ');
-  if (!doneMap[dk]) doneMap[dk] = { done:false, photos:[], swappedName:null };
-  doneMap[dk].swappedName = newName;
-
-  const { data: existing } = await supabaseClient.from('jadwal_piket').select('date_key').eq('date_key', dk).maybeSingle();
+  const{data:existing}=await supabaseClient.from('jadwal_piket').select('date_key').eq('date_key',dk).maybeSingle();
   let error;
-  if (existing) {
-    ({ error } = await supabaseClient.from('jadwal_piket').update({ swapped_name: newName }).eq('date_key', dk));
+  if(existing){
+    ({error}=await supabaseClient.from('jadwal_piket').update({swapped_name:newName}).eq('date_key',dk));
   } else {
-    ({ error } = await supabaseClient.from('jadwal_piket').insert({ date_key:dk, is_done:false, photo_url:JSON.stringify([]), swapped_name:newName }));
+    ({error}=await supabaseClient.from('jadwal_piket').insert({date_key:dk,is_done:false,photo_url:JSON.stringify([]),swapped_name:newName}));
   }
-  if (error) { console.error('confirmSwap error:', error); showToast('Gagal simpan tukar jadwal!'); return; }
+  if(error){console.error('confirmSwap error:',error);showToast('Gagal simpan tukar jadwal!');return;}
   closeSwapModal();
-  showToast(newName ? `Jadwal ditukar ke ${newName}!` : 'Jadwal dikembalikan ke aslinya');
+  showToast(newName?`Jadwal ditukar ke ${newName}!`:'Jadwal dikembalikan ke aslinya');
   await loadData();
 }
-
-/* ─── CLOCK ─── */
-function updateClock() {
-  const now = new Date();
-  document.getElementById('live-date').textContent = now.getDate()+' '+MON_FULL[now.getMonth()]+' '+now.getFullYear();
-  document.getElementById('live-time').textContent = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
+function updateClock(){
+  const now=new Date();
+  document.getElementById('live-date').textContent=now.getDate()+' '+MON_FULL[now.getMonth()]+' '+now.getFullYear();
+  document.getElementById('live-time').textContent=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
 }
-setInterval(updateClock, 1000); updateClock();
+setInterval(updateClock,1000);updateClock();
 
-/* ─── RENDER STRIP ─── */
-function renderStrip() {
-  const strip  = document.getElementById('today-strip');
-  const txt    = document.getElementById('strip-text');
-  strip.className = 'today-strip';
-  const person  = getEffectivePerson(today);
-  const dayData = doneMap[dateKey(today)];
+function renderStrip(){
+  const strip=document.getElementById('today-strip');const txt=document.getElementById('strip-text');strip.className='today-strip';
+  const person=getEffectivePerson(today);const dayData=doneMap[dateKey(today)];
   strip.classList.add('on-duty');
-  txt.innerHTML = (dayData && dayData.done)
-    ? `Piket <strong>${person}</strong> selesai!`
-    : `Hari ini: <strong>${person}</strong> - Semangat!`;
+  txt.innerHTML=(dayData&&dayData.done)?`Piket <strong>${person}</strong> selesai!`:`Hari ini: <strong>${person}</strong> - Semangat!`;
 }
+function renderSchedule(){
+  const grid=document.getElementById('schedule-grid');
+  const dow=today.getDay()===0?6:today.getDay()-1;
+  const monday=new Date(today);monday.setDate(today.getDate()-dow+weekOffset*7);
+  const dates=Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(monday.getDate()+i);return d;});
+  const mon=dates[0],sun=dates[6];
+  document.getElementById('week-label').textContent=mon.getDate()+' '+MON_SHORT[mon.getMonth()]+' - '+sun.getDate()+' '+MON_SHORT[sun.getMonth()];
+  let html='';
+  dates.forEach((date,idx)=>{
+    const dk=dateKey(date);const isSun=date.getDay()===0;const isToday=dk===dateKey(today);
+    const dayData=doneMap[dk]||{done:false,photos:[],swappedName:null};
+    const personArr=getEffectivePerson(date)||[];const origArr=calcPersonForDate(date)||[];
+    const person=personArr[0]||null;
+const origPerson=origArr[0]||null;
+const personSecond=personArr[1]||null;
+const origPersonSecond=origArr[1]||null;
+    const isSwapped=!!dayData.swappedName;const photos=dayData.photos||[];
+    const avatarCls=person&&COLORS[person.toLowerCase()]?COLORS[person.toLowerCase()].cls:'av-faris';
+    let cls='day-card';
+    if(isToday)cls+=' is-today status-live';
+    else if(dayData.done)cls+=' done-today status-done';
+    else cls+=' status-upcoming';
+    if(isSwapped)cls+=' is-swapped';
+    let bodyContent='';
+    if(person){
+      const thumbs=photos.map(url=>`<div style="position:relative;display:inline-block;"><img src="${url}" class="proof-thumb" onclick="openLightbox('${url}','${person} - ${fmtDateLabel(dk)}')" title="Lihat foto bukti"><button onclick="event.stopPropagation();hapusFotoIndividual('${dk}','${url}')" style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--sunday);color:#fff;border:none;font-size:11px;cursor:pointer;line-height:1;">✕</button></div>`).join('');
 
-/* ─── RENDER SCHEDULE ─── */
-function renderSchedule() {
-  const grid = document.getElementById('schedule-grid');
-  const dow   = today.getDay() === 0 ? 6 : today.getDay()-1;
-  const monday = new Date(today);
-  monday.setDate(today.getDate() - dow + weekOffset * 7);
-  const dates = Array.from({ length:7 }, (_,i) => { const d = new Date(monday); d.setDate(monday.getDate()+i); return d; });
-  const mon = dates[0], sun = dates[6];
-  document.getElementById('week-label').textContent = mon.getDate()+' '+MON_SHORT[mon.getMonth()]+' - '+sun.getDate()+' '+MON_SHORT[sun.getMonth()];
-
-  let html = '';
-  dates.forEach((date, idx) => {
-    const dk       = dateKey(date);
-    const isSun    = date.getDay() === 0;
-    const isToday  = dk === dateKey(today);
-    const dayData  = doneMap[dk] || { done:false, photos:[], swappedName:null };
-    const personArr   = getEffectivePerson(date) || [];
-    const origArr     = calcPersonForDate(date) || [];
-    const person      = personArr[0] || null;
-    const origPerson  = origArr[0] || null;
-    const personSecond = personArr[1] || null;
-    const isSwapped   = !!dayData.swappedName;
-    const photos      = dayData.photos || [];
-    const isDone      = dayData.done;
-    const avatarCls   = person && COLORS[person.toLowerCase()] ? COLORS[person.toLowerCase()].cls : 'av-faris';
-
-    let cls = 'day-card';
-    if (isToday)        cls += ' is-today status-live';
-    else if (isDone)    cls += ' done-today status-done';
-    else                cls += ' status-upcoming';
-    if (isSwapped)      cls += ' is-swapped';
-
-    let bodyContent = '';
-    if (person) {
-      const thumbs = photos.map(url =>
-        `<div style="position:relative;display:inline-block;">
-          <img src="${url}" class="proof-thumb" onclick="openLightbox('${url}','${person} - ${fmtDateLabel(dk)}')" title="Lihat foto bukti">
-          <button onclick="event.stopPropagation();hapusFotoIndividual('${dk}','${url}')" style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--sunday);color:#fff;border:none;font-size:11px;cursor:pointer;line-height:1;">✕</button>
-        </div>`
-      ).join('');
-
-      const photoCount = photos.length;
-      const photoInfo  = photoCount > 0 ? `<span class="photo-count-badge">${photoCount} foto</span>` : '';
-      const avatarClsSecond = personSecond && COLORS[personSecond.toLowerCase()] ? COLORS[personSecond.toLowerCase()].cls : 'av-faris';
-      const secondChip = personSecond
-        ? `<div class="person-chip" style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--border);">
-            <div class="avatar ${avatarClsSecond}"><img src="${PHOTOS[personSecond]||''}" alt="${personSecond}"></div>
-            <div class="person-info">
-              <div class="person-name">${personSecond}</div>
-              <div class="person-role">Giliran piket</div>
-            </div>
-          </div>` : '';
-
-      // *** KUNCI PERBAIKAN: label dan checked state diambil LANGSUNG dari isDone ***
-      const chkChecked  = isDone ? 'checked' : '';
-      const chkLabel    = isDone ? 'Selesai' : 'Tandai';
-
-      bodyContent = `
-        <div class="day-row-main">
-          <div style="flex:1;min-width:0;">
-            <div class="person-chip">
-              <div class="avatar ${avatarCls}"><img src="${PHOTOS[person]}" alt="${person}"></div>
-              <div class="person-info">
-                <div class="person-name">${person}</div>
-                <div class="person-role">${isSwapped?'Pengganti piket':'Giliran piket'}</div>
-                ${isSwapped && origPerson ? `<div class="swap-tag">Tukar - asli: ${origPerson}</div>` : ''}
-              </div>
-            </div>
-            ${secondChip}
-          </div>
-          <div class="card-actions">
-            <div class="done-area">
-              <label class="done-label" for="chk-${dk}">${chkLabel}</label>
-              <input class="done-toggle" type="checkbox" id="chk-${dk}" data-dk="${dk}" ${chkChecked}>
-            </div>
-            <button class="btn-swap" onclick="openSwapModal('${dk}','${origPerson||person}')">Tukar</button>
-          </div>
-        </div>
-        <div class="photos-row">
-          ${thumbs}
-          <label class="proof-add" title="Upload foto bukti">
-            <span>+</span>
-            <span class="proof-add-lbl">Foto</span>
-            <input type="file" accept="image/*" multiple onchange="handleUpload(this,'${dk}')">
-          </label>
-          ${photoInfo}
-        </div>`;
+      const photoCount=photos.length;const photoInfo=photoCount>0?`<span class="photo-count-badge">${photoCount} foto</span>`:'';
+const avatarClsSecond=personSecond&&COLORS[personSecond.toLowerCase()]?COLORS[personSecond.toLowerCase()].cls:'av-faris';
+      const secondChip=personSecond?`<div class="person-chip" style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--border);"><div class="avatar ${avatarClsSecond}"><img src="${PHOTOS[personSecond]||''}" alt="${personSecond}"></div><div class="person-info"><div class="person-name">${personSecond}</div><div class="person-role">Giliran piket</div></div></div>`:'';
+      bodyContent=`<div class="day-row-main"><div style="flex:1;min-width:0;"><div class="person-chip"><div class="avatar ${avatarCls}"><img src="${PHOTOS[person]}" alt="${person}"></div><div class="person-info"><div class="person-name">${person}</div><div class="person-role">${isSwapped?'Pengganti piket':'Giliran piket'}</div>${isSwapped&&origPerson?`<div class="swap-tag">Tukar - asli: ${origPerson}</div>`:''}</div></div>${secondChip}</div><div class="card-actions"><div class="done-area"><label class="done-label" for="chk-${dk}">${dayData.done?'Selesai':'Tandai'}</label><input class="done-toggle" type="checkbox" id="chk-${dk}" data-dk="${dk}" ${dayData.done?'checked':''}></div><button class="btn-swap" onclick="openSwapModal('${dk}','${origPerson||person}')">Tukar</button></div></div><div class="photos-row">${thumbs}<label class="proof-add" title="Upload foto bukti"><span>+</span><span class="proof-add-lbl">Foto</span><input type="file" accept="image/*" multiple onchange="handleUpload(this,'${dk}')"></label>${photoInfo}</div>`;      
     }
-
-    html += `<div class="${cls}" style="animation-delay:${idx*0.04}s">
-      <div class="day-header">
-        <div class="day-name-col">
-          <div class="day-short">${DAY_SHORT[date.getDay()]}</div>
-          <div class="day-date-num">${date.getDate()}</div>
-          <div class="day-month-sm">${MON_SHORT[date.getMonth()]}</div>
-        </div>
-        <div class="day-body">${bodyContent}</div>
-      </div>
-    </div>`;
+    html+=`<div class="${cls}" style="animation-delay:${idx*0.04}s"><div class="day-header"><div class="day-name-col"><div class="day-short">${DAY_SHORT[date.getDay()]}</div><div class="day-date-num">${date.getDate()}</div><div class="day-month-sm">${MON_SHORT[date.getMonth()]}</div></div><div class="day-body">${bodyContent}</div></div></div>`;
   });
-
-  grid.innerHTML = html;
-
-  // Pasang event listener checkbox SETELAH render selesai
-  grid.querySelectorAll('.done-toggle').forEach(chk => {
+  grid.innerHTML=html;
+grid.querySelectorAll('.done-toggle').forEach(chk => {
     chk.addEventListener('change', async function() {
-      const dk = this.dataset.dk;
-      if (!doneMap[dk]) doneMap[dk] = { done:false, photos:[], swappedName:null };
+      // Cegah double-fire jika realtime balik ke browser ini
+      if (this.dataset.busy === '1') return;
+      this.dataset.busy = '1';
+      this.disabled = true;
 
-      // Update state lokal DULU agar UI responsif sebelum server menjawab
-      doneMap[dk].done = this.checked;
-      if (!this.checked) doneMap[dk].photos = [];
+      const dk     = this.dataset.dk;
+      const isDone = this.checked;
 
-      // Perbarui label secara instan (sebelum loadData dipanggil ulang)
+      // 1. Update label instan tanpa re-render
       const lbl = document.querySelector(`label[for="chk-${dk}"]`);
-      if (lbl) lbl.textContent = this.checked ? 'Selesai' : 'Tandai';
+      if (lbl) lbl.textContent = isDone ? 'Selesai' : 'Tandai';
 
-      await saveStatus(dk, this.checked);
-      showToast(this.checked ? 'Status diperbarui!' : 'Tanda dibatalkan');
+      // 2. Update state lokal
+      if (!doneMap[dk]) doneMap[dk] = { done: false, photos: [], swappedName: null };
+      doneMap[dk].done = isDone;
+      if (!isDone) doneMap[dk].photos = [];
 
-      // loadData akan menarik data terbaru dan re-render lengkap
-      // Realtime channel di browser lain juga akan memicu loadData
-      await loadData();
+      // 3. Simpan ke Supabase
+      await saveStatus(dk, isDone);
+      showToast(isDone ? 'Status diperbarui!' : 'Tanda dibatalkan');
+
+      // 4. Re-render ringan — TANPA loadData() agar tidak loop dengan realtime
+      renderStrip();
+      renderMembers();
+
+      // 5. Re-render jadwal tapi jaga scroll position
+      const sy = window.scrollY;
+      renderSchedule();
+      window.scrollTo(0, sy);
+
+      // busy flag otomatis hilang setelah renderSchedule buat elemen baru
     });
+  }); 
+}
+
+function renderMembers(){
+  const grid=document.getElementById('members-grid');let html='';
+  ROSTER.forEach(person=>{
+    let count=0;
+    Object.keys(doneMap).forEach(dk=>{const row=doneMap[dk];if(!row.done)return;const d=new Date(dk+'T00:00:00');const eff=row.swappedName||calcPersonForDate(d);if(eff===person)count++;});
+    const avatarCls=COLORS[person.toLowerCase()]?COLORS[person.toLowerCase()].cls:'';
+    html+=`<div class="member-card"><div class="member-avatar-lg ${avatarCls}"><img src="${PHOTOS[person]}" alt="${person}"></div><div class="member-name-lg">${person}</div><div class="member-stat">Selesai: <strong>${count}x</strong></div></div>`;
   });
+  grid.innerHTML=html;
 }
 
-/* ─── RENDER MEMBERS ─── */
-function renderMembers() {
-  const grid = document.getElementById('members-grid');
-  let html = '';
-  ROSTER.forEach(person => {
-    let count = 0;
-    Object.keys(doneMap).forEach(dk => {
-      const row = doneMap[dk];
-      if (!row.done) return;
-      const d   = new Date(dk+'T00:00:00');
-      const eff = row.swappedName ? row.swappedName.split(',').map(s=>s.trim()) : (calcPersonForDate(d)||[]);
-      if (eff.includes(person)) count++;
-    });
-    const avatarCls = COLORS[person.toLowerCase()] ? COLORS[person.toLowerCase()].cls : '';
-    html += `<div class="member-card">
-      <div class="member-avatar-lg ${avatarCls}"><img src="${PHOTOS[person]}" alt="${person}"></div>
-      <div class="member-name-lg">${person}</div>
-      <div class="member-stat">Selesai: <strong>${count}x</strong></div>
-    </div>`;
-  });
-  grid.innerHTML = html;
-}
+function openLightbox(src,caption){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox-caption').textContent=caption||'';document.getElementById('lightbox').classList.add('show');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('show');document.getElementById('lightbox-img').src='';}
+document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLightbox();});
+document.getElementById('lightbox-close').addEventListener('click',closeLightbox);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
 
-/* ─── LIGHTBOX ─── */
-function openLightbox(src, caption) {
-  document.getElementById('lightbox-img').src            = src;
-  document.getElementById('lightbox-caption').textContent = caption || '';
-  document.getElementById('lightbox').classList.add('show');
-}
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('show');
-  document.getElementById('lightbox-img').src = '';
-}
-document.getElementById('lightbox').addEventListener('click', function(e) { if (e.target === this) closeLightbox(); });
-document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+document.getElementById('btn-prev').addEventListener('click',()=>{weekOffset--;renderSchedule();});
+document.getElementById('btn-next').addEventListener('click',()=>{weekOffset++;renderSchedule();});
+document.getElementById('btn-today').addEventListener('click',()=>{weekOffset=0;renderSchedule();showToast('Kembali ke minggu ini');});
 
-/* ─── WEEK NAV ─── */
-document.getElementById('btn-prev').addEventListener('click',  () => { weekOffset--; renderSchedule(); });
-document.getElementById('btn-next').addEventListener('click',  () => { weekOffset++; renderSchedule(); });
-document.getElementById('btn-today').addEventListener('click', () => { weekOffset = 0; renderSchedule(); showToast('Kembali ke minggu ini'); });
-
-/* ─── THEME ─── */
-const toggleBtn = document.getElementById('theme-toggle');
-document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
-toggleBtn.addEventListener('click', () => {
-  const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', t);
-  localStorage.setItem('theme', t);
+const toggleBtn=document.getElementById('theme-toggle');
+document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'light');
+toggleBtn.addEventListener('click',()=>{
+  const t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';
+  document.documentElement.setAttribute('data-theme',t);localStorage.setItem('theme',t);
 });
 
-/* ════════════════════════════════════════════════════════════
-   REALTIME — Ini inti perbaikan utama.
-   Setiap kali ada INSERT / UPDATE / DELETE di tabel jadwal_piket
-   dari browser manapun, loadData() dipanggil ulang sehingga
-   seluruh UI (kartu, checkbox, label, strip) langsung diperbarui
-   tanpa perlu refresh manual.
-════════════════════════════════════════════════════════════ */
+// Flag: true selama browser INI sedang menyimpan, agar event realtime
+// yang dipantulkan balik tidak memicu loadData() ganda
+let _savingNow = false;
+
 supabaseClient
   .channel('piket-realtime-v2')
-  .on(
-    'postgres_changes',
-    { event: '*', schema: 'public', table: 'jadwal_piket' },
-    (payload) => {
-      console.log('[Realtime index] perubahan diterima:', payload.eventType, payload.new?.date_key || '');
-      loadData(); // Tarik data terbaru & gambar ulang semua kartu
-    }
-  )
-  .subscribe((status) => {
-    console.log('[Realtime index] status channel:', status);
-  });
-
-/* ─── INIT ─── */
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal_piket' }, () => {
+    if (_savingNow) return; // abaikan pantulan dari diri sendiri
+    loadData();
+  })
+  .subscribe(status => console.log('[Realtime]', status));
 loadData();
 
-/* ─── PWA ─── */
 let deferredPrompt;
-const installContainer  = document.getElementById('install-container');
-const btnInstallCustom  = document.getElementById('btn-install-custom');
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installContainer.style.display = 'block';
-  btnInstallCustom.addEventListener('click', async () => {
-    installContainer.style.display = 'none';
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User memilih: ${outcome}`);
-    deferredPrompt = null;
+const installContainer=document.getElementById('install-container');
+const btnInstallCustom=document.getElementById('btn-install-custom');
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();deferredPrompt=e;installContainer.style.display='block';
+  btnInstallCustom.addEventListener('click',async()=>{
+    installContainer.style.display='none';deferredPrompt.prompt();
+    const{outcome}=await deferredPrompt.userChoice;
+    console.log(`User memilih: ${outcome}`);deferredPrompt=null;
   });
 });
-window.addEventListener('appinstalled', () => { installContainer.style.display = 'none'; deferredPrompt = null; });
+window.addEventListener('appinstalled',()=>{installContainer.style.display='none';deferredPrompt=null;});
 
-const isIOS            = /iphone|ipad|ipod/i.test(navigator.userAgent);
+// Tampilkan panduan manual untuk iOS Safari
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 const isInStandaloneMode = window.navigator.standalone === true;
 if (isIOS && !isInStandaloneMode) {
   installContainer.style.display = 'block';
-  document.getElementById('ios-install-hint').style.display  = 'block';
+  document.getElementById('ios-install-hint').style.display = 'block';
   document.getElementById('btn-install-custom').style.display = 'none';
 }
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg  => console.log('PWA Siap!', reg))
-      .catch(err => console.log('PWA Gagal:', err));
-  });
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then(reg=>console.log('PWA Siap!',reg)).catch(err=>console.log('PWA Gagal:',err));});
 }
 </script>
 </body>
