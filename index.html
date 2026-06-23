@@ -799,6 +799,7 @@ function setupRealtimeChannel() {
       (payload) => {
         console.log('[Realtime] INSERT diterima:', payload);
         loadData();
+        try { new BroadcastChannel('piket-sync').postMessage(1); } catch(e) {}
       }
     )
     .on(
@@ -807,6 +808,7 @@ function setupRealtimeChannel() {
       (payload) => {
         console.log('[Realtime] UPDATE diterima:', payload);
         loadData();
+        try { new BroadcastChannel('piket-sync').postMessage(1); } catch(e) {}
       }
     )
     .on(
@@ -815,6 +817,7 @@ function setupRealtimeChannel() {
       (payload) => {
         console.log('[Realtime] DELETE diterima:', payload);
         loadData();
+        try { new BroadcastChannel('piket-sync').postMessage(1); } catch(e) {}
       }
     )
     .subscribe((status, err) => {
