@@ -510,15 +510,15 @@ const supabaseClient = createClient(
 );
 /* ══ CONFIG ══ */
 const AVATAR_MAP = {
-  'ARWIN': 'https://i.ibb.co/hFdBHKbJ/GXI413m.webp',
-  'EDY': 'https://i.ibb.co/4ZJSdFbP/Kc-YNWOi.webp',
-  'ARIE': 'https://i.ibb.co/6cKcK6qS/DNYg-S7O.webp',
-  'JASON': 'https://i.ibb.co/WNvjbsrS/j-S1t-Nw5.webp',
-  'JERRI': 'https://i.ibb.co/k2W8yxJm/Bp-Owq-Ot.webp',
+  'ARWIN': 'https://i.imgur.com/mqnpYR4.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'EDY': 'https://i.imgur.com/BuJRkiz.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'ARIE': 'https://i.imgur.com/UhoVzcY.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'JASON': 'https://i.imgur.com/dtmA8It.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'JERRI': 'https://i.imgur.com/zmHTp4I.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'KADAFI': 'https://i.imgur.com/MJZwIPA.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'IBRAHIM': 'https://i.imgur.com/AhzwSJZ.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'ARRUAN': 'https://i.imgur.com/dh2yDvv.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'RIYAN': 'https://i.imgur.com/fV6XOJu.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'RIYANSAH': 'https://i.imgur.com/fV6XOJu.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'FIKRI': 'https://i.imgur.com/vj1OHx8.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'CELVIN': 'https://i.imgur.com/Hhk1xkB.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'RAMBO': 'https://i.imgur.com/dfIfgYc.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
