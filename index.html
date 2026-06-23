@@ -326,9 +326,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 </header>
 
 <div id="install-container" style="display:none;padding:0 1.4rem;margin-top:1rem;">
-  <div id="ios-install-hint" style="display:none;padding:10px 0 0;font-size:.75rem;color:var(--ink3);text-align:center;">
-    Di Safari: ketuk <strong>⎵ Share</strong> lalu pilih <strong>Add to Home Screen</strong>
-  </div>
   <button id="btn-install-custom" style="width:100%;padding:12px;background:var(--accent);color:white;border:none;border-radius:var(--r-lg);font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:var(--shadow);">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
     Pasang Aplikasi Kamar 5 Casper
@@ -351,12 +348,14 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 
 <div class="slider-wrap" id="sliderWrap">
   <div class="slider-track" id="sliderTrack">
-    <div class="slide"><img src="https://i.ibb.co/hFdBHKbJ/GXI413m.webp" alt="1" draggable="false"></div>
-    <div class="slide"><img src="https://i.ibb.co/4ZJSdFbP/Kc-YNWOi.webp" alt="2" draggable="false"></div>
-    <div class="slide"><img src="https://i.ibb.co/6cKcK6qS/DNYg-S7O.webp" alt="3" draggable="false"></div>
-    <div class="slide"><img src="https://i.ibb.co/WNvjbsrS/j-S1t-Nw5.webp" alt="4" draggable="false"></div>
-    <div class="slide"><img src="https://i.ibb.co/k2W8yxJm/Bp-Owq-Ot.webp" alt="5" draggable="false"></div>
-     </div>
+    <div class="slide"><img src="https://i.imgur.com/GXI413m.png" alt="1" draggable="false"></div>
+    <div class="slide"><img src="https://i.imgur.com/KcYNWOi.png" alt="2" draggable="false"></div>
+    <div class="slide"><img src="https://i.imgur.com/DNYgS7O.png" alt="3" draggable="false"></div>
+    <div class="slide"><img src="https://i.imgur.com/jS1tNw5.png" alt="4" draggable="false"></div>
+    <div class="slide"><img src="https://i.imgur.com/BpOwqOt.png" alt="5" draggable="false"></div>
+    <div class="slide"><img src="https://i.imgur.com/4C9ji7Z.png" alt="6" draggable="false"></div>
+    <div class="slide"><img src="https://i.imgur.com/L9PJLoa.png" alt="7" draggable="false"></div>
+  </div>
   <button class="slider-btn prev" id="sliderPrev">&#8592;</button>
   <button class="slider-btn next" id="sliderNext">&#8594;</button>
   <div class="slide-counter" id="slideCounter">1 / 7</div>
@@ -436,7 +435,7 @@ const PHOTOS = {
   'KADAFI': 'https://i.imgur.com/MJZwIPA.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'IBRAHIM': 'https://i.imgur.com/AhzwSJZ.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'ARRUAN': 'https://i.imgur.com/dh2yDvv.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'RIYANSAH': 'https://i.imgur.com/fV6XOJu.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'RIYAN': 'https://i.imgur.com/fV6XOJu.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'FIKRI': 'https://i.imgur.com/vj1OHx8.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'CELVIN': 'https://i.imgur.com/Hhk1xkB.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'RAMBO': 'https://i.imgur.com/dfIfgYc.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
@@ -448,15 +447,15 @@ const DAY_MAP = {
   2: ["ARIE","JASON"],       // Selasa
   3: ["JERRI","KADAFI"],     // Rabu
   4: ["IBRAHIM","ARRUAN"],   // Kamis
-  5: ["RIYANSAH"],           // Jumat
+  5: ["RIYAN"],           // Jumat
   6: ["FIKRI","CELVIN"],     // Sabtu
   0: ["RAMBO","M_DWI"]       // Minggu (tidak dipakai jika Minggu = libur)
 };
-const ROSTER = ["ARWIN","EDY","ARIE","JASON","JERRI","KADAFI","IBRAHIM","ARRUAN","RIYANSAH","FIKRI","CELVIN","RAMBO","M_DWI"];
+const ROSTER = ["ARWIN","EDY","ARIE","JASON","JERRI","KADAFI","IBRAHIM","ARRUAN","RIYAN","FIKRI","CELVIN","RAMBO","M_DWI"];
 const COLORS = {
   arwin:{cls:'av-arwin'},edy:{cls:'av-edy'},arie:{cls:'av-arie'},jason:{cls:'av-jason'},
   jerri:{cls:'av-jerri'},kadafi:{cls:'av-kadafi'},ibrahim:{cls:'av-ibrahim'},arruan:{cls:'av-arruan'},
-  riyansah:{cls:'av-riyansah'},fikri:{cls:'av-fikri'},celvin:{cls:'av-celvin'},rambo:{cls:'av-rambo'},m_dwi:{cls:'av-m_dwi'}
+  riyan:{cls:'av-riyan'},fikri:{cls:'av-fikri'},celvin:{cls:'av-celvin'},rambo:{cls:'av-rambo'},m_dwi:{cls:'av-m_dwi'}
 };
 const DAY_SHORT=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 const MON_SHORT=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
@@ -508,18 +507,12 @@ async function loadData(){
   renderStrip();renderSchedule();renderMembers();
 }
 
-async function saveStatus(dk, isDone) {
-  const current = doneMap[dk] || { done: false, photos: [], swappedName: null };
-  _savingNow = true; // kunci realtime selama simpan
-  const { error } = await supabaseClient.from('jadwal_piket').upsert({
-    date_key:     dk,
-    is_done:      isDone,
-    photo_url:    JSON.stringify(current.photos || []),
-    swapped_name: current.swappedName || null
-  });
-  setTimeout(() => { _savingNow = false; }, 1500); // buka kunci setelah 1.5 detik
-  if (error) { console.error('Save error:', error); showToast('Gagal sinkron!'); }
+async function saveStatus(dk,isDone){
+  const current=doneMap[dk]||{done:false,photos:[],swappedName:null};
+  const{error}=await supabaseClient.from('jadwal_piket').upsert({date_key:dk,is_done:isDone,photo_url:JSON.stringify(current.photos||[]),swapped_name:current.swappedName||null});
+  if(error){console.error('Save error:',error);showToast('Gagal sinkron!');}
 }
+
 async function handleUpload(input,dk){
   const files=Array.from(input.files||[]);if(!files.length)return;
   showToast(`Mengupload ${files.length} foto...`);
@@ -535,16 +528,14 @@ async function handleUpload(input,dk){
   if(!uploaded.length){showToast('Semua foto gagal diupload!');return;}
   if(!doneMap[dk])doneMap[dk]={done:true,photos:[],swappedName:null};
   const allPhotos=[...(doneMap[dk].photos||[]),...uploaded];
-  // is_done = true otomatis karena ada foto yang berhasil diupload
-  doneMap[dk].photos = allPhotos;
-  doneMap[dk].done   = allPhotos.length > 0;
+  doneMap[dk].photos=allPhotos;doneMap[dk].done=true;
 
   const{data:existingRow}=await supabaseClient.from('jadwal_piket').select('date_key').eq('date_key',dk).maybeSingle();
   let dbErr;
   if(existingRow){
-    ({error:dbErr}=await supabaseClient.from('jadwal_piket').update({is_done:allPhotos.length>0,photo_url:JSON.stringify(allPhotos)}).eq('date_key',dk));
+    ({error:dbErr}=await supabaseClient.from('jadwal_piket').update({is_done:true,photo_url:JSON.stringify(allPhotos)}).eq('date_key',dk));
   } else {
-    ({error:dbErr}=await supabaseClient.from('jadwal_piket').insert({date_key:dk,is_done:allPhotos.length>0,photo_url:JSON.stringify(allPhotos),swapped_name:doneMap[dk].swappedName||null}));
+    ({error:dbErr}=await supabaseClient.from('jadwal_piket').insert({date_key:dk,is_done:true,photo_url:JSON.stringify(allPhotos),swapped_name:doneMap[dk].swappedName||null}));
   }
 if(dbErr){console.error('Simpan foto error:',dbErr);showToast('Gagal simpan URL foto!');return;}
   showToast(`${uploaded.length} foto tersimpan!`);
@@ -576,10 +567,9 @@ async function hapusFotoIndividual(dk, photoUrl) {
 
   // 3. Sinkronkan ke database
 // 3. Sinkronkan ke database — pakai UPDATE (bukan upsert) agar RLS anon tidak diblokir
-  // Jika foto habis dihapus, is_done otomatis false
   const { error: dbErr } = await supabaseClient
     .from('jadwal_piket')
-    .update({ photo_url: JSON.stringify(sisaFoto), is_done: sisaFoto.length > 0 })
+    .update({ photo_url: JSON.stringify(sisaFoto) })
     .eq('date_key', dk);
   if (dbErr) { console.error('DB update error:', dbErr); showToast('Gagal update database!'); return; }
 
@@ -707,12 +697,8 @@ setInterval(updateClock,1000);updateClock();
 function renderStrip(){
   const strip=document.getElementById('today-strip');const txt=document.getElementById('strip-text');strip.className='today-strip';
   const person=getEffectivePerson(today);const dayData=doneMap[dateKey(today)];
-  // Selesai = ada foto bukti
-  const sudahAda = dayData && dayData.photos && dayData.photos.length > 0;
-  strip.classList.add(sudahAda ? 'on-duty' : 'on-duty');
-  txt.innerHTML = sudahAda
-    ? `✅ Piket <strong>${person}</strong> selesai — ada ${dayData.photos.length} foto bukti!`
-    : `Hari ini: <strong>${person}</strong> · Upload foto sebagai bukti piket`;
+  strip.classList.add('on-duty');
+  txt.innerHTML=(dayData&&dayData.done)?`Piket <strong>${person}</strong> selesai!`:`Hari ini: <strong>${person}</strong> - Semangat!`;
 }
 function renderSchedule(){
   const grid=document.getElementById('schedule-grid');
@@ -732,11 +718,9 @@ const personSecond=personArr[1]||null;
 const origPersonSecond=origArr[1]||null;
     const isSwapped=!!dayData.swappedName;const photos=dayData.photos||[];
     const avatarCls=person&&COLORS[person.toLowerCase()]?COLORS[person.toLowerCase()].cls:'av-faris';
-    // Selesai = ada foto, bukan dari checkbox manual
-    const isDoneByPhoto = photos.length > 0;
     let cls='day-card';
     if(isToday)cls+=' is-today status-live';
-    else if(isDoneByPhoto)cls+=' done-today status-done';
+    else if(dayData.done)cls+=' done-today status-done';
     else cls+=' status-upcoming';
     if(isSwapped)cls+=' is-swapped';
     let bodyContent='';
@@ -746,17 +730,21 @@ const origPersonSecond=origArr[1]||null;
       const photoCount=photos.length;const photoInfo=photoCount>0?`<span class="photo-count-badge">${photoCount} foto</span>`:'';
 const avatarClsSecond=personSecond&&COLORS[personSecond.toLowerCase()]?COLORS[personSecond.toLowerCase()].cls:'av-faris';
       const secondChip=personSecond?`<div class="person-chip" style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--border);"><div class="avatar ${avatarClsSecond}"><img src="${PHOTOS[personSecond]||''}" alt="${personSecond}"></div><div class="person-info"><div class="person-name">${personSecond}</div><div class="person-role">Giliran piket</div></div></div>`:'';
-      // Status selesai sekarang OTOMATIS dari foto — ada foto = selesai
-const statusBadge = photos.length > 0
-  ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;color:var(--today);background:var(--today-s);border:1.5px solid var(--today-b);padding:4px 10px;border-radius:7px;">✓ Selesai</span>`
-  : `<span style="display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;color:var(--ink4);background:var(--surface2);border:1.5px solid var(--border2);padding:4px 10px;border-radius:7px;">⏳ Belum</span>`;
-
-bodyContent=`<div class="day-row-main"><div style="flex:1;min-width:0;"><div class="person-chip"><div class="avatar ${avatarCls}"><img src="${PHOTOS[person]}" alt="${person}"></div><div class="person-info"><div class="person-name">${person}</div><div class="person-role">${isSwapped?'Pengganti piket':'Giliran piket'}</div>${isSwapped&&origPerson?`<div class="swap-tag">Tukar - asli: ${origPerson}</div>`:''}</div></div>${secondChip}</div><div class="card-actions">${statusBadge}<button class="btn-swap" onclick="openSwapModal('${dk}','${origPerson||person}')">Tukar</button></div></div><div class="photos-row">${thumbs}<label class="proof-add" title="Upload foto bukti"><span>+</span><span class="proof-add-lbl">Foto</span><input type="file" accept="image/*" multiple onchange="handleUpload(this,'${dk}')"></label>${photoInfo}</div>`;      
+      bodyContent=`<div class="day-row-main"><div style="flex:1;min-width:0;"><div class="person-chip"><div class="avatar ${avatarCls}"><img src="${PHOTOS[person]}" alt="${person}"></div><div class="person-info"><div class="person-name">${person}</div><div class="person-role">${isSwapped?'Pengganti piket':'Giliran piket'}</div>${isSwapped&&origPerson?`<div class="swap-tag">Tukar - asli: ${origPerson}</div>`:''}</div></div>${secondChip}</div><div class="card-actions"><div class="done-area"><label class="done-label" for="chk-${dk}">${dayData.done?'Selesai':'Tandai'}</label><input class="done-toggle" type="checkbox" id="chk-${dk}" data-dk="${dk}" ${dayData.done?'checked':''}></div><button class="btn-swap" onclick="openSwapModal('${dk}','${origPerson||person}')">Tukar</button></div></div><div class="photos-row">${thumbs}<label class="proof-add" title="Upload foto bukti"><span>+</span><span class="proof-add-lbl">Foto</span><input type="file" accept="image/*" multiple onchange="handleUpload(this,'${dk}')"></label>${photoInfo}</div>`;      
     }
     html+=`<div class="${cls}" style="animation-delay:${idx*0.04}s"><div class="day-header"><div class="day-name-col"><div class="day-short">${DAY_SHORT[date.getDay()]}</div><div class="day-date-num">${date.getDate()}</div><div class="day-month-sm">${MON_SHORT[date.getMonth()]}</div></div><div class="day-body">${bodyContent}</div></div></div>`;
   });
   grid.innerHTML=html;
-
+  grid.querySelectorAll('.done-toggle').forEach(chk=>{
+    chk.addEventListener('change',async function(){
+      const dk=this.dataset.dk;
+      if(!doneMap[dk])doneMap[dk]={done:false,photos:[],swappedName:null};
+      doneMap[dk].done=this.checked;if(!this.checked)doneMap[dk].photos=[];
+      await saveStatus(dk,this.checked);
+      renderSchedule();renderStrip();renderMembers();
+      showToast(this.checked?'Status diperbarui!':'Tanda dibatalkan');
+    });
+  });
 }
 
 function renderMembers(){
@@ -787,17 +775,8 @@ toggleBtn.addEventListener('click',()=>{
   document.documentElement.setAttribute('data-theme',t);localStorage.setItem('theme',t);
 });
 
-// Flag: true selama browser INI sedang menyimpan, agar event realtime
-// yang dipantulkan balik tidak memicu loadData() ganda
-let _savingNow = false;
+supabaseClient.channel('piket-realtime-v2').on('postgres_changes',{event:'*',schema:'public',table:'jadwal_piket'},()=>{loadData();}).subscribe();
 
-supabaseClient
-  .channel('piket-realtime-v2')
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal_piket' }, () => {
-    if (_savingNow) return; // abaikan pantulan dari diri sendiri
-    loadData();
-  })
-  .subscribe(status => console.log('[Realtime]', status));
 loadData();
 
 let deferredPrompt;
@@ -812,15 +791,6 @@ window.addEventListener('beforeinstallprompt',(e)=>{
   });
 });
 window.addEventListener('appinstalled',()=>{installContainer.style.display='none';deferredPrompt=null;});
-
-// Tampilkan panduan manual untuk iOS Safari
-const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-const isInStandaloneMode = window.navigator.standalone === true;
-if (isIOS && !isInStandaloneMode) {
-  installContainer.style.display = 'block';
-  document.getElementById('ios-install-hint').style.display = 'block';
-  document.getElementById('btn-install-custom').style.display = 'none';
-}
 
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then(reg=>console.log('PWA Siap!',reg)).catch(err=>console.log('PWA Gagal:',err));});
