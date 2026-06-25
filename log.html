@@ -508,49 +508,55 @@ const supabaseClient = createClient(
   'https://psyvamqzlleldjcgiaeh.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzeXZhbXF6bGxlbGRqY2dpYWVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNzkzMzEsImV4cCI6MjA5Nzc1NTMzMX0.Ju5uWl6aWmfw4kXIBgEX3p5Z5CR6UTmY3znlirM0iqk'
 );
-/* ══ CONFIG ══ */
+
 const AVATAR_MAP = {
-  'ARWIN': 'https://i.imgur.com/mqnpYR4.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'EDY': 'https://i.imgur.com/BuJRkiz.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'ARIE': 'https://i.imgur.com/UhoVzcY.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'JASON': 'https://i.imgur.com/dtmA8It.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'JERRI': 'https://i.imgur.com/zmHTp4I.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'ARWIN':  'https://i.imgur.com/mqnpYR4.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'EDY':    'https://i.imgur.com/BuJRkiz.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'ARIE':   'https://i.imgur.com/UhoVzcY.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'JASON':  'https://i.imgur.com/dtmA8It.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'JERRI':  'https://i.imgur.com/zmHTp4I.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'KADAFI': 'https://i.imgur.com/MJZwIPA.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'IBRAHIM': 'https://i.imgur.com/AhzwSJZ.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'IBRAHIM':'https://i.imgur.com/AhzwSJZ.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'ARRUAN': 'https://i.imgur.com/dh2yDvv.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'RIYAN': 'https://i.imgur.com/tvKZBHw.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'FIKRI': 'https://i.imgur.com/vj1OHx8.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'RIYAN':  'https://i.imgur.com/fV6XOJu.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'FIKRI':  'https://i.imgur.com/vj1OHx8.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'CELVIN': 'https://i.imgur.com/Hhk1xkB.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'RAMBO': 'https://i.imgur.com/dfIfgYc.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'M_DWI': 'https://i.imgur.com/rNTo22v.jpeg?auto=format&fit=crop&w=150&h=150&q=80'
+  'RAMBO':  'https://i.imgur.com/dfIfgYc.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'M_DWI':  'https://i.imgur.com/rNTo22v.jpeg?auto=format&fit=crop&w=150&h=150&q=80'
 };
 
-const AVATAR_CLS = {
-  ARWIN:'av-arwin', EDY:'av-edy', ARIE:'av-arie', JASON:'av-jason',
-  JERRI:'av-jerri', KADAFI:'av-kadafi', IBRAHIM:'av-ibrahim', ARRUAN:'av-arruan',
-  RIYAN:'av-RIYAN', FIKRI:'av-fikri', CELVIN:'av-celvin', RAMBO:'av-rambo', M_DWI:'av-m_dwi'
-};
-const DAY_MAP = {
-  1: ["ARWIN","EDY"], 2: ["ARIE","JASON"], 3: ["JERRI","KADAFI"],
-  4: ["IBRAHIM","ARRUAN"], 5: ["RIYAN"], 6: ["FIKRI","CELVIN"], 0: ["RAMBO","M_DWI"]
-};
-const ROSTER = ["ARWIN","EDY","ARIE","JASON","JERRI","KADAFI","IBRAHIM","ARRUAN","RIYAN","FIKRI","CELVIN","RAMBO","M_DWI"];
-const EPOCH  = new Date('2025-01-06');
-const DAY_SHORT = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+const KELOMPOK_PIKET = [
+  { minggu: 1, nama: ['JASON', 'ARIE', 'ARRUAN'] },
+  { minggu: 2, nama: ['IBRAHIM', 'FIKRI', 'CELVIN'] },
+  { minggu: 3, nama: ['KADAFI', 'RIYAN', 'ARWIN', 'EDY'] },
+  { minggu: 4, nama: ['JERRI', 'M_DWI', 'RAMBO'] }
+];
+
+const ROSTER    = ["ARWIN","EDY","ARIE","JASON","JERRI","KADAFI","IBRAHIM","ARRUAN","RIYAN","FIKRI","CELVIN","RAMBO","M_DWI"];
 const MON_SHORT = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 const MON_FULL  = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const DAY_SHORT = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 
 let allEntries   = [];
 let activeFilter = '';
 
 /* ══ HELPERS ══ */
-function calcPersonForDate(date) {
-  const people = DAY_MAP[date.getDay()];
-  return people && people.length ? people[0] : null; // ambil staf utama untuk histori/statistik per-orang
+function getMondayOf(date) {
+  const d = new Date(date); d.setHours(0,0,0,0);
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  return d;
 }
-function calcPersonForDateAll(date) {
-  return DAY_MAP[date.getDay()] || [];
+
+function getSundayOf(monday) {
+  const s = new Date(monday); s.setDate(monday.getDate() + 6); return s;
 }
+
+function fmtShortDate(d) {
+  return d.getDate() + ' ' + MON_SHORT[d.getMonth()] + ' ' + d.getFullYear();
+}
+
 function parsePhotos(raw) {
   if (!raw) return [];
   if (Array.isArray(raw)) return raw;
@@ -561,41 +567,53 @@ function parsePhotos(raw) {
   return [];
 }
 
-function fmtDate(dk) {
-  const [y,m,day] = dk.split('-').map(Number);
-  const d = new Date(y, m-1, day);
-  return { d, dayName:DAY_SHORT[d.getDay()], dayNum:d.getDate(), mon:MON_SHORT[d.getMonth()], year:d.getFullYear(), monFull:MON_FULL[d.getMonth()]+' '+d.getFullYear() };
-}
-
 /* ══ CLOCK ══ */
 function updateClock() {
   const now = new Date();
-  document.getElementById('live-date').textContent = now.getDate()+' '+MON_FULL[now.getMonth()]+' '+now.getFullYear();
-  document.getElementById('live-time').textContent = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('live-date').textContent =
+    now.getDate() + ' ' + MON_FULL[now.getMonth()] + ' ' + now.getFullYear();
+  document.getElementById('live-time').textContent =
+    String(now.getHours()).padStart(2,'0') + ':' +
+    String(now.getMinutes()).padStart(2,'0') + ':' +
+    String(now.getSeconds()).padStart(2,'0');
 }
 setInterval(updateClock, 1000); updateClock();
 
-/* ══ LOAD ══ */
+/* ══ LOAD DATA ══ */
 async function loadData() {
   const { data, error } = await supabaseClient
     .from('jadwal_piket')
-    .select('date_key, is_done, photo_url, swapped_name')
+    .select('week_key, date_key, is_done, photo_url, anggota_kelompok, minggu_ke, uploader')
     .eq('is_done', true)
     .order('date_key', { ascending: false });
 
   if (error) { console.error('Gagal load:', error); return; }
 
   allEntries = (data || []).map(item => {
-    const dk     = item.date_key;
-    const d      = new Date(dk + 'T00:00:00');
-    const calc   = calcPersonForDate(d);
-    const person = item.swapped_name || calc;
+    const photos   = parsePhotos(item.photo_url);
+    const anggota  = item.anggota_kelompok
+      ? item.anggota_kelompok.split(',').map(s => s.trim()).filter(Boolean)
+      : [];
+    const minggu_ke = item.minggu_ke;
+
+    // Tanggal Senin dari date_key (dipakai untuk display)
+    const refDate = item.date_key
+      ? new Date(item.date_key + 'T00:00:00')
+      : new Date();
+    const monday = getMondayOf(refDate);
+    const sunday = getSundayOf(monday);
+
     return {
-      dk, person, origPerson: calc,
-      isSwapped: !!item.swapped_name,
-      photos: parsePhotos(item.photo_url),
+      week_key:  item.week_key || item.date_key,
+      date_key:  item.date_key,
+      monday,
+      sunday,
+      minggu_ke,
+      anggota,
+      photos,
+      uploader:  item.uploader || null,
     };
-  }).filter(e => e.person);
+  }).filter(e => e.anggota.length > 0 || e.photos.length > 0);
 
   buildFilterOptions();
   updateSummary();
@@ -605,8 +623,13 @@ async function loadData() {
 /* ══ FILTER OPTIONS ══ */
 function buildFilterOptions() {
   const sel = document.getElementById('filter-person');
+  // Reset ke hanya option pertama
+  while (sel.options.length > 1) sel.remove(1);
+
   const counts = {};
-  allEntries.forEach(e => { counts[e.person] = (counts[e.person]||0)+1; });
+  allEntries.forEach(e => {
+    e.anggota.forEach(nama => { counts[nama] = (counts[nama] || 0) + 1; });
+  });
   ROSTER.forEach(p => {
     if (!counts[p]) return;
     const opt = document.createElement('option');
@@ -618,26 +641,29 @@ function buildFilterOptions() {
 /* ══ SUMMARY ══ */
 function updateSummary() {
   const now  = new Date();
-  const mon  = now.getMonth(); const yr = now.getFullYear();
-  let photoCount = 0, swapCount = 0, thisMonth = 0;
+  const mon  = now.getMonth();
+  const yr   = now.getFullYear();
+  let photoCount = 0, thisMonth = 0;
+
   allEntries.forEach(e => {
     if (e.photos.length > 0) photoCount++;
-    if (e.isSwapped) swapCount++;
-    const [y,m] = e.dk.split('-').map(Number);
-    if (y === yr && m-1 === mon) thisMonth++;
+    if (e.monday.getMonth() === mon && e.monday.getFullYear() === yr) thisMonth++;
   });
+
   document.getElementById('chip-total').textContent  = allEntries.length;
   document.getElementById('chip-photo').textContent  = photoCount;
-  document.getElementById('chip-swap').textContent   = swapCount;
+  document.getElementById('chip-swap').textContent   = '—';
   document.getElementById('chip-streak').textContent = thisMonth;
   document.getElementById('strip-summary').textContent =
-    `${allEntries.length} catatan piket tersimpan · ${thisMonth} bulan ini`;
+    `${allEntries.length} minggu piket tersimpan · ${thisMonth} bulan ini`;
 }
 
-/* ══ APPLY FILTER & RENDER ══ */
+/* ══ APPLY FILTER ══ */
 function applyFilter() {
   activeFilter = document.getElementById('filter-person').value;
-  const filtered = activeFilter ? allEntries.filter(e => e.person === activeFilter) : allEntries;
+  const filtered = activeFilter
+    ? allEntries.filter(e => e.anggota.includes(activeFilter))
+    : allEntries;
   document.getElementById('filter-count').textContent = `${filtered.length} catatan`;
   renderLog(filtered);
 }
@@ -645,76 +671,88 @@ function applyFilter() {
 /* ══ RENDER LOG ══ */
 function renderLog(entries) {
   const container = document.getElementById('log-container');
+
   if (!entries.length) {
     container.innerHTML = `
       <div class="empty-state">
         <div class="empty-icon">📭</div>
         <div class="empty-title">Belum Ada Histori</div>
-        <div class="empty-sub">${activeFilter ? `${activeFilter} belum punya catatan piket` : 'Belum ada piket yang selesai dicatat'}</div>
+        <div class="empty-sub">${activeFilter
+          ? `${activeFilter} belum punya catatan piket`
+          : 'Belum ada piket mingguan yang selesai dicatat'}</div>
       </div>`;
     return;
   }
 
-  /* Group by month */
+  /* Group by bulan dari Senin minggu tersebut */
   const groups = {};
   entries.forEach(e => {
-    const key = e.dk.slice(0,7); // YYYY-MM
+    const key = e.monday.getFullYear() + '-' + String(e.monday.getMonth() + 1).padStart(2,'0');
     if (!groups[key]) groups[key] = [];
     groups[key].push(e);
   });
 
   let html = '';
+
   Object.keys(groups).forEach((monthKey, gi) => {
     const [y, m] = monthKey.split('-').map(Number);
-    const label  = MON_FULL[m-1] + ' ' + y;
+    const label  = MON_FULL[m - 1] + ' ' + y;
     const items  = groups[monthKey];
 
     html += `<div class="month-group"><div class="month-header">${label}</div>`;
 
     items.forEach((e, idx) => {
-      const f = fmtDate(e.dk);
-      const cls = [
-        'log-card',
-        e.photos.length > 0 ? 'has-photo' : '',
-        e.isSwapped ? 'swapped' : '',
-      ].filter(Boolean).join(' ');
-
       const totalDelay = (gi * items.length + idx) * 0.04;
+      const hasFoto    = e.photos.length > 0;
+      const cls        = ['log-card', hasFoto ? 'has-photo' : ''].filter(Boolean).join(' ');
 
-      /* Thumbnails — max 3 visible + badge */
+      /* Thumbnails */
       let thumbsHtml = '';
-      if (e.photos.length > 0) {
-        const show = e.photos.slice(0,3);
+      if (hasFoto) {
+        const show = e.photos.slice(0, 3);
         const more = e.photos.length - 3;
         thumbsHtml = `<div class="log-thumbs">` +
-          show.map(url => `<img class="log-thumb" src="${url}" alt="" onclick="openLightbox('${url}','${e.person} — ${f.dayNum} ${f.mon} ${f.year}')">`).join('') +
+          show.map(url =>
+            `<img class="log-thumb" src="${url}" alt=""
+               onclick="openLightbox('${url}','Kelompok ${e.minggu_ke} · ${fmtShortDate(e.monday)}')">`
+          ).join('') +
           (more > 0 ? `<div class="log-more-badge">+${more}</div>` : '') +
           `</div>`;
       }
 
+      /* Avatar anggota */
+      const avatarStrip = e.anggota.slice(0, 4).map(nama =>
+        `<div style="width:32px;height:32px;border-radius:50%;overflow:hidden;
+                     border:2px solid var(--border);flex-shrink:0;display:inline-block;">
+           <img src="${AVATAR_MAP[nama] || ''}" alt="${nama}"
+                style="width:100%;height:100%;object-fit:cover;"
+                title="${nama}">
+         </div>`
+      ).join('');
+
       const badges = [
         `<span class="log-status-badge done">✓ Selesai</span>`,
-        e.photos.length > 0 ? `<span class="log-status-badge photo">📸 ${e.photos.length} foto</span>` : '',
-        e.isSwapped ? `<span class="log-status-badge swap">🔄 Tukar</span>` : '',
+        hasFoto ? `<span class="log-status-badge photo">📸 ${e.photos.length} foto</span>` : '',
+        e.minggu_ke ? `<span class="log-status-badge swap">Kelompok ${e.minggu_ke}</span>` : '',
       ].filter(Boolean).join('');
 
       html += `
         <div class="${cls}" style="animation-delay:${totalDelay}s">
           <div class="log-date-col">
-            <div class="log-day-name">${f.dayName}</div>
-            <div class="log-day-num">${f.dayNum}</div>
-            <div class="log-month">${f.mon}</div>
-            <div class="log-year">${f.year}</div>
+            <div class="log-day-name">Klp.</div>
+            <div class="log-day-num" style="font-size:1.3rem;">${e.minggu_ke || '?'}</div>
+            <div class="log-month">${MON_SHORT[e.monday.getMonth()]}</div>
+            <div class="log-year">${e.monday.getFullYear()}</div>
           </div>
           <div class="log-body">
             <div class="log-top">
-              <div class="log-person">
-                <div class="log-avatar ${AVATAR_CLS[e.person]||''}">
-                  <img src="${AVATAR_MAP[e.person]||''}" alt="${e.person}">
+              <div class="log-person" style="flex-direction:column;align-items:flex-start;gap:4px;">
+                <div style="font-size:.72rem;font-weight:700;color:var(--ink2);">
+                  📅 ${fmtShortDate(e.monday)} — ${fmtShortDate(e.sunday)}
                 </div>
-                <div>
-                  <div class="log-name">${e.person}</div>
-                  <div class="log-role">${e.isSwapped ? `Pengganti · asli: ${e.origPerson}` : 'Jadwal piket'}</div>
+                <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;">
+                  ${avatarStrip}
+                  <span style="font-size:.68rem;color:var(--ink3);margin-left:4px;">${e.anggota.join(', ')}</span>
                 </div>
               </div>
             </div>
@@ -722,6 +760,7 @@ function renderLog(entries) {
               ${badges}
               ${thumbsHtml}
             </div>
+            ${e.uploader ? `<div style="font-size:.6rem;color:var(--ink4);margin-top:4px;">📤 Upload: ${e.uploader}</div>` : ''}
           </div>
         </div>`;
     });
@@ -735,43 +774,45 @@ function renderLog(entries) {
 /* ══ LIGHTBOX ══ */
 function openLightbox(src, caption) {
   document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox-caption').textContent = caption||'';
+  document.getElementById('lightbox-caption').textContent = caption || '';
   document.getElementById('lightbox').classList.add('show');
 }
-document.getElementById('lightbox').addEventListener('click', function(e){ if(e.target===this) closeLightbox(); });
-document.getElementById('lightbox-close').addEventListener('click', ()=>{ document.getElementById('lightbox').classList.remove('show'); document.getElementById('lightbox-img').src=''; });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ document.getElementById('lightbox').classList.remove('show'); } });
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) {
+    this.classList.remove('show');
+    document.getElementById('lightbox-img').src = '';
+  }
+});
+document.getElementById('lightbox-close').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('show');
+  document.getElementById('lightbox-img').src = '';
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('show');
+});
 
 /* ══ THEME ══ */
 const toggleBtn = document.getElementById('theme-toggle');
-document.documentElement.setAttribute('data-theme', localStorage.getItem('theme')||'light');
-toggleBtn.addEventListener('click',()=>{
-  const t = document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';
-  document.documentElement.setAttribute('data-theme',t);
-  localStorage.setItem('theme',t);
+document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+toggleBtn.addEventListener('click', () => {
+  const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('theme', t);
 });
 
 /* ══ REALTIME ══ */
-// Terima sinyal dari index.html via BroadcastChannel
 try {
-  new BroadcastChannel('piket-sync').onmessage = () => {
-    console.log('[Log] Sinyal perubahan diterima — reload data');
-    loadData();
-  };
+  new BroadcastChannel('piket-sync').onmessage = () => loadData();
 } catch(e) {}
-
-// Polling fallback setiap 8 detik
 setInterval(loadData, 8000);
-
-// Reload saat tab aktif kembali
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') loadData();
 });
-/* ══ INIT ══ */
+
 loadData();
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('/sw.js').catch(()=>{}); });
+  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
 }
 </script>
 </body>
