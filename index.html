@@ -429,393 +429,602 @@ const supabaseClient = createClient(
   'https://psyvamqzlleldjcgiaeh.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzeXZhbXF6bGxlbGRqY2dpYWVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNzkzMzEsImV4cCI6MjA5Nzc1NTMzMX0.Ju5uWl6aWmfw4kXIBgEX3p5Z5CR6UTmY3znlirM0iqk'
 );
+
+/* ══════════════════════════════════════
+   DATA KELOMPOK MINGGUAN
+══════════════════════════════════════ */
 const PHOTOS = {
-  'ARWIN': 'https://i.imgur.com/mqnpYR4.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'EDY': 'https://i.imgur.com/BuJRkiz.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'ARIE': 'https://i.imgur.com/UhoVzcY.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'JASON': 'https://i.imgur.com/dtmA8It.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'JERRI': 'https://i.imgur.com/zmHTp4I.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'ARWIN':  'https://i.imgur.com/mqnpYR4.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'EDY':    'https://i.imgur.com/BuJRkiz.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'ARIE':   'https://i.imgur.com/UhoVzcY.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'JASON':  'https://i.imgur.com/dtmA8It.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'JERRI':  'https://i.imgur.com/zmHTp4I.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'KADAFI': 'https://i.imgur.com/MJZwIPA.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'IBRAHIM': 'https://i.imgur.com/AhzwSJZ.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'IBRAHIM':'https://i.imgur.com/AhzwSJZ.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'ARRUAN': 'https://i.imgur.com/dh2yDvv.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'RIYAN': 'https://i.imgur.com/fV6XOJu.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'FIKRI': 'https://i.imgur.com/vj1OHx8.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'RIYAN':  'https://i.imgur.com/fV6XOJu.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'FIKRI':  'https://i.imgur.com/vj1OHx8.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
   'CELVIN': 'https://i.imgur.com/Hhk1xkB.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'RAMBO': 'https://i.imgur.com/dfIfgYc.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
-  'M_DWI': 'https://i.imgur.com/rNTo22v.jpeg?auto=format&fit=crop&w=150&h=150&q=80'
+  'RAMBO':  'https://i.imgur.com/dfIfgYc.jpeg?auto=format&fit=crop&w=150&h=150&q=80',
+  'M_DWI':  'https://i.imgur.com/rNTo22v.jpeg?auto=format&fit=crop&w=150&h=150&q=80'
 };
-// Pemetaan langsung per hari (0=Minggu...6=Sabtu), bisa 1 atau 2 orang per hari
-const DAY_MAP = {
-  1: ["ARWIN","EDY"],        // Senin
-  2: ["ARIE","JASON"],       // Selasa
-  3: ["JERRI","KADAFI"],     // Rabu
-  4: ["IBRAHIM","ARRUAN"],   // Kamis
-  5: ["RIYAN"],           // Jumat
-  6: ["FIKRI","CELVIN"],     // Sabtu
-  0: ["RAMBO","M_DWI"]       // Minggu (tidak dipakai jika Minggu = libur)
-};
+
+const KELOMPOK_PIKET = [
+  { minggu: 1, nama: ['JASON', 'ARIE', 'ARRUAN'] },
+  { minggu: 2, nama: ['IBRAHIM', 'FIKRI', 'CELVIN'] },
+  { minggu: 3, nama: ['KADAFI', 'RIYAN', 'ARWIN', 'EDY'] },
+  { minggu: 4, nama: ['JERRI', 'M_DWI', 'RAMBO'] }
+];
+
 const ROSTER = ["ARWIN","EDY","ARIE","JASON","JERRI","KADAFI","IBRAHIM","ARRUAN","RIYAN","FIKRI","CELVIN","RAMBO","M_DWI"];
-const COLORS = {
-  arwin:{cls:'av-arwin'},edy:{cls:'av-edy'},arie:{cls:'av-arie'},jason:{cls:'av-jason'},
-  jerri:{cls:'av-jerri'},kadafi:{cls:'av-kadafi'},ibrahim:{cls:'av-ibrahim'},arruan:{cls:'av-arruan'},
-  RIYAN:{cls:'av-RIYAN'},fikri:{cls:'av-fikri'},celvin:{cls:'av-celvin'},rambo:{cls:'av-rambo'},m_dwi:{cls:'av-m_dwi'}
-};
-const DAY_SHORT=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
-const MON_SHORT=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-const MON_FULL=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const PTS_DONE=10,PTS_PHOTO=5;
+const DAY_SHORT  = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+const MON_SHORT  = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const MON_FULL   = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
-const today=new Date();today.setHours(0,0,0,0);
-const EPOCH=new Date('2025-01-06');
-let weekOffset=0,doneMap={};
-let swapDateKey=null,swapSelectedNames=[],swapOriginalName=null;
+/* ══ STATE ══ */
+const today = new Date(); today.setHours(0,0,0,0);
+let weekOffset = 0;   // offset dari minggu sekarang (dalam minggu)
+let weekDataMap = {}; // { "2026-W26": { done, photos, uploader, anggota } }
 
-function dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function fmtDateLabel(dk){const[y,m,day]=dk.split('-').map(Number);const d=new Date(y,m-1,day);return d.getDate()+' '+MON_SHORT[d.getMonth()]+' '+d.getFullYear();}
-function calcPersonForDate(date){
-  const people = DAY_MAP[date.getDay()];
-  return people && people.length ? people : null;
-}
-function getEffectivePerson(date){
-  const dk=dateKey(date);const data=doneMap[dk];
-  if(data?.swappedName){
-    // swappedName bisa "NAMA1" atau "NAMA1, NAMA2"
-    return data.swappedName.split(',').map(s=>s.trim()).filter(Boolean);
-  }
-  return calcPersonForDate(date);
-}
-function parsePhotos(raw){if(!raw)return[];if(Array.isArray(raw))return raw;if(typeof raw==='string'){if(raw.startsWith('[')){try{return JSON.parse(raw);}catch{return[raw];}}if(raw.startsWith('http'))return[raw];}return[];}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),2400);}
+/* ══════════════════════════════════════
+   HELPERS MINGGUAN
+══════════════════════════════════════ */
 
-(function(){
-  const TOTAL=5,INTERVAL=2200;
-  const track=document.getElementById('sliderTrack');
-  const dotsWrap=document.getElementById('sliderDots');
-  const counter=document.getElementById('slideCounter');
-  let cur=0,timer=null;
-  for(let i=0;i<TOTAL;i++){const d=document.createElement('button');d.className='dot'+(i===0?' active':'');d.addEventListener('click',()=>goTo(i,true));dotsWrap.appendChild(d);}
-  function updateUI(){track.style.transform=`translateX(-${cur*100}%)`;counter.textContent=`${cur+1} / ${TOTAL}`;dotsWrap.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));}
-  function goTo(idx,manual){cur=(idx+TOTAL)%TOTAL;updateUI();if(manual){clearInterval(timer);startAP();}}
-  function startAP(){timer=setInterval(()=>{cur=(cur+1)%TOTAL;updateUI();},INTERVAL);}
-  document.getElementById('sliderPrev').addEventListener('click',()=>goTo(cur-1,true));
-  document.getElementById('sliderNext').addEventListener('click',()=>goTo(cur+1,true));
-  updateUI();startAP();
-})();
-
-async function loadData(){
-  const{data,error}=await supabaseClient.from('jadwal_piket').select('date_key,is_done,photo_url,swapped_name');
-  if(error){console.error('Gagal load:',error);return;}
-  doneMap={};
-  (data||[]).forEach(item=>{doneMap[item.date_key]={done:item.is_done||false,photos:parsePhotos(item.photo_url),swappedName:item.swapped_name||null};});
-  renderStrip();renderSchedule();renderMembers();
+/** Hitung Senin dari tanggal manapun */
+function getMondayOf(date) {
+  const d = new Date(date);
+  d.setHours(0,0,0,0);
+  const day = d.getDay(); // 0=Min
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  return d;
 }
 
-async function saveStatus(dk, isDone) {
-  const current = doneMap[dk] || { done: false, photos: [], swappedName: null };
-  _savingNow = true; // kunci realtime selama simpan
-  const { error } = await supabaseClient.from('jadwal_piket').upsert({
-    date_key:     dk,
-    is_done:      isDone,
-    photo_url:    JSON.stringify(current.photos || []),
-    swapped_name: current.swappedName || null
-  });
-  setTimeout(() => { _savingNow = false; }, 1500); // buka kunci setelah 1.5 detik
-  if (error) { console.error('Save error:', error); showToast('Gagal sinkron!'); }
+/** Format key minggu: "YYYY-WNN" */
+function weekKey(monday) {
+  // Gunakan ISO week number
+  const d = new Date(monday);
+  d.setHours(0,0,0,0);
+  const jan4 = new Date(d.getFullYear(), 0, 4);
+  const startOfWeek1 = getMondayOf(jan4);
+  const diffMs = d - startOfWeek1;
+  const weekNum = Math.floor(diffMs / (7 * 24 * 60 * 60 * 1000)) + 1;
+  return d.getFullYear() + '-W' + String(weekNum).padStart(2, '0');
 }
-async function handleUpload(input,dk){
-  const files=Array.from(input.files||[]);if(!files.length)return;
-  showToast(`Mengupload ${files.length} foto...`);
-  const uploaded=[];
-  for(const file of files){
-    const ext=file.name.split('.').pop()||'jpg';
-    const fileName=`${dk}-${Date.now()}-${Math.random().toString(36).slice(2,6)}.${ext}`;
-    const{error:upErr}=await supabaseClient.storage.from('foto-piket').upload(fileName,file,{upsert:true});
-    if(upErr){console.error('Upload error:',upErr);continue;}
-    const{data:urlData}=supabaseClient.storage.from('foto-piket').getPublicUrl(fileName);
-    uploaded.push(urlData.publicUrl);
-  }
-  if(!uploaded.length){showToast('Semua foto gagal diupload!');return;}
-  if(!doneMap[dk])doneMap[dk]={done:true,photos:[],swappedName:null};
-  const allPhotos=[...(doneMap[dk].photos||[]),...uploaded];
-  // is_done = true otomatis karena ada foto yang berhasil diupload
-  doneMap[dk].photos = allPhotos;
-  doneMap[dk].done   = allPhotos.length > 0;
-
-  const{data:existingRow}=await supabaseClient.from('jadwal_piket').select('date_key').eq('date_key',dk).maybeSingle();
-  let dbErr;
-  if(existingRow){
-    ({error:dbErr}=await supabaseClient.from('jadwal_piket').update({is_done:allPhotos.length>0,photo_url:JSON.stringify(allPhotos)}).eq('date_key',dk));
-  } else {
-    ({error:dbErr}=await supabaseClient.from('jadwal_piket').insert({date_key:dk,is_done:allPhotos.length>0,photo_url:JSON.stringify(allPhotos),swapped_name:doneMap[dk].swappedName||null}));
-  }
-if(dbErr){console.error('Simpan foto error:',dbErr);showToast('Gagal simpan URL foto!');return;}
-  showToast(`${uploaded.length} foto tersimpan!`);
-  await loadData();
-}  // ← TUTUP FUNGSI handleUpload — INI YANG HILANG
 
 /**
- * Hapus SATU foto bukti piket secara individual.
- * Menghapus file fisik di Supabase Storage DAN memperbarui kolom photo_url di tabel.
- * @param {string} dk        date_key terkait
- * @param {string} photoUrl  URL publik foto yang akan dihapus
+ * Tentukan kelompok piket untuk minggu tertentu
+ * Berdasarkan ISO week number modulus 4 → siklus 1-2-3-4
  */
-async function hapusFotoIndividual(dk, photoUrl) {
-  if (!confirm('Hapus foto bukti ini secara permanen?')) return;
+function getKelompokForMonday(monday) {
+  const d = new Date(monday);
+  d.setHours(0,0,0,0);
+  const jan4 = new Date(d.getFullYear(), 0, 4);
+  const startOfWeek1 = getMondayOf(jan4);
+  const diffMs = d - startOfWeek1;
+  const weekNum = Math.floor(diffMs / (7 * 24 * 60 * 60 * 1000)) + 1;
+  // (weekNum - 1) % 4 → 0,1,2,3 → index ke KELOMPOK_PIKET[0..3]
+  const idx = ((weekNum - 1) % 4 + 4) % 4;
+  return KELOMPOK_PIKET[idx];
+}
 
-  // Ekstrak nama file dari URL publik Supabase Storage
-  // Format publicUrl: https://xxx.supabase.co/storage/v1/object/public/foto-piket/NAMAFILE.ext
+/** Senin minggu ini + offset */
+function getMondayWithOffset(offset) {
+  const mon = getMondayOf(today);
+  mon.setDate(mon.getDate() + offset * 7);
+  return mon;
+}
+
+/** Minggu (Ahad) dari Senin */
+function getSundayOf(monday) {
+  const sun = new Date(monday);
+  sun.setDate(monday.getDate() + 6);
+  return sun;
+}
+
+function fmtShort(date) {
+  return date.getDate() + ' ' + MON_SHORT[date.getMonth()];
+}
+
+function parsePhotos(raw) {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw;
+  if (typeof raw === 'string') {
+    if (raw.startsWith('[')) { try { return JSON.parse(raw); } catch { return [raw]; } }
+    if (raw.startsWith('http')) return [raw];
+  }
+  return [];
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ══ CLOCK ══ */
+function updateClock() {
+  const now = new Date();
+  document.getElementById('live-date').textContent =
+    now.getDate() + ' ' + MON_FULL[now.getMonth()] + ' ' + now.getFullYear();
+  document.getElementById('live-time').textContent =
+    String(now.getHours()).padStart(2,'0') + ':' +
+    String(now.getMinutes()).padStart(2,'0') + ':' +
+    String(now.getSeconds()).padStart(2,'0');
+}
+setInterval(updateClock, 1000); updateClock();
+
+/* ══ SLIDER ══ */
+(function() {
+  const TOTAL = 5, INTERVAL = 2200;
+  const track = document.getElementById('sliderTrack');
+  const dotsWrap = document.getElementById('sliderDots');
+  const counter  = document.getElementById('slideCounter');
+  let cur = 0, timer = null;
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i, true));
+    dotsWrap.appendChild(d);
+  }
+  function updateUI() {
+    track.style.transform = `translateX(-${cur * 100}%)`;
+    counter.textContent = `${cur + 1} / ${TOTAL}`;
+    dotsWrap.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+  }
+  function goTo(idx, manual) {
+    cur = (idx + TOTAL) % TOTAL; updateUI();
+    if (manual) { clearInterval(timer); startAP(); }
+  }
+  function startAP() { timer = setInterval(() => { cur = (cur + 1) % TOTAL; updateUI(); }, INTERVAL); }
+  document.getElementById('sliderPrev').addEventListener('click', () => goTo(cur - 1, true));
+  document.getElementById('sliderNext').addEventListener('click', () => goTo(cur + 1, true));
+  updateUI(); startAP();
+})();
+
+/* ══════════════════════════════════════
+   LOAD DATA DARI SUPABASE
+══════════════════════════════════════ */
+async function loadData() {
+  const { data, error } = await supabaseClient
+    .from('jadwal_piket')
+    .select('week_key, minggu_ke, is_done, photo_url, anggota_kelompok, uploader');
+  if (error) { console.error('Gagal load:', error); return; }
+
+  weekDataMap = {};
+  (data || []).forEach(item => {
+    if (!item.week_key) return;
+    weekDataMap[item.week_key] = {
+      done:     item.is_done || false,
+      photos:   parsePhotos(item.photo_url),
+      uploader: item.uploader || null,
+      anggota:  item.anggota_kelompok ? item.anggota_kelompok.split(',') : [],
+      minggu_ke: item.minggu_ke || null
+    };
+  });
+
+  renderStrip();
+  renderSchedule();
+  renderMembers();
+}
+
+/* ══════════════════════════════════════
+   RENDER STRIP HEADER (minggu berjalan)
+══════════════════════════════════════ */
+function renderStrip() {
+  const strip = document.getElementById('today-strip');
+  const txt   = document.getElementById('strip-text');
+  const mon   = getMondayOf(today);
+  const kelompok = getKelompokForMonday(mon);
+  const wk    = weekKey(mon);
+  const data  = weekDataMap[wk];
+  const selesai = data && data.photos && data.photos.length > 0;
+
+  strip.className = 'today-strip ' + (selesai ? 'on-duty' : 'on-duty');
+  if (selesai) {
+    txt.innerHTML = `✅ Minggu ini selesai! Kelompok <strong>${kelompok.nama.join(', ')}</strong> — ${data.photos.length} foto`;
+  } else {
+    txt.innerHTML = `Minggu ini: Kelompok <strong>${kelompok.nama.join(', ')}</strong> — Upload foto sebagai bukti`;
+  }
+}
+
+/* ══════════════════════════════════════
+   RENDER KARTU KELOMPOK MINGGUAN
+══════════════════════════════════════ */
+function renderSchedule() {
+  const grid = document.getElementById('schedule-grid');
+
+  // Hitung 3 minggu: sebelumnya, ini, sesudahnya — tampilkan yang di-offset
+  // Kita tampilkan satu kartu besar per minggu yang dipilih
+  // + preview mini 2 minggu tetangga
+
+  const weeks = [-1, 0, 1].map(i => {
+    const mon = getMondayWithOffset(weekOffset + i);
+    const sun = getSundayOf(mon);
+    const kelompok = getKelompokForMonday(mon);
+    const wk = weekKey(mon);
+    const data = weekDataMap[wk] || { done: false, photos: [], uploader: null, anggota: [] };
+    return { mon, sun, kelompok, wk, data, isCurrent: i === 0 };
+  });
+
+  const [prev, curr, next] = weeks;
+
+  // Update label navigasi
+  document.getElementById('week-label').textContent =
+    fmtShort(curr.mon) + ' — ' + fmtShort(curr.sun) + ' ' + curr.sun.getFullYear();
+
+  // Bangun HTML
+  let html = '';
+
+  // Kartu utama minggu yang dipilih
+  html += buildWeekCard(curr, true);
+
+  // Preview mini minggu tetangga
+  html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem;">`;
+  html += buildWeekCardMini(prev, '← Minggu Lalu');
+  html += buildWeekCardMini(next, 'Minggu Depan →');
+  html += `</div>`;
+
+  grid.innerHTML = html;
+
+  // Pasang event listener checkbox toggle setelah render
+  const chk = document.getElementById('chk-done-' + curr.wk);
+  if (chk) {
+    chk.addEventListener('change', async function() {
+      const isDone = this.checked;
+      if (!weekDataMap[curr.wk]) weekDataMap[curr.wk] = { done: false, photos: [], uploader: null, anggota: curr.kelompok.nama };
+      weekDataMap[curr.wk].done = isDone;
+      await saveWeekStatus(curr.wk, curr.kelompok, isDone, weekDataMap[curr.wk].photos);
+      renderStrip(); renderSchedule(); renderMembers();
+      showToast(isDone ? 'Status minggu diperbarui!' : 'Tanda dibatalkan');
+    });
+  }
+}
+
+function buildWeekCard(week, isMain) {
+  const { mon, sun, kelompok, wk, data } = week;
+  const isCurrentWeek = weekOffset === 0;
+  const photos  = data.photos || [];
+  const selesai = photos.length > 0;
+  const lewat   = sun < today && !selesai;
+
+  let cardCls = 'day-card';
+  if (isCurrentWeek) cardCls += ' is-today status-live';
+  else if (selesai)  cardCls += ' done-today status-done';
+  else if (lewat)    cardCls += ' status-done'; // merah, terlewat
+  else               cardCls += ' status-upcoming';
+
+  // Status badge
+  let statusBadge = '';
+  if (selesai) {
+    statusBadge = `<span style="display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;color:var(--today);background:var(--today-s);border:1.5px solid var(--today-b);padding:4px 10px;border-radius:7px;">✓ Selesai</span>`;
+  } else if (lewat) {
+    statusBadge = `<span style="display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;color:var(--sunday);background:var(--sunday-s);border:1.5px solid var(--sunday-b);padding:4px 10px;border-radius:7px;">⚠ Terlewat</span>`;
+  } else if (isCurrentWeek) {
+    statusBadge = `<span style="display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;color:var(--gold);background:var(--gold-s);border:1.5px solid var(--gold-b);padding:4px 10px;border-radius:7px;">⏳ Menunggu Eksekusi</span>`;
+  } else {
+    statusBadge = `<span style="display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;color:var(--ink4);background:var(--surface2);border:1.5px solid var(--border2);padding:4px 10px;border-radius:7px;">📅 Belum Giliran</span>`;
+  }
+
+  // Avatar kelompok
+  const avatarRow = kelompok.nama.map(nama =>
+    `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--border);">
+      <div class="avatar" style="width:44px;height:44px;flex-shrink:0;">
+        <img src="${PHOTOS[nama] || ''}" alt="${nama}">
+      </div>
+      <div>
+        <div class="person-name" style="font-size:.88rem;">${nama}</div>
+        <div class="person-role">Anggota kelompok Minggu ${kelompok.minggu}</div>
+      </div>
+    </div>`
+  ).join('');
+
+  // Foto thumbnails
+  const thumbs = photos.map(url =>
+    `<div style="position:relative;display:inline-block;">
+       <img src="${url}" class="proof-thumb"
+         onclick="openLightbox('${url}','Bukti Piket ${fmtShort(mon)}–${fmtShort(sun)}')"
+         title="Lihat foto bukti">
+       <button onclick="event.stopPropagation();hapusFotoMinggu('${wk}','${url}')"
+         style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;
+                background:var(--sunday);color:#fff;border:none;font-size:11px;cursor:pointer;line-height:1;">✕</button>
+     </div>`
+  ).join('');
+
+  const photoCount = photos.length;
+  const photoInfo  = photoCount > 0
+    ? `<span class="photo-count-badge">${photoCount} foto</span>` : '';
+
+  return `
+    <div class="${cardCls}" style="animation-delay:.03s">
+      <div class="day-header">
+        <div class="day-name-col" style="min-width:72px;">
+          <div class="day-short">MINGGU</div>
+          <div class="day-date-num" style="font-size:1.8rem;">${kelompok.minggu}</div>
+          <div class="day-month-sm">Siklus</div>
+        </div>
+        <div class="day-body">
+          <!-- Range tanggal & status -->
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;margin-bottom:8px;">
+            <div style="font-size:.75rem;font-weight:700;color:var(--ink2);">
+              📅 ${fmtShort(mon)} — ${fmtShort(sun)} ${sun.getFullYear()}
+            </div>
+            ${statusBadge}
+          </div>
+
+          <!-- Anggota kelompok -->
+          <div style="margin-bottom:8px;">
+            ${avatarRow}
+          </div>
+
+          <!-- Upload foto -->
+          <div class="photos-row">
+            ${thumbs}
+            <label class="proof-add" title="Upload foto bukti piket minggu ini">
+              <span>+</span>
+              <span class="proof-add-lbl">Foto</span>
+              <input type="file" accept="image/*" multiple onchange="handleUploadWeek(this,'${wk}')">
+            </label>
+            ${photoInfo}
+          </div>
+
+          ${data.uploader ? `<div style="font-size:.65rem;color:var(--ink3);margin-top:6px;">📤 Upload oleh: <strong>${data.uploader}</strong></div>` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildWeekCardMini(week, label) {
+  const { mon, sun, kelompok, wk, data } = week;
+  const selesai = data.photos && data.photos.length > 0;
+  const lewat   = sun < today && !selesai;
+
+  let color = selesai ? 'var(--today)' : lewat ? 'var(--sunday)' : 'var(--ink3)';
+  let bg    = selesai ? 'var(--today-s)' : lewat ? 'var(--sunday-s)' : 'var(--surface2)';
+  let border= selesai ? 'var(--today-b)' : lewat ? 'var(--sunday-b)' : 'var(--border)';
+  let icon  = selesai ? '✅' : lewat ? '⚠' : '📅';
+
+  return `
+    <div style="background:var(--surface);border:1.5px solid ${border};border-radius:var(--r-lg);
+                padding:.8rem;text-align:center;cursor:pointer;transition:all .15s;"
+         onclick="weekOffset+=${week === week ? (label.includes('Lalu') ? -1 : 1) : 0};renderSchedule();">
+      <div style="font-size:.62rem;font-weight:700;color:var(--ink3);margin-bottom:4px;">${label}</div>
+      <div style="font-size:.7rem;font-weight:700;color:var(--ink2);">
+        Kelompok ${kelompok.minggu}
+      </div>
+      <div style="font-size:.62rem;color:var(--ink3);margin-bottom:6px;">${fmtShort(mon)}–${fmtShort(sun)}</div>
+      <div style="font-size:.65rem;font-weight:700;color:${color};background:${bg};
+                  border:1px solid ${border};padding:3px 8px;border-radius:5px;display:inline-block;">
+        ${icon} ${selesai ? 'Selesai' : lewat ? 'Terlewat' : 'Belum'}
+      </div>
+    </div>`;
+}
+
+/* ══════════════════════════════════════
+   UPLOAD FOTO MINGGU
+══════════════════════════════════════ */
+async function handleUploadWeek(input, wk) {
+  const files = Array.from(input.files || []);
+  if (!files.length) return;
+  showToast(`Mengupload ${files.length} foto...`);
+
+  const mon = getMondayWithOffset(weekOffset);
+  const kelompok = getKelompokForMonday(mon);
+  const uploaded = [];
+
+  for (const file of files) {
+    const ext = file.name.split('.').pop() || 'jpg';
+    const fileName = `week-${wk}-${Date.now()}-${Math.random().toString(36).slice(2,6)}.${ext}`;
+    const { error: upErr } = await supabaseClient.storage
+      .from('foto-piket').upload(fileName, file, { upsert: true });
+    if (upErr) { console.error('Upload error:', upErr); continue; }
+    const { data: urlData } = supabaseClient.storage.from('foto-piket').getPublicUrl(fileName);
+    uploaded.push(urlData.publicUrl);
+  }
+
+  if (!uploaded.length) { showToast('Semua foto gagal diupload!'); return; }
+
+  if (!weekDataMap[wk]) weekDataMap[wk] = { done: true, photos: [], uploader: null, anggota: kelompok.nama };
+  const allPhotos = [...(weekDataMap[wk].photos || []), ...uploaded];
+  weekDataMap[wk].photos = allPhotos;
+  weekDataMap[wk].done   = true;
+
+  await saveWeekStatus(wk, kelompok, true, allPhotos);
+  showToast(`${uploaded.length} foto bukti tersimpan!`);
+  await loadData();
+}
+
+/* ══════════════════════════════════════
+   SIMPAN STATUS MINGGU KE SUPABASE
+══════════════════════════════════════ */
+async function saveWeekStatus(wk, kelompok, isDone, photos) {
+  const mon = getMondayOf(
+    (() => {
+      // Reconstruct monday dari week_key
+      const [year, weekStr] = wk.split('-W');
+      const jan4 = new Date(Number(year), 0, 4);
+      const startW1 = getMondayOf(jan4);
+      const mon = new Date(startW1);
+      mon.setDate(startW1.getDate() + (Number(weekStr) - 1) * 7);
+      return mon;
+    })()
+  );
+
+  const { data: existing } = await supabaseClient
+    .from('jadwal_piket').select('week_key').eq('week_key', wk).maybeSingle();
+
+  const payload = {
+    week_key:          wk,
+    minggu_ke:         kelompok.minggu,
+    is_done:           isDone,
+    photo_url:         JSON.stringify(photos || []),
+    anggota_kelompok:  kelompok.nama.join(','),
+    // Gunakan date_key = Senin minggu itu untuk kompatibilitas tabel lama
+    date_key:          mon.getFullYear() + '-' +
+                       String(mon.getMonth() + 1).padStart(2, '0') + '-' +
+                       String(mon.getDate()).padStart(2, '0'),
+  };
+
+  let err;
+  if (existing) {
+    ({ error: err } = await supabaseClient.from('jadwal_piket').update(payload).eq('week_key', wk));
+  } else {
+    ({ error: err } = await supabaseClient.from('jadwal_piket').insert(payload));
+  }
+  if (err) { console.error('saveWeekStatus error:', err); showToast('Gagal simpan!'); }
+}
+
+/* ══════════════════════════════════════
+   HAPUS SATU FOTO DARI MINGGU
+══════════════════════════════════════ */
+async function hapusFotoMinggu(wk, photoUrl) {
+  if (!confirm('Hapus foto bukti ini secara permanen?')) return;
   const fileName = photoUrl.split('/foto-piket/').pop();
   if (!fileName) { showToast('URL foto tidak valid!'); return; }
 
-  // 1. Hapus file fisik dari Storage Bucket
   const { error: storageErr } = await supabaseClient.storage.from('foto-piket').remove([fileName]);
-  if (storageErr) { console.error('Gagal hapus file storage:', storageErr); showToast('Gagal hapus file foto!'); return; }
+  if (storageErr) { showToast('Gagal hapus file foto!'); return; }
 
-  // 2. Update array foto di doneMap (buang foto yang dihapus)
-  if (!doneMap[dk]) return;
-  const sisaFoto = (doneMap[dk].photos || []).filter(url => url !== photoUrl);
-  doneMap[dk].photos = sisaFoto;
+  if (!weekDataMap[wk]) return;
+  const sisaFoto = (weekDataMap[wk].photos || []).filter(u => u !== photoUrl);
+  weekDataMap[wk].photos = sisaFoto;
 
-  // 3. Sinkronkan ke database
-// 3. Sinkronkan ke database — pakai UPDATE (bukan upsert) agar RLS anon tidak diblokir
-  // Jika foto habis dihapus, is_done otomatis false
   const { error: dbErr } = await supabaseClient
     .from('jadwal_piket')
     .update({ photo_url: JSON.stringify(sisaFoto), is_done: sisaFoto.length > 0 })
-    .eq('date_key', dk);
-  if (dbErr) { console.error('DB update error:', dbErr); showToast('Gagal update database!'); return; }
+    .eq('week_key', wk);
+  if (dbErr) { showToast('Gagal update database!'); return; }
 
   showToast('Foto berhasil dihapus!');
   await loadData();
 }
-/**
- * Hapus MASSAL semua foto bukti piket yang umurnya lebih dari 30 hari.
- * Menghapus file fisik di Storage Bucket, lalu membersihkan kolom photo_url
- * dari baris-baris yang terkait di database.
- */
+
+/* ══════════════════════════════════════
+   HAPUS FOTO > 30 HARI
+══════════════════════════════════════ */
 async function hapusFotoLebih30Hari() {
-  if (!confirm('Hapus SEMUA foto bukti piket yang sudah lebih dari 30 hari? Tindakan ini tidak bisa dibatalkan!')) return;
+  if (!confirm('Hapus SEMUA foto bukti piket yang sudah lebih dari 30 hari?')) return;
+  const batas = new Date();
+  batas.setDate(batas.getDate() - 30);
+  showToast('Memproses pembersihan...');
 
-  const batasTanggal = new Date();
-  batasTanggal.setDate(batasTanggal.getDate() - 30);
-  batasTanggal.setHours(0,0,0,0);
-
-  showToast('Memproses pembersihan foto lama...');
-
-  // 1. Ambil semua baris yang punya foto dan tanggalnya lebih lama dari batas
   const { data, error } = await supabaseClient
     .from('jadwal_piket')
-    .select('date_key, photo_url, is_done, swapped_name')
-    .lt('date_key', dateKey(batasTanggal));
+    .select('week_key, date_key, photo_url, is_done')
+    .not('photo_url', 'is', null);
 
-  if (error) { console.error('Gagal ambil data:', error); showToast('Gagal mengambil data!'); return; }
+  if (error) { showToast('Gagal ambil data!'); return; }
 
-  let totalFileDihapus = 0;
-  let totalBarisDiupdate = 0;
-
+  let totalFile = 0, totalBaris = 0;
   for (const row of (data || [])) {
+    // Cek apakah minggu ini sudah > 30 hari lalu (pakai date_key)
+    if (!row.date_key) continue;
+    const d = new Date(row.date_key + 'T00:00:00');
+    if (d >= batas) continue;
+
     const photos = parsePhotos(row.photo_url);
     if (!photos.length) continue;
 
-    // Ekstrak nama file dari setiap URL untuk dihapus dari Storage
-    const fileNames = photos
-      .map(url => url.split('/foto-piket/').pop())
-      .filter(Boolean);
-
+    const fileNames = photos.map(u => u.split('/foto-piket/').pop()).filter(Boolean);
     if (fileNames.length) {
-      const { error: storageErr } = await supabaseClient.storage.from('foto-piket').remove(fileNames);
-      if (storageErr) { console.error('Gagal hapus file:', row.date_key, storageErr); continue; }
-      totalFileDihapus += fileNames.length;
+      const { error: sErr } = await supabaseClient.storage.from('foto-piket').remove(fileNames);
+      if (sErr) continue;
+      totalFile += fileNames.length;
     }
 
-    // 2. Bersihkan kolom photo_url di baris terkait (kosongkan array foto)
-    const { error: updErr } = await supabaseClient.from('jadwal_piket').upsert({
-      date_key: row.date_key,
-      is_done: row.is_done,
-      photo_url: JSON.stringify([]),
-      swapped_name: row.swapped_name || null
+    const { error: uErr } = await supabaseClient
+      .from('jadwal_piket')
+      .update({ photo_url: JSON.stringify([]), is_done: false })
+      .eq(row.week_key ? 'week_key' : 'date_key', row.week_key || row.date_key);
+    if (!uErr) totalBaris++;
+  }
+  showToast(`Selesai! ${totalFile} file & ${totalBaris} baris dibersihkan.`);
+  await loadData();
+}
+
+/* ══════════════════════════════════════
+   RENDER PENGHUNI KAMAR
+══════════════════════════════════════ */
+function renderMembers() {
+  const grid = document.getElementById('members-grid');
+
+  // Hitung berapa kali setiap anggota termasuk dalam kelompok yang SELESAI
+  const countMap = {};
+  ROSTER.forEach(p => { countMap[p] = 0; });
+
+  Object.values(weekDataMap).forEach(row => {
+    if (!row.done && (!row.photos || row.photos.length === 0)) return;
+    (row.anggota || []).forEach(nama => {
+      if (countMap[nama] !== undefined) countMap[nama]++;
     });
-    if (!updErr) totalBarisDiupdate++;
-  }
-
-  showToast(`Selesai! ${totalFileDihapus} file & ${totalBarisDiupdate} baris dibersihkan.`);
-  await loadData();
-}
-function openSwapModal(dk,originalPerson){
-  swapDateKey=dk;swapOriginalName=originalPerson;
-  // Muat pilihan sebelumnya jika ada (bisa 1 atau 2 nama, dipisah koma)
-  const curSwap=doneMap[dk]?.swappedName;
-  swapSelectedNames=curSwap?curSwap.split(',').map(s=>s.trim()).filter(Boolean):[];
-  document.getElementById('swap-date-label').textContent=DAY_SHORT[new Date(dk+'T00:00:00').getDay()]+', '+fmtDateLabel(dk);
-  document.getElementById('swap-sub').textContent='Pilih hingga 2 anggota pengganti untuk tanggal:';
-  const grid=document.getElementById('swap-grid');
-  grid.innerHTML=ROSTER.map(person=>{
-    const isOriginal=person===originalPerson;
-    const isSel=swapSelectedNames.includes(person);
-    return `<button class="swap-person-btn ${isSel?'sel':''} ${isOriginal?'is-original':''}" data-person="${person}" onclick="selectSwapPerson(this,'${person}')"><div class="swap-av"><img src="${PHOTOS[person]}" alt="${person}"></div><div><div class="swap-person-name">${person}</div><div class="swap-person-tag">${isOriginal?'(Jadwal asli)':isSel?'(Terpilih)':''}</div></div></button>`;
-  }).join('');
-  document.getElementById('btn-swap-confirm').disabled=swapSelectedNames.length===0;
-  document.getElementById('swapModal').classList.add('show');
-}
-function selectSwapPerson(el,person){
-  const idx=swapSelectedNames.indexOf(person);
-  if(idx>-1){
-    // Sudah terpilih → batalkan pilihan
-    swapSelectedNames.splice(idx,1);
-  } else {
-    if(swapSelectedNames.length>=2){showToast('Maksimal 2 pengganti!');return;}
-    swapSelectedNames.push(person);
-  }
-  document.querySelectorAll('.swap-person-btn').forEach(b=>{
-    const isSel=swapSelectedNames.includes(b.dataset.person);
-    b.classList.toggle('sel',isSel);
-    const tag=b.querySelector('.swap-person-tag');
-    if(b.dataset.person===swapOriginalName)tag.textContent='(Jadwal asli)';
-    else if(isSel)tag.textContent='(Terpilih)';
-    else tag.textContent='';
   });
-  document.getElementById('btn-swap-confirm').disabled=swapSelectedNames.length===0;
-}
-function closeSwapModal(){document.getElementById('swapModal').classList.remove('show');swapDateKey=null;swapSelectedNames=[];swapOriginalName=null;}
-document.getElementById('swapModal').addEventListener('click',function(e){if(e.target===this)closeSwapModal();});
-async function confirmSwap(){
-  if(!swapDateKey||swapSelectedNames.length===0)return;
-  const dk=swapDateKey;
-  // Gabung nama dengan koma jika 2 orang, null jika dikembalikan ke aslinya
-  const isRevert=swapSelectedNames.length===1&&swapSelectedNames[0]===swapOriginalName;
-  const newName=isRevert?null:swapSelectedNames.join(', ');
-  if(!doneMap[dk])doneMap[dk]={done:false,photos:[],swappedName:null};
-  doneMap[dk].swappedName=newName;
 
-  const{data:existing}=await supabaseClient.from('jadwal_piket').select('date_key').eq('date_key',dk).maybeSingle();
-  let error;
-  if(existing){
-    ({error}=await supabaseClient.from('jadwal_piket').update({swapped_name:newName}).eq('date_key',dk));
-  } else {
-    ({error}=await supabaseClient.from('jadwal_piket').insert({date_key:dk,is_done:false,photo_url:JSON.stringify([]),swapped_name:newName}));
-  }
-  if(error){console.error('confirmSwap error:',error);showToast('Gagal simpan tukar jadwal!');return;}
-  closeSwapModal();
-  showToast(newName?`Jadwal ditukar ke ${newName}!`:'Jadwal dikembalikan ke aslinya');
-  await loadData();
-}
-function updateClock(){
-  const now=new Date();
-  document.getElementById('live-date').textContent=now.getDate()+' '+MON_FULL[now.getMonth()]+' '+now.getFullYear();
-  document.getElementById('live-time').textContent=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
-}
-setInterval(updateClock,1000);updateClock();
-
-function renderStrip(){
-  const strip=document.getElementById('today-strip');const txt=document.getElementById('strip-text');strip.className='today-strip';
-  const person=getEffectivePerson(today);const dayData=doneMap[dateKey(today)];
-  // Selesai = ada foto bukti
-  const sudahAda = dayData && dayData.photos && dayData.photos.length > 0;
-  strip.classList.add(sudahAda ? 'on-duty' : 'on-duty');
-  txt.innerHTML = sudahAda
-    ? `✅ Piket <strong>${person}</strong> selesai — ada ${dayData.photos.length} foto bukti!`
-    : `Hari ini: <strong>${person}</strong> · Upload foto sebagai bukti piket`;
-}
-function renderSchedule(){
-  const grid=document.getElementById('schedule-grid');
-  const dow=today.getDay()===0?6:today.getDay()-1;
-  const monday=new Date(today);monday.setDate(today.getDate()-dow+weekOffset*7);
-  const dates=Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(monday.getDate()+i);return d;});
-  const mon=dates[0],sun=dates[6];
-  document.getElementById('week-label').textContent=mon.getDate()+' '+MON_SHORT[mon.getMonth()]+' - '+sun.getDate()+' '+MON_SHORT[sun.getMonth()];
-  let html='';
-  dates.forEach((date,idx)=>{
-    const dk=dateKey(date);const isSun=date.getDay()===0;const isToday=dk===dateKey(today);
-    const dayData=doneMap[dk]||{done:false,photos:[],swappedName:null};
-    const personArr=getEffectivePerson(date)||[];const origArr=calcPersonForDate(date)||[];
-    const person=personArr[0]||null;
-const origPerson=origArr[0]||null;
-const personSecond=personArr[1]||null;
-const origPersonSecond=origArr[1]||null;
-    const isSwapped=!!dayData.swappedName;const photos=dayData.photos||[];
-    const avatarCls=person&&COLORS[person.toLowerCase()]?COLORS[person.toLowerCase()].cls:'av-faris';
-    // Selesai = ada foto, bukan dari checkbox manual
-    const isDoneByPhoto = photos.length > 0;
-    let cls='day-card';
-    if(isToday)cls+=' is-today status-live';
-    else if(isDoneByPhoto)cls+=' done-today status-done';
-    else cls+=' status-upcoming';
-    if(isSwapped)cls+=' is-swapped';
-    let bodyContent='';
-    if(person){
-      const thumbs=photos.map(url=>`<div style="position:relative;display:inline-block;"><img src="${url}" class="proof-thumb" onclick="openLightbox('${url}','${person} - ${fmtDateLabel(dk)}')" title="Lihat foto bukti"><button onclick="event.stopPropagation();hapusFotoIndividual('${dk}','${url}')" style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--sunday);color:#fff;border:none;font-size:11px;cursor:pointer;line-height:1;">✕</button></div>`).join('');
-
-      const photoCount=photos.length;const photoInfo=photoCount>0?`<span class="photo-count-badge">${photoCount} foto</span>`:'';
-const avatarClsSecond=personSecond&&COLORS[personSecond.toLowerCase()]?COLORS[personSecond.toLowerCase()].cls:'av-faris';
-      const secondChip=personSecond?`<div class="person-chip" style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--border);"><div class="avatar ${avatarClsSecond}"><img src="${PHOTOS[personSecond]||''}" alt="${personSecond}"></div><div class="person-info"><div class="person-name">${personSecond}</div><div class="person-role">Giliran piket</div></div></div>`:'';
-      // Status selesai sekarang OTOMATIS dari foto — ada foto = selesai
-const statusBadge = photos.length > 0
-  ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;color:var(--today);background:var(--today-s);border:1.5px solid var(--today-b);padding:4px 10px;border-radius:7px;">✓ Selesai</span>`
-  : `<span style="display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;color:var(--ink4);background:var(--surface2);border:1.5px solid var(--border2);padding:4px 10px;border-radius:7px;">⏳ Belum</span>`;
-
-bodyContent=`<div class="day-row-main"><div style="flex:1;min-width:0;"><div class="person-chip"><div class="avatar ${avatarCls}"><img src="${PHOTOS[person]}" alt="${person}"></div><div class="person-info"><div class="person-name">${person}</div><div class="person-role">${isSwapped?'Pengganti piket':'Giliran piket'}</div>${isSwapped&&origPerson?`<div class="swap-tag">Tukar - asli: ${origPerson}</div>`:''}</div></div>${secondChip}</div><div class="card-actions">${statusBadge}<button class="btn-swap" onclick="openSwapModal('${dk}','${origPerson||person}')">Tukar</button></div></div><div class="photos-row">${thumbs}<label class="proof-add" title="Upload foto bukti"><span>+</span><span class="proof-add-lbl">Foto</span><input type="file" accept="image/*" multiple onchange="handleUpload(this,'${dk}')"></label>${photoInfo}</div>`;      
-    }
-    html+=`<div class="${cls}" style="animation-delay:${idx*0.04}s"><div class="day-header"><div class="day-name-col"><div class="day-short">${DAY_SHORT[date.getDay()]}</div><div class="day-date-num">${date.getDate()}</div><div class="day-month-sm">${MON_SHORT[date.getMonth()]}</div></div><div class="day-body">${bodyContent}</div></div></div>`;
-  });
-  grid.innerHTML=html;
-
+  grid.innerHTML = ROSTER.map(person =>
+    `<div class="member-card">
+       <div class="member-avatar-lg">
+         <img src="${PHOTOS[person]}" alt="${person}">
+       </div>
+       <div class="member-name-lg">${person}</div>
+       <div class="member-stat">Selesai: <strong>${countMap[person]}x</strong></div>
+     </div>`
+  ).join('');
 }
 
-function renderMembers(){
-  const grid=document.getElementById('members-grid');let html='';
-  ROSTER.forEach(person=>{
-    let count=0;
-    Object.keys(doneMap).forEach(dk=>{const row=doneMap[dk];if(!row.done)return;const d=new Date(dk+'T00:00:00');const eff=row.swappedName||calcPersonForDate(d);if(eff===person)count++;});
-    const avatarCls=COLORS[person.toLowerCase()]?COLORS[person.toLowerCase()].cls:'';
-    html+=`<div class="member-card"><div class="member-avatar-lg ${avatarCls}"><img src="${PHOTOS[person]}" alt="${person}"></div><div class="member-name-lg">${person}</div><div class="member-stat">Selesai: <strong>${count}x</strong></div></div>`;
-  });
-  grid.innerHTML=html;
+/* ══════════════════════════════════════
+   LIGHTBOX
+══════════════════════════════════════ */
+function openLightbox(src, caption) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-caption').textContent = caption || '';
+  document.getElementById('lightbox').classList.add('show');
 }
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+  document.getElementById('lightbox-img').src = '';
+}
+document.getElementById('lightbox').addEventListener('click', function(e) { if (e.target === this) closeLightbox(); });
+document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
-function openLightbox(src,caption){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox-caption').textContent=caption||'';document.getElementById('lightbox').classList.add('show');}
-function closeLightbox(){document.getElementById('lightbox').classList.remove('show');document.getElementById('lightbox-img').src='';}
-document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLightbox();});
-document.getElementById('lightbox-close').addEventListener('click',closeLightbox);
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+/* ══ NAVIGASI MINGGU ══ */
+document.getElementById('btn-prev').addEventListener('click', () => { weekOffset--; renderSchedule(); });
+document.getElementById('btn-next').addEventListener('click', () => { weekOffset++; renderSchedule(); });
+document.getElementById('btn-today').addEventListener('click', () => { weekOffset = 0; renderSchedule(); showToast('Kembali ke minggu ini'); });
 
-document.getElementById('btn-prev').addEventListener('click',()=>{weekOffset--;renderSchedule();});
-document.getElementById('btn-next').addEventListener('click',()=>{weekOffset++;renderSchedule();});
-document.getElementById('btn-today').addEventListener('click',()=>{weekOffset=0;renderSchedule();showToast('Kembali ke minggu ini');});
-
-const toggleBtn=document.getElementById('theme-toggle');
-document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'light');
-toggleBtn.addEventListener('click',()=>{
-  const t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';
-  document.documentElement.setAttribute('data-theme',t);localStorage.setItem('theme',t);
+/* ══ THEME ══ */
+const toggleBtn = document.getElementById('theme-toggle');
+document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+toggleBtn.addEventListener('click', () => {
+  const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('theme', t);
 });
 
-// Flag: true selama browser INI sedang menyimpan, agar event realtime
-// yang dipantulkan balik tidak memicu loadData() ganda
+/* ══ REALTIME ══ */
 let _savingNow = false;
-
 supabaseClient
-  .channel('piket-realtime-v2')
+  .channel('piket-weekly-realtime')
   .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal_piket' }, () => {
-    if (_savingNow) return; // abaikan pantulan dari diri sendiri
+    if (_savingNow) return;
     loadData();
   })
-  .subscribe(status => console.log('[Realtime]', status));
-loadData();
+  .subscribe();
 
+/* ══ PWA ══ */
 let deferredPrompt;
-const installContainer=document.getElementById('install-container');
-const btnInstallCustom=document.getElementById('btn-install-custom');
-window.addEventListener('beforeinstallprompt',(e)=>{
-  e.preventDefault();deferredPrompt=e;installContainer.style.display='block';
-  btnInstallCustom.addEventListener('click',async()=>{
-    installContainer.style.display='none';deferredPrompt.prompt();
-    const{outcome}=await deferredPrompt.userChoice;
-    console.log(`User memilih: ${outcome}`);deferredPrompt=null;
+const installContainer = document.getElementById('install-container');
+const btnInstallCustom = document.getElementById('btn-install-custom');
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault(); deferredPrompt = e; installContainer.style.display = 'block';
+  btnInstallCustom.addEventListener('click', async () => {
+    installContainer.style.display = 'none'; deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User memilih: ${outcome}`); deferredPrompt = null;
   });
 });
-window.addEventListener('appinstalled',()=>{installContainer.style.display='none';deferredPrompt=null;});
+window.addEventListener('appinstalled', () => { installContainer.style.display = 'none'; deferredPrompt = null; });
 
-// Tampilkan panduan manual untuk iOS Safari
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 const isInStandaloneMode = window.navigator.standalone === true;
 if (isIOS && !isInStandaloneMode) {
@@ -824,9 +1033,16 @@ if (isIOS && !isInStandaloneMode) {
   document.getElementById('btn-install-custom').style.display = 'none';
 }
 
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then(reg=>console.log('PWA Siap!',reg)).catch(err=>console.log('PWA Gagal:',err));});
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('PWA Siap!', reg))
+      .catch(err => console.log('PWA Gagal:', err));
+  });
 }
+
+/* ══ INIT ══ */
+loadData();
 </script>
 </body>
 </html>
