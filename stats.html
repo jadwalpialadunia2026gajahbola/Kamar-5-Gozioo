@@ -857,7 +857,14 @@ const DAY_MAP = {
   4: ["IBRAHIM","ARRUAN"], 5: ["RIYAN"], 6: ["FIKRI","CELVIN"], 0: ["RAMBO","M_DWI"]
 };
 const ROSTER = ["ARWIN","EDY","ARIE","JASON","JERRI","KADAFI","IBRAHIM","ARRUAN","RIYAN","FIKRI","CELVIN","RAMBO","M_DWI"];
-const EPOCH  = new Date('2025-01-06'); // Senin pertama siklus piket
+const EPOCH  = new Date('2025-01-06');
+
+const KELOMPOK_PIKET = [
+  { minggu: 1, nama: ['JASON', 'ARIE', 'ARRUAN'] },
+  { minggu: 2, nama: ['IBRAHIM', 'FIKRI', 'CELVIN'] },
+  { minggu: 3, nama: ['KADAFI', 'RIYAN', 'ARWIN', 'EDY'] },
+  { minggu: 4, nama: ['JERRI', 'M_DWI', 'RAMBO'] }
+];
 
 /*
  * DENDA_MULAI_EFEKTIF:
@@ -1036,23 +1043,43 @@ function computeAll(doneMap) {
   const thisMonKey = NOW_YEAR+'-'+String(NOW_MONTH+1).padStart(2,'0');
 
   /* Walk doneMap entries */
+  /* Walk doneMap entries — sistem mingguan: baca anggota_kelompok */
   Object.entries(doneMap).forEach(([dk, row]) => {
     if (!row.done) return;
-    const d      = new Date(dk+'T00:00:00');
-    const person = row.swappedName || calcPersonForDate(d);
-    if (!person || !scores[person]) return;
+    const d = new Date(dk + 'T00:00:00');
 
-    scores[person].done++;
-    scores[person].pts += PTS_DONE;
+    // Kumpulkan anggota: dari kolom anggota_kelompok (sistem baru) atau DAY_MAP (legacy)
+    let anggota = [];
+    if (row.anggota && row.anggota.length > 0) {
+      anggota = row.anggota;
+    } else {
+      const p = calcPersonForDate(d);
+      if (p) anggota = [p];
+    }
+
+    anggota.forEach(person => {
+      if (!person || !scores[person]) return;
+      scores[person].done++;
+      scores[person].pts += PTS_DONE;
+    });
+
+    // Foto hanya dihitung 1x per minggu, dibagi ke semua anggota
     const np = parsePhotos(row.photos_raw || row.photos || []).length;
-    if (np > 0) { scores[person].photos += np; scores[person].pts += PTS_PHOTO; }
+    if (np > 0) {
+      anggota.forEach(person => {
+        if (!person || !scores[person]) return;
+        scores[person].photos += 1; // 1 kredit foto per anggota per minggu
+        scores[person].pts += PTS_PHOTO;
+      });
+    }
 
-    const mk = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    const mk = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
     if (monthCounts[mk] !== undefined) monthCounts[mk]++;
 
-    /* Bulan ini */
     if (d.getMonth() === NOW_MONTH && d.getFullYear() === NOW_YEAR) {
-      scores[person].doneThisMonth++;
+      anggota.forEach(person => {
+        if (scores[person]) scores[person].doneThisMonth++;
+      });
     }
   });
 
@@ -1101,7 +1128,7 @@ async function loadData() {
 
   const { data, error } = await supabaseClient
     .from('jadwal_piket')
-    .select('date_key, is_done, photo_url, swapped_name')
+    .select('date_key, week_key, is_done, photo_url, swapped_name, anggota_kelompok, minggu_ke')
     .order('date_key', { ascending: true });
 
   if (error) { console.error('Gagal load:', error); return; }
@@ -1109,12 +1136,18 @@ async function loadData() {
   /* Build doneMap */
   const doneMap = {};
   (data || []).forEach(item => {
-    const photos = parsePhotos(item.photo_url);
-    doneMap[item.date_key] = {
+    const photos  = parsePhotos(item.photo_url);
+    const anggota = item.anggota_kelompok
+      ? item.anggota_kelompok.split(',').map(s => s.trim()).filter(Boolean)
+      : [];
+    const key = item.date_key || item.week_key;
+    if (!key) return;
+    doneMap[key] = {
       done:        item.is_done || false,
       photos:      photos,
       photos_raw:  item.photo_url,
       swappedName: item.swapped_name || null,
+      anggota:     anggota,
     };
   });
 
