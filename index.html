@@ -740,9 +740,9 @@ function buildWeekCard(week, isMain) {
     <div class="${cardCls}" style="animation-delay:.03s">
       <div class="day-header">
         <div class="day-name-col" style="min-width:72px;">
-          <div class="day-short">MINGGU</div>
-          <div class="day-date-num" style="font-size:1.8rem;">${kelompok.minggu}</div>
-          <div class="day-month-sm">Siklus</div>
+          <div class="day-short">PIKET</div>
+          <div style="font-size:1.6rem;">🧹</div>
+          <div class="day-month-sm">Minggu ini</div>
         </div>
         <div class="day-body">
           <!-- Range tanggal & status -->
@@ -854,38 +854,52 @@ async function handleUploadWeek(input, wk) {
 async function saveWeekStatus(wk, kelompok, isDone, photos) {
   const mon = getMondayOf(
     (() => {
-      // Reconstruct monday dari week_key
       const [year, weekStr] = wk.split('-W');
       const jan4 = new Date(Number(year), 0, 4);
       const startW1 = getMondayOf(jan4);
-      const mon = new Date(startW1);
-      mon.setDate(startW1.getDate() + (Number(weekStr) - 1) * 7);
-      return mon;
+      const m = new Date(startW1);
+      m.setDate(startW1.getDate() + (Number(weekStr) - 1) * 7);
+      return m;
     })()
   );
 
+  const dateKey = mon.getFullYear() + '-' +
+                  String(mon.getMonth() + 1).padStart(2, '0') + '-' +
+                  String(mon.getDate()).padStart(2, '0');
+
+  // Cek apakah sudah ada baris dengan week_key ini
   const { data: existing } = await supabaseClient
-    .from('jadwal_piket').select('week_key').eq('week_key', wk).maybeSingle();
+    .from('jadwal_piket')
+    .select('id')
+    .eq('week_key', wk)
+    .maybeSingle();
 
-  const payload = {
-    week_key:          wk,
-    minggu_ke:         kelompok.minggu,
-    is_done:           isDone,
-    photo_url:         JSON.stringify(photos || []),
-    anggota_kelompok:  kelompok.nama.join(','),
-    // Gunakan date_key = Senin minggu itu untuk kompatibilitas tabel lama
-    date_key:          mon.getFullYear() + '-' +
-                       String(mon.getMonth() + 1).padStart(2, '0') + '-' +
-                       String(mon.getDate()).padStart(2, '0'),
-  };
-
-  let err;
   if (existing) {
-    ({ error: err } = await supabaseClient.from('jadwal_piket').update(payload).eq('week_key', wk));
+    // UPDATE baris yang sudah ada
+    const { error: err } = await supabaseClient
+      .from('jadwal_piket')
+      .update({
+        minggu_ke:        kelompok.minggu,
+        is_done:          isDone,
+        photo_url:        JSON.stringify(photos || []),
+        anggota_kelompok: kelompok.nama.join(','),
+      })
+      .eq('week_key', wk);
+    if (err) { console.error('Update error:', err); showToast('Gagal update: ' + err.message); }
   } else {
-    ({ error: err } = await supabaseClient.from('jadwal_piket').insert(payload));
+    // INSERT baris baru
+    const { error: err } = await supabaseClient
+      .from('jadwal_piket')
+      .insert({
+        week_key:         wk,
+        date_key:         dateKey,
+        minggu_ke:        kelompok.minggu,
+        is_done:          isDone,
+        photo_url:        JSON.stringify(photos || []),
+        anggota_kelompok: kelompok.nama.join(','),
+      });
+    if (err) { console.error('Insert error:', err); showToast('Gagal insert: ' + err.message); }
   }
-  if (err) { console.error('saveWeekStatus error:', err); showToast('Gagal simpan!'); }
 }
 
 /* ══════════════════════════════════════
