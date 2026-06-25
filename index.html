@@ -813,6 +813,8 @@ async function handleUploadWeek(input, wk) {
   const kelompok = getKelompokForMonday(mon);
   const uploaded = [];
 
+  _savingNow = true;
+
   for (const file of files) {
     const ext = file.name.split('.').pop() || 'jpg';
     const fileName = `week-${wk}-${Date.now()}-${Math.random().toString(36).slice(2,6)}.${ext}`;
@@ -823,7 +825,11 @@ async function handleUploadWeek(input, wk) {
     uploaded.push(urlData.publicUrl);
   }
 
-  if (!uploaded.length) { showToast('Semua foto gagal diupload!'); return; }
+  if (!uploaded.length) {
+    _savingNow = false;
+    showToast('Semua foto gagal diupload!');
+    return;
+  }
 
   if (!weekDataMap[wk]) weekDataMap[wk] = { done: true, photos: [], uploader: null, anggota: kelompok.nama };
   const allPhotos = [...(weekDataMap[wk].photos || []), ...uploaded];
@@ -831,10 +837,17 @@ async function handleUploadWeek(input, wk) {
   weekDataMap[wk].done   = true;
 
   await saveWeekStatus(wk, kelompok, true, allPhotos);
+
+  _savingNow = false;
+
   showToast(`${uploaded.length} foto bukti tersimpan!`);
+
+  renderStrip();
+  renderSchedule();
+  renderMembers();
+
   await loadData();
 }
-
 /* ══════════════════════════════════════
    SIMPAN STATUS MINGGU KE SUPABASE
 ══════════════════════════════════════ */
